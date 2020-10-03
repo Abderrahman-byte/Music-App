@@ -3,3 +3,6 @@
 *.sqlite
 *.sqlite3
 *.db
+
+log.json
+crowling.json
