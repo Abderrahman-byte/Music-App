@@ -58,6 +58,5 @@ def run(*args) :
     pagesList = getLinksList()
     # Get list af Artist from each page
     artistsList = getArtistsLists(pagesList)
-    # Search each artist or band in Deeze Api on : "https://api.deezer.com/search/artist?q={artist-name}"
-    # Create Artist object model 
+    
     print('get artists finished on', time.time() - start_time)
