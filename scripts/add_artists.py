@@ -2,10 +2,16 @@ import requests, queue
 from urllib.parse import quote
 from threading import Thread, Lock
 
+from tracks.models import Artist
+
 import json, os, time
 
 COUNT_OF_THREADS = 5
 global_lock = Lock()
+
+def getArtistsList() :
+    if not os.path.exists('crawling.json') : return []
+    return json.loads(open('crawling.json').read())
 
 def log(content: dict) :
     while global_lock.locked() :
@@ -27,6 +33,21 @@ def log(content: dict) :
     fp.close()
     global_lock.release()
 
+def createArticleModel(data: dict) :
+    if data.get('name') is None or data.get('id') is None :
+        return
+
+    try :
+        artist = Artist.objects.get(deezer_id=data.get('id'))
+        print(f'artist {data.get("name")} with id {artist.deezer_id} already exist')
+    except Artist.DoesNotExist :
+        artist = Artist(name=data.get('name'), deezer_id=data.get('id'))
+
+    try :
+        artist.save()
+    except Exception as ex:
+        print(ex)
+
 def getMostPopular(response: dict) :
     if response.get('data') is None or type(response.get('data')) != list or response.get('total') is None or response.get('total') <= 0 :
         if response.get('error') :
@@ -36,16 +57,13 @@ def getMostPopular(response: dict) :
     most_fan = list(sorted(response.get('data'), key=lambda item: item.get('nb_fan'), reverse=True))[0]
     return most_fan
 
-def getArtistsList() :
-    if not os.path.exists('crawling.json') : return []
-    return json.loads(open('crawling.json').read())
-
 def searchForArtist(keyword) :
     url = f'https://api.deezer.com/search/artist?q={quote(keyword)}&limit=100000000000'
     req = requests.get(url)
     content = json.loads(req.content.decode('utf-8'))
     artist_data = getMostPopular(content)
     if artist_data is not None :
+        createArticleModel(artist_data)
         log(artist_data) 
     else :
         print(keyword, 'was no match')
@@ -75,7 +93,7 @@ def StarProcessing(articles: list) :
 
 def run() :
     start_time = time.time()
-    artists_list = getArtistsList()
+    artists_list = getArtistsList()[0:100]
     
     # for i, art in enumerate(artists_list):
     #     print(f'searching for {art} {i}/{len(artists_list)} ; {round(time.time() - start_time, 2)} passed')
