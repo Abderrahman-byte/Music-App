@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from .models import Artist
 
-@receiver(post_save, Artist)
-def AsignAlbums(sender, instance, created) :
+@receiver(post_save, sender=Artist)
+def AsignAlbums(sender, instance, created, *args, **kwargs) :
     if created :
         print(f'{instance.id} {instance.name} justed created so you better asign albums')
