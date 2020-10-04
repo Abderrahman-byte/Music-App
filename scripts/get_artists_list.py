@@ -16,7 +16,7 @@ def verifyStart(item) :
         print(f'{item} will be ignored')
         return False
 
-    if item in FORBIDDEN :
+    if item.lower() in [forb.lower() for forb in FORBIDDEN] :
         return False
 
     for text in NOT_TO_START_WITH :
