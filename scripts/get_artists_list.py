@@ -5,13 +5,24 @@ from urllib.parse import urljoin, urlparse
 import os, re, string, time
 import json
 
-FORBIDDEN = ['top', '0-9'] + string.ascii_lowercase.split() + string.digits.split()
+FORBIDDEN = ['top', '0-9'] + list(string.ascii_lowercase) + list(string.digits) + ['Bibliography', 'References', 'See also', 'Artists']
 NOT_TO_START_WITH = ['list of', 'categorie:', 'sitar', 'category:']
 
 def verifyStart(item) :
+    forbidden_all = '|'.join(FORBIDDEN)
+    regex = re.compile(rf'^\d+\s+({forbidden_all}){"{1}"}$', re.IGNORECASE)
+
+    if regex.match(item) is not None :
+        print(f'{item} will be ignored')
+        return False
+
+    if item in FORBIDDEN :
+        return False
+
     for text in NOT_TO_START_WITH :
-        if item.lower().startswith(text.lower()) or item.lower() in FORBIDDEN:
+        if item.lower().startswith(text.lower()):
             return False
+    
     return True
 
 def getLinksList() :
@@ -58,5 +69,4 @@ def run(*args) :
     pagesList = getLinksList()
     # Get list af Artist from each page
     artistsList = getArtistsLists(pagesList)
-    
     print('get artists finished on', time.time() - start_time)
