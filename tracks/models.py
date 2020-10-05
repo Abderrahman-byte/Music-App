@@ -39,4 +39,4 @@ class Track(models.Model) :
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     release_date  = models.DateField(default=date.today, editable=True)
     preview = models.TextField(null=True, blank=True)
-    rank = models.IntegerField(unique=True, null=True)
+    rank = models.IntegerField(null=True)

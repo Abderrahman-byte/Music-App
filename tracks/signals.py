@@ -4,7 +4,7 @@ from django.dispatch import receiver
 import requests, json, time
 from datetime import datetime
 
-from .models import Artist, Album, Genre
+from .models import Artist, Album, Genre, Track
 
 def getAlbums(instance, nb) :
     url = f'https://api.deezer.com/artist/{instance.deezer_id}/albums?limit={nb}'
@@ -56,6 +56,24 @@ def getAlbumDetails(instance) :
             instance.genres.add(g)
 
     instance.save()
+
+    if tracks is not None and type(tracks) == list and len(tracks) >= 0:
+        for track in tracks :
+            # Create Track
+            if type(track) != dict or track.get('title') is None or track.get('id') is None  :
+                return
+                
+            try :
+                t = Track(
+                    deezer_id=track.get('id'), 
+                    album=instance, 
+                    preview=track.get('preview'), 
+                    title=track.get('title'),
+                    rank=track.get('rank')
+                )
+                t.save()
+            except Exception as ex :
+                print(ex)
 
 def getArtistsDetails(instance) :
     url = f'https://api.deezer.com/artist/{instance.deezer_id}'

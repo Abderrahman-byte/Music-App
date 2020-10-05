@@ -6,7 +6,7 @@ from tracks.models import Artist
 
 import json, os, time
 
-COUNT_OF_THREADS = 5
+COUNT_OF_THREADS = 4
 global_lock = Lock()
 
 def getArtistsList() :
@@ -93,7 +93,7 @@ def StarProcessing(articles: list) :
 
 def run() :
     start_time = time.time()
-    artists_list = getArtistsList()[0:100]
+    artists_list = getArtistsList()[104:109]
     
     # for i, art in enumerate(artists_list):
     #     print(f'searching for {art} {i}/{len(artists_list)} ; {round(time.time() - start_time, 2)} passed')
