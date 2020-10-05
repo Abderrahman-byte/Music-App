@@ -35,6 +35,7 @@ class Album(models.Model) :
 class Track(models.Model) :
     id = models.CharField(max_length=20, primary_key=True, editable=False, default=generate_id)
     deezer_id = models.IntegerField(unique=True)
+    title = models.CharField(max_length=500)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     release_date  = models.DateField(default=date.today, editable=True)
     preview = models.TextField(null=True, blank=True)
