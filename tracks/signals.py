@@ -46,10 +46,13 @@ def getArtistsDetails(instance) :
     instance.save()
 
     nb_album = content.get('nb_album')
-
     getAlbums(instance, nb)
 
 @receiver(post_save, sender=Artist)
-def AsignAlbums(sender, instance, created, *args, **kwargs) :
+def artistCreated(sender, instance, created, *args, **kwargs) :
     if created :
         getArtistsDetails(instance)
+
+def albumCreated(sender, instance, created, *args, **kwargs) :
+    if created :
+        print(f'Album {instance.title} was created with id {instance.id}')
