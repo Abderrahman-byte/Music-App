@@ -1,5 +1,6 @@
 from django.db import models
-from django.utils import timezone
+
+from datetime import date
 
 from .utils import generate_id
 
@@ -25,7 +26,7 @@ class Album(models.Model) :
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     genres = models.ManyToManyField(Genre)
-    release_date  = models.DateField(default=timezone.now, editable=True)
+    release_date  = models.DateField(default=date.today, editable=True)
     cover_big = models.TextField(null=True, blank=True)
     cover_medium = models.TextField(null=True, blank=True)
     cover_small = models.TextField(null=True, blank=True)
@@ -35,6 +36,6 @@ class Track(models.Model) :
     id = models.CharField(max_length=20, primary_key=True, editable=False, default=generate_id)
     deezer_id = models.IntegerField(unique=True)
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
-    release_date  = models.DateField(default=timezone.now, editable=True)
+    release_date  = models.DateField(default=date.today, editable=True)
     preview = models.TextField(null=True, blank=True)
     rank = models.IntegerField(unique=True)
