@@ -97,7 +97,7 @@ def StarProcessing(articles: list) :
 
 def run() :
     start_time = time.time()
-    artists_list = getArtistsList()[102:110]
+    artists_list = getArtistsList()
     
     # for i, art in enumerate(artists_list):
     #     print(f'searching for {art} {i}/{len(artists_list)} ; {round(time.time() - start_time, 2)} passed')
