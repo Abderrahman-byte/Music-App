@@ -4,14 +4,16 @@ from threading import Thread, Lock
 
 from tracks.models import Artist
 
-import json, os, time
+import json, os, time, logging
 
 COUNT_OF_THREADS = 4
 global_lock = Lock()
 
 def getArtistsList() :
-    if not os.path.exists('crawling.json') : return []
-    return json.loads(open('crawling.json').read())
+    if not os.path.exists('artists.json') : 
+        logging.getLogger('errors').error('artists.json file doesnt exist.')
+        return []
+    return json.loads(open('artists.json').read())
 
 def log(content: dict) :
     while global_lock.locked() :
@@ -23,7 +25,8 @@ def log(content: dict) :
     if os.path.exists('logs.json') :
         try :
             logging = json.loads(open('logs.json', 'r').read())
-        except :
+        except Exception as ex:
+            logging.getLogger('errors').error('Cannot read log.json file because ' + ex.__str__())
             logging = list()
 
     logging.append(content)
@@ -39,19 +42,19 @@ def createArticleModel(data: dict) :
 
     try :
         artist = Artist.objects.get(deezer_id=data.get('id'))
-        print(f'artist {data.get("name")} with id {artist.deezer_id} already exist')
+        logging.getLogger('warnings').warning(f'artist {data.get("name")} with id {artist.deezer_id} already exist')
     except Artist.DoesNotExist :
         artist = Artist(name=data.get('name'), deezer_id=data.get('id'))
 
     try :
         artist.save()
     except Exception as ex:
-        print(ex)
+        logging.getLogger('errors').error(f'Cannot save artist {artist.name} because : ' + ex.__str__())
 
 def getMostPopular(response: dict) :
     if response.get('data') is None or type(response.get('data')) != list or response.get('total') is None or response.get('total') <= 0 :
         if response.get('error') :
-            print(response.get('error'))
+            logging.getLogger('errors').error('Error recieved from deerer', response.get('error'))
         return None
 
     most_fan = list(sorted(response.get('data'), key=lambda item: item.get('nb_fan'), reverse=True))[0]
@@ -66,7 +69,7 @@ def searchForArtist(keyword) :
         createArticleModel(artist_data)
         # log(artist_data)
     else :
-        print(keyword, 'was no match')
+        logging.getLogger('warnings').warning(f'"{keyword}" was not match in deezer search')
 
 def StarProcessing(articles: list) :
     start_process = time.time()
@@ -82,6 +85,7 @@ def StarProcessing(articles: list) :
             searchForArtist(art)
             index = len(articles) - articles_queue.qsize()
             print(f'Artist fetched "{art}"; processed {index} in {time.time() - start_process} ; {round((index) / len(articles) * 100, 2)}% done')
+            logging.getLogger('debuging').debug(f'Artist {art} created with his albums and tracks')
             time.sleep(1)
 
     for _ in range(COUNT_OF_THREADS) :
@@ -93,7 +97,7 @@ def StarProcessing(articles: list) :
 
 def run() :
     start_time = time.time()
-    artists_list = getArtistsList()
+    artists_list = getArtistsList()[102:110]
     
     # for i, art in enumerate(artists_list):
     #     print(f'searching for {art} {i}/{len(artists_list)} ; {round(time.time() - start_time, 2)} passed')
@@ -101,4 +105,5 @@ def run() :
 
     StarProcessing(artists_list)
 
-    print('add artists ended on', time.time() - start_time)
+    logging.getLogger('debuging').debug(f'add artists ended in {round(time.time() - start_time, 2)}s')
+    print(f'add artists ended in {round(time.time() - start_time, 2)}s')

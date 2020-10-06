@@ -3,6 +3,7 @@ from django.dispatch import receiver
 
 import requests, json, time
 from datetime import datetime
+import logging
 
 from .models import Artist, Album, Genre, Track
 
@@ -23,14 +24,14 @@ def getAlbums(instance, nb) :
 
         try :
             album = Album.objects.get(deezer_id=deezer_id)
-            print(f'album {title} with id {deezer_id} already exists')
+            logging.getLogger('warnings').warning(f'album {title} with id {deezer_id} already exists')
         except Album.DoesNotExist :
             album = Album(deezer_id=deezer_id, title=title, release_date=release, artist=instance)
 
         try :
             album.save()
         except Exception as ex :
-            print(ex) 
+            logging.getLogger('errors').error(f'Album "{album.title}" coundnt be saved because ' + ex.__str__()) 
 
         time.sleep(0.5)
 
@@ -73,7 +74,7 @@ def getAlbumDetails(instance) :
                 )
                 t.save()
             except Exception as ex :
-                print(ex)
+                logging.getLogger('errors').error(f'Track "{t.title}" couldnt because ' + ex.__str__())
 
 def getArtistsDetails(instance) :
     url = f'https://api.deezer.com/artist/{instance.deezer_id}'
