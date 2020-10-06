@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -122,3 +123,59 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Loggers
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] [{asctime}] [{process:d}] {message}',
+            'style': '{'
+        }
+    },
+
+    'handlers': {
+        'errors_handler': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'errors.log'),
+            'formatter': 'verbose',
+            'maxBytes': 1024*1024*1
+        },
+        'warnings_handler': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',
+            'maxBytes': 1024*1024*1
+        },
+        'debuging_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'formatter': 'verbose',
+            'maxBytes': 1024*1024*1
+        }
+    },
+
+    'loggers': {
+        'errors': {
+            'handlers': ['errors_handler'],
+            'level': 'ERROR',
+            'propagate': False
+        },
+        'warnings': {
+            'handlers': ['warnings_handler'],
+            'level': 'WARNING',
+            'propagate': False
+        },
+        'debuging': {
+            'handlers': ['debuging_handler'],
+            'level': 'DEBUG',
+            'propagate': True
+        }
+    }
+} 
