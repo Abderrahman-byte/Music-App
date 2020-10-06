@@ -8,3 +8,6 @@ log.json
 logs.json
 crowling.json
 crawling.json
+
+*.log
+*.logs
