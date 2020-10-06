@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_extensions',
 
     'tracks.apps.TracksConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -183,3 +184,8 @@ LOGGING = {
         }
     }
 } 
+
+
+# Authentication costumization
+
+AUTH_USER_MODEL = 'users.Account'
