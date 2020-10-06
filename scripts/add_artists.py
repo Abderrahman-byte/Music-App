@@ -62,7 +62,11 @@ def getMostPopular(response: dict) :
 
 def searchForArtist(keyword) :
     url = f'https://api.deezer.com/search/artist?q={quote(keyword)}&limit=100000000000'
-    req = requests.get(url)
+    try :
+        req = requests.get(url)
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Couldnt search for Artist {keyword} because : ' + ex.__str__())
+        return
     content = json.loads(req.content.decode('utf-8'))
     artist_data = getMostPopular(content)
     if artist_data is not None :
