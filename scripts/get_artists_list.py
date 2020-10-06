@@ -46,7 +46,7 @@ def getArtistsFromPage(link: str) :
     try :
         req = requests.get(link)
     except Exception as ex :
-        logging.getLogger('errors').error(f'Couldnt get page {link} because of' + ex.__str__())
+        logging.getLogger('errors').error(f'Couldnt get page "{link}" because of' + ex.__str__())
         return []
     html = req.content.decode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
@@ -54,15 +54,15 @@ def getArtistsFromPage(link: str) :
     artists_list = [an.text for an in soup.select('#mw-content-text > .mw-parser-output ul > li > a')]
     artists_list = list(filter(verifyStart, artists_list))
 
-    print(f'Crawling {link} finished') # DEBUG
-    logging.getLogger('debuging').debug(f'Crawling {link} finished') # DEBUG
+    print(f'Crawling "{link}" finished') # DEBUG
+    logging.getLogger('debuging').debug(f'Crawling "{link}" finished') # DEBUG
     return artists_list
 
 def getArtistsLists(links) : 
     artists = list()
 
     for i, link in enumerate(links) :
-        logging.getLogger('debuging').debug(f'Star crawling {link} {i}/{len(links)}') # DEBUG
+        logging.getLogger('debuging').debug(f'Star crawling "{link}" {i}/{len(links)}') # DEBUG
         artists+= getArtistsFromPage(link)
 
     artists = list(dict.fromkeys(artists))

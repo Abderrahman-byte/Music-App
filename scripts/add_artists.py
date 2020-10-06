@@ -42,14 +42,14 @@ def createArticleModel(data: dict) :
 
     try :
         artist = Artist.objects.get(deezer_id=data.get('id'))
-        logging.getLogger('warnings').warning(f'artist {data.get("name")} with id {artist.deezer_id} already exist')
+        logging.getLogger('warnings').warning(f'artist "{data.get("name")}" with id {artist.deezer_id} already exist')
     except Artist.DoesNotExist :
         artist = Artist(name=data.get('name'), deezer_id=data.get('id'))
 
     try :
         artist.save()
     except Exception as ex:
-        logging.getLogger('errors').error(f'Cannot save artist {artist.name} because : ' + ex.__str__())
+        logging.getLogger('errors').error(f'Cannot save artist "{artist.name}" because : ' + ex.__str__())
 
 def getMostPopular(response: dict) :
     if response.get('data') is None or type(response.get('data')) != list or response.get('total') is None or response.get('total') <= 0 :
@@ -65,7 +65,7 @@ def searchForArtist(keyword) :
     try :
         req = requests.get(url)
     except Exception as ex :
-        logging.getLogger('errors').error(f'Couldnt search for Artist {keyword} because : ' + ex.__str__())
+        logging.getLogger('errors').error(f'Couldnt search for Artist "{keyword}" because : ' + ex.__str__())
         return
     content = json.loads(req.content.decode('utf-8'))
     artist_data = getMostPopular(content)
@@ -89,7 +89,7 @@ def StarProcessing(articles: list) :
             searchForArtist(art)
             index = len(articles) - articles_queue.qsize()
             print(f'Artist fetched "{art}"; processed {index} in {time.time() - start_process} ; {round((index) / len(articles) * 100, 2)}% done')
-            logging.getLogger('debuging').debug(f'Artist {art} created with his albums and tracks')
+            logging.getLogger('debuging').debug(f'Artist "{art}" created with his albums and tracks')
             time.sleep(1)
 
     for _ in range(COUNT_OF_THREADS) :

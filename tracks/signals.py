@@ -9,8 +9,12 @@ from .models import Artist, Album, Genre, Track
 
 def getAlbums(instance, nb) :
     url = f'https://api.deezer.com/artist/{instance.deezer_id}/albums?limit={nb}'
-    req = requests.get(url)
-    content = json.loads(req.content.decode('utf-8'))
+    try :
+        req = requests.get(url)
+        content = json.loads(req.content.decode('utf-8'))
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Couldnt get albums of "{instance.name}" because : ' + ex.__str__())
+        return
 
     if content.get('data') is None or  type(content.get('data')) != list or len(content.get('data')) <= 0 or content.get('total') == 0 :
         return
@@ -24,7 +28,7 @@ def getAlbums(instance, nb) :
 
         try :
             album = Album.objects.get(deezer_id=deezer_id)
-            logging.getLogger('warnings').warning(f'album {title} with id {deezer_id} already exists')
+            logging.getLogger('warnings').warning(f'album "{title}" with id "{deezer_id}" already exists')
         except Album.DoesNotExist :
             album = Album(deezer_id=deezer_id, title=title, release_date=release, artist=instance)
 
@@ -37,8 +41,12 @@ def getAlbums(instance, nb) :
 
 def getAlbumDetails(instance) :
     url = f'https://api.deezer.com/album/{instance.deezer_id}'
-    req = requests.get(url)
-    content = json.loads(req.content.decode('utf-8'))
+    try :
+        req = requests.get(url)
+        content = json.loads(req.content.decode('utf-8'))
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Couldnt get details of album "{instance.title}" because : ' + ex.__str__())
+        return
 
     genres = content.get('genres', {}).get('data')
     tracks = content.get('tracks', {}).get('data')
@@ -79,8 +87,12 @@ def getAlbumDetails(instance) :
 def getArtistsDetails(instance) :
     url = f'https://api.deezer.com/artist/{instance.deezer_id}'
 
-    req = requests.get(url)
-    content = json.loads(req.content.decode('utf-8'))
+    try :
+        req = requests.get(url)
+        content = json.loads(req.content.decode('utf-8'))
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Couldnt Artist details "{instance.name}" because : ' + ex.__str__())
+        return
     
     instance.picture = content.get('picture', instance.picture)
     instance.picture_small = content.get('picture_small', instance.picture_small)
