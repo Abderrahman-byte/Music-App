@@ -8,6 +8,7 @@ log.json
 logs.json
 crowling.json
 crawling.json
+artists.json
 
 *.log
 *.logs
