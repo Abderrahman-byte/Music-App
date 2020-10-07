@@ -16,6 +16,11 @@ class TimeStampField(serializers.Field) :
         else :
             raise TypeError('TimeStampField support only date and datetime data types.')
         
+class GenreSerializer(serializers.ModelSerializer) :
+    class meta :
+        model = Genre
+        fields = ['id', 'name', 'picture']
+
 
 class TrackSimpleSerializer(serializers.ModelSerializer) :
     release_date = TimeStampField()
@@ -23,6 +28,7 @@ class TrackSimpleSerializer(serializers.ModelSerializer) :
     class Meta :
         model = Track
         fields = ['id', 'title', 'release_date', 'rank', 'preview']
+
 
 class AlbumSimpleSerializer(serializers.ModelSerializer) :
     release_date = TimeStampField()
