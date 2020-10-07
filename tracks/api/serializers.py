@@ -32,6 +32,7 @@ class TrackSimpleSerializer(serializers.ModelSerializer) :
 
 class AlbumSimpleSerializer(serializers.ModelSerializer) :
     release_date = TimeStampField()
+    genre = GenreSerializer(many=True, read_only=True)
 
     class Meta :
         model = Album
