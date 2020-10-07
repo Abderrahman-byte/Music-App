@@ -38,7 +38,17 @@ class AlbumSimpleSerializer(serializers.ModelSerializer) :
         model = Album
         fields = ['id', 'title', 'release_date', 'cover_big', 'cover_medium', 'cover_small', 'cover_xl', 'genre']
 
+
 class ArtistSimpleSerializer(serializers.ModelSerializer) :
     class Meta :
         model = Artist
         fields = ['id', 'name', 'picture', 'picture_small', 'picture_medium', 'picture_big', 'picture_xl']
+
+
+class TrackDetailedSerializer(serializers.ModelSerializer) :
+    album = AlbumSimpleSerializer(read_only=True)
+    artist = ArtistSimpleSerializer(source='album.artist', read_only=True)
+
+    class Meta :
+        model = Track
+        fields = ['id', 'title', 'release_date', 'rank', 'preview', 'album', 'artist']
