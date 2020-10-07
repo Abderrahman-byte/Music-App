@@ -19,7 +19,14 @@ class TimeStampField(serializers.Field) :
 
 class TrackSimpleSerializer(serializers.ModelSerializer) :
     release_date = TimeStampField()
-    
+
     class Meta :
         model = Track
         fields = ['id', 'title', 'release_date', 'rank', 'preview']
+
+class AlbumSimpleSerializer(serializers.ModelSerializer) :
+    release_date = TimeStampField()
+
+    class Meta :
+        model = Album
+        fields = ['id', 'title', 'release_date', 'cover_big', 'cover_medium', 'cover_small', 'cover_xl']
