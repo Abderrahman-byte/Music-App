@@ -4,7 +4,7 @@ from rest_framework.response import Response
 import logging
 
 from ..models import Track, Album, Artist, Genre
-from .serializers import TrackDetailedSerializer
+from .serializers import TrackDetailedSerializer, AlbumDetailedSerializer
 
 @api_view(['GET'])
 def TopTracks(request) :
@@ -41,5 +41,18 @@ def TrackApiView(request, id) :
     except Track.DoesNotExist :
         return Response({'error': f'Track with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
     except Exception as ex :
-        logging.getLogger('errors').error(f'Request to view "TrackApiView" error: {ex.__str__()}')
+        logging.getLogger('errors').error(f'Request from view "TrackApiView" error: {ex.__str__()}')
+        return Response(status=403)
+
+
+@api_view(['GET'])
+def AlbumApiView(request, id) :
+    try :
+        album = Album.objects.get(pk=id)
+        serializer = AlbumDetailedSerializer(album)
+        return Response(serializer.data, content_type='application/json')
+    except Album.DoesNotExist :
+        return Response({'error': f'Album with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Request from view "AlbumApiView" error: {ex.__str__()}')
         return Response(status=403)
