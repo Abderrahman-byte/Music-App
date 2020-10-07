@@ -25,7 +25,7 @@ def TopTracks(request) :
     serializer = TrackSimpleSerializer(top_tracks, many=True)
     response_data = {
         'data': serializer.data, 
-        'next': f'/api/music/tracks?limit={25}&index={index + limit}',
-        'prev': f'/api/music/tracks?limit={25}&index={index - limit}'
+        'next': f'/api/music/tracks/top?limit={25}&index={index + limit}',
+        'prev': f'/api/music/tracks/top?limit={25}&index={index - limit}' if index - limit >= 0 else None
     }
     return Response(response_data, content_type='application/json')
