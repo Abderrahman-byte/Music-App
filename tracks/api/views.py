@@ -1,8 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+import logging
+
 from ..models import Track, Album, Artist, Genre
-from .serializers import TrackSimpleSerializer
+from .serializers import TrackDetailedSerializer
 
 @api_view(['GET'])
 def TopTracks(request) :
@@ -20,12 +22,24 @@ def TopTracks(request) :
     except :
         pass
 
-    
     top_tracks = Track.objects.order_by('-rank')[index:index + limit]
-    serializer = TrackSimpleSerializer(top_tracks, many=True)
+    serializer = TrackDetailedSerializer(top_tracks, many=True)
     response_data = {
         'data': serializer.data, 
         'next': f'/api/music/tracks/top?limit={25}&index={index + limit}',
         'prev': f'/api/music/tracks/top?limit={25}&index={index - limit}' if index - limit >= 0 else None
     }
     return Response(response_data, content_type='application/json')
+
+
+@api_view(['GET'])
+def TrackApiView(request, id) :
+    try :
+        track = Track.objects.get(pk=id)
+        serializer = TrackDetailedSerializer(track)
+        return Response(serializer.data, content_type='application/json')
+    except Track.DoesNotExist :
+        return Response({'error': f'Track with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Request to view "TrackApiView" error: {ex.__str__()}')
+        return Response(status=403)
