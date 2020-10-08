@@ -4,7 +4,7 @@ from rest_framework.response import Response
 import logging
 
 from ..models import Track, Album, Artist, Genre
-from .serializers import TrackDetailedSerializer, AlbumDetailedSerializer, ArtistSimpleSerializer
+from .serializers import TrackDetailedSerializer, AlbumDetailedSerializer, ArtistDetailedSerializer
 
 @api_view(['GET'])
 def TopTracks(request) :
@@ -62,7 +62,7 @@ def AlbumApiView(request, id) :
 def ArtistApiView(request, id) :
     try:
         artist = Artist.objects.get(pk=id)
-        serializer = ArtistSimpleSerializer(artist)
+        serializer = ArtistDetailedSerializer(artist)
         return Response(serializer.data, content_type='application/json')
     except Artist.DoesNotExist :
         return Response({'error': f'Artist with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
