@@ -18,7 +18,7 @@ class TimeStampField(serializers.Field) :
             raise TypeError('TimeStampField support only date and datetime data types.')
         
 class GenreSerializer(serializers.ModelSerializer) :
-    class meta :
+    class Meta :
         model = Genre
         fields = ['id', 'name', 'picture']
 
@@ -33,12 +33,12 @@ class TrackSimpleSerializer(serializers.ModelSerializer) :
 
 class AlbumSimpleSerializer(serializers.ModelSerializer) :
     release_date = TimeStampField()
-    genre = GenreSerializer(many=True, read_only=True)
+    genres = GenreSerializer(many=True, read_only=True)
     nb_tracks = serializers.IntegerField(source='track_set.count', read_only=True)
 
     class Meta :
         model = Album
-        fields = ['id', 'title', 'release_date', 'cover_big', 'cover_medium', 'cover_small', 'cover_xl', 'genre', 'nb_tracks']
+        fields = ['id', 'title', 'release_date', 'cover_big', 'cover_medium', 'cover_small', 'cover_xl', 'genres', 'nb_tracks']
 
 
 class ArtistSimpleSerializer(serializers.ModelSerializer) :
@@ -60,7 +60,7 @@ class TrackDetailedSerializer(serializers.ModelSerializer) :
 
 class AlbumDetailedSerializer(serializers.ModelSerializer) :
     release_date = TimeStampField()
-    genre = GenreSerializer(many=True, read_only=True)
+    genres = GenreSerializer(many=True, read_only=True)
     nb_tracks = serializers.IntegerField(source='track_set.count', read_only=True)
     tracks = TrackSimpleSerializer(source='track_set.all', read_only=True, many=True)
     artist = ArtistSimpleSerializer(read_only=True)
@@ -68,7 +68,7 @@ class AlbumDetailedSerializer(serializers.ModelSerializer) :
     class Meta :
         model = Album
         fields = ['id', 'title', 'release_date', 'cover_big', 'cover_medium', 'cover_small', 'cover_xl', 
-        'genre', 'nb_tracks', 'tracks', 'artist']
+        'genres', 'nb_tracks', 'tracks', 'artist']
 
 
 class ArtistDetailedSerializer(serializers.ModelSerializer) :
