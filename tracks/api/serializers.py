@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.conf import settings
 
 from datetime import date, datetime
 
@@ -89,6 +90,6 @@ class ArtistDetailedSerializer(serializers.ModelSerializer) :
         data =  {
             'data': TrackSimpleSerializer(tracks_list[index:index + limit], many=True).data, 
             'total': nb_tracks,
-            'next': f'/api/music/artist/{instance.id}/top?index=5'
+            'next': f'{settings.SITE_PROTO}://{settings.ROOT_HOSTCONF}/api/music/artist/{instance.id}/top?index=5'
         }
         return data
