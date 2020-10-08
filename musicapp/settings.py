@@ -189,3 +189,7 @@ LOGGING = {
 # Authentication costumization
 
 AUTH_USER_MODEL = 'users.Account'
+
+# Url Conf
+ROOT_HOSTCONF = 'localhost:8000'
+SITE_PROTO = 'http'
