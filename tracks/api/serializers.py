@@ -68,3 +68,27 @@ class AlbumDetailedSerializer(serializers.ModelSerializer) :
         model = Album
         fields = ['id', 'title', 'release_date', 'cover_big', 'cover_medium', 'cover_small', 'cover_xl', 
         'genre', 'nb_tracks', 'tracks', 'artist']
+
+
+class ArtistDetailedSerializer(serializers.ModelSerializer) :
+    nb_album = serializers.IntegerField(source='album_set.count', read_only=True)
+    top = serializers.SerializerMethodField(method_name='get_top')
+
+    class Meta :
+        model = Artist
+        fields = ['id', 'name', 'picture', 'picture_small', 'picture_medium', 'picture_big', 'picture_xl', 
+        'nb_album', 'top']
+
+    def get_top(self, instance) :
+        limit = 5
+        index = 0
+        albums_list = instance.album_set.all()
+        albums_ids = [album.id for album in albums_list]
+        tracks_list = Track.objects.filter(album_id__in=albums_ids).order_by('-rank')
+        nb_tracks = tracks_list.count()
+        data =  {
+            'data': TrackSimpleSerializer(tracks_list[index:index + limit], many=True).data, 
+            'total': nb_tracks,
+            'next': f'/api/music/artist/{instance.id}/top?index=5'
+        }
+        return data
