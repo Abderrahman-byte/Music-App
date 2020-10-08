@@ -26,8 +26,8 @@ def TopTracks(request) :
     serializer = TrackDetailedSerializer(top_tracks, many=True)
     response_data = {
         'data': serializer.data, 
-        'next': f'{request.scheme}://{request.get_host()}/api/music/tracks/top?limit={25}&index={index + limit}',
-        'prev': f'{request.scheme}://{request.get_host()}/api/music/tracks/top?limit={25}&index={index - limit}' if index - limit >= 0 else None
+        'next': f'{request.scheme}://{request.get_host()}/api/music/tracks/top?limit={limit}&index={index + limit}',
+        'prev': f'{request.scheme}://{request.get_host()}/api/music/tracks/top?limit={limit}&index={index - limit}' if index - limit >= 0 else None
     }
     return Response(response_data, content_type='application/json')
 
@@ -64,6 +64,43 @@ def ArtistApiView(request, id) :
         artist = Artist.objects.get(pk=id)
         serializer = ArtistDetailedSerializer(artist)
         return Response(serializer.data, content_type='application/json')
+    except Artist.DoesNotExist :
+        return Response({'error': f'Artist with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Request from view "ArtistApiView" error: {ex.__str__()}')
+        return Response(status=403)
+
+
+@api_view(['GET'])
+def ArtistTopTracks(request, id) :
+    query = request.query_params
+    limit = 25
+    index = 0
+
+    try: 
+        limit = int(query.get('limit', 25))
+    except :
+        pass
+
+    try :
+        index = int(query.get('index', 0))
+    except :
+        pass
+
+    try:
+        artist = Artist.objects.get(pk=id)
+        albums_list = artist.album_set.all()
+        albums_ids = [album.id for album in albums_list]
+        tracks_list = Track.objects.filter(album_id__in=albums_ids).order_by('-rank')
+        nb_tracks = tracks_list.count()
+
+        data =  {
+            'data': TrackDetailedSerializer(tracks_list[index:index + limit], many=True).data, 
+            'total': nb_tracks,
+            'next': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/top?index={index + limit}&limit={25}',
+            'prev': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/top?limit={25}&index={index - limit}' if index - limit >= 0 else None
+        }
+        return Response(data, content_type='application/json')
     except Artist.DoesNotExist :
         return Response({'error': f'Artist with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
     except Exception as ex :
