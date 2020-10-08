@@ -4,7 +4,12 @@ from rest_framework.response import Response
 import logging
 
 from ..models import Track, Album, Artist, Genre
-from .serializers import TrackDetailedSerializer, AlbumDetailedSerializer, ArtistDetailedSerializer
+from .serializers import (
+    TrackDetailedSerializer, 
+    AlbumDetailedSerializer, 
+    ArtistDetailedSerializer, 
+    AlbumSimpleSerializer
+)
 
 @api_view(['GET'])
 def TopTracks(request) :
@@ -97,9 +102,45 @@ def ArtistTopTracks(request, id) :
         data =  {
             'data': TrackDetailedSerializer(tracks_list[index:index + limit], many=True).data, 
             'total': nb_tracks,
-            'next': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/top?index={index + limit}&limit={25}',
-            'prev': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/top?limit={25}&index={index - limit}' if index - limit >= 0 else None
+            'next': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/top?index={index + limit}&limit={limit}' if index + limit <= nb_tracks else None,
+            'prev': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/top?limit={limit}&index={index - limit}' if index - limit >= 0 else None
         }
+        return Response(data, content_type='application/json')
+    except Artist.DoesNotExist :
+        return Response({'error': f'Artist with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
+    except Exception as ex :
+        logging.getLogger('errors').error(f'Request from view "ArtistApiView" error: {ex.__str__()}')
+        return Response(status=403)
+
+
+@api_view(['GET'])
+def ArtistAlbumApiView(request, id) :
+    query = request.query_params
+    limit = 5
+    index = 0
+
+    try: 
+        limit = int(query.get('limit', 5))
+    except :
+        pass
+
+    try :
+        index = int(query.get('index', 0))
+    except :
+        pass
+
+    try:
+        artist = Artist.objects.get(pk=id)
+        album_list = artist.album_set.all()
+        nb_albums = album_list.count()
+        
+        data =  {
+            'data': AlbumSimpleSerializer(album_list[index:index + limit], many=True).data, 
+            'total': nb_albums,
+            'next': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/albums?index={index + limit}&limit={limit}' if index + limit <= nb_albums else None,
+            'prev': f'{request.scheme}://{request.get_host()}/api/music/artist/{artist.id}/albums?limit={limit}&index={index - limit}' if index - limit >= 0 else None
+        }
+
         return Response(data, content_type='application/json')
     except Artist.DoesNotExist :
         return Response({'error': f'Artist with id "{id}" Doesnot exist'}, status=404, content_type='application/json')
