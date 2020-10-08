@@ -131,7 +131,7 @@ def ArtistAlbumApiView(request, id) :
 
     try:
         artist = Artist.objects.get(pk=id)
-        album_list = artist.album_set.all()
+        album_list = artist.album_set.all().order_by('-release_date')
         nb_albums = album_list.count()
         
         data =  {
