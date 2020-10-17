@@ -2,6 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
 
+from .serializers import AccountSerializer
+
 @api_view(['POST'])
 def LoginView(request) :
     data = request.data
@@ -14,7 +16,13 @@ def LoginView(request) :
 
     if user is None :
         status = 401
-        resp_data = {'detail': 'Username or password are wrong'}
+        resp_data = {'detail': 'Username or password are wrong.'}
+    elif not user.is_active :
+        status = 401
+        resp_data = {'detail': 'Your account has not been activated.'}
     else :
         login(request, user)
-        return Response({'success': 'User login successfuly'}, status=200, content_type='application/json')
+        status = 200
+        resp_data = {'success': 'User login successfuly.', 'data': AccountSerializer(user).data}
+        
+    return Response(resp_data, status=status, content_type='application/json')
