@@ -11,9 +11,10 @@ def generateUserId() :
 
 class Account(AbstractUser):
     id = models.CharField(max_length=17, primary_key=True, default=generateUserId, editable=True)
+    is_active = models.BooleanField(default=False)
     email = models.CharField(max_length=200, unique=True, null=False, error_messages={
         'unique': _('A user with that email already exists.')
     })
-    
+
     # Profil_img
     # added playlists
