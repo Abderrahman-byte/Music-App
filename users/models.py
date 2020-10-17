@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
 
 import string
 from random import choice
@@ -10,6 +11,9 @@ def generateUserId() :
 
 class Account(AbstractUser):
     id = models.CharField(max_length=17, primary_key=True, default=generateUserId, editable=True)
-
-    # Add user email to be unique
+    email = models.CharField(max_length=200, unique=True, null=False, error_messages={
+        'unique': _('A user with that email already exists.')
+    })
+    
     # Profil_img
+    # added playlists
