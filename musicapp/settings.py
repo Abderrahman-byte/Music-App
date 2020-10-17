@@ -189,6 +189,7 @@ LOGGING = {
 # Authentication costumization
 
 AUTH_USER_MODEL = 'users.Account'
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
 
 # Url Conf
 ROOT_HOSTCONF = 'localhost:8000'
