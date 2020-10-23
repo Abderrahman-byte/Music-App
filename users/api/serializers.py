@@ -28,7 +28,7 @@ class AccountSerializer(serializers.ModelSerializer) :
             account.set_password(password)
             account.save()
 
-            return AccountSerializer(account)
+            return account
         except utils.IntegrityError as ex :
             regex = re.compile('\((.+)\)\=\(.+\)')
             field_name = regex.search(ex.__str__()).group(1)
