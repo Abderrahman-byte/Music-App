@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db import utils
 from django.core.exceptions import ValidationError
 
-import re
+import re, logging
 
 from ..models import Account
 
@@ -37,4 +37,5 @@ class AccountSerializer(serializers.ModelSerializer) :
         except ValidationError as ex :
             raise Exception(', '.join(ex.messages))
         except Exception as ex :
+            logging.getLogger('errors').error(f'Exception in "AccountSerializer.create" : {ex.__str__()}')
             raise Exception('Something goes wrong')
