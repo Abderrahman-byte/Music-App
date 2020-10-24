@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 
+import json, logging
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -129,7 +131,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
 # Loggers
 
 LOGGING = {
@@ -194,3 +195,18 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBacke
 # Url Conf
 ROOT_HOSTCONF = 'localhost:8000'
 SITE_PROTO = 'http'
+
+# Email SMTP Configuration
+try :
+    mail_cred = json.loads(open('./mail.json', 'r').read())
+except Exception as ex :
+    logging.getLogger('errors').error(f'Error comming from SMTP settings : {ex.__str__()}.')
+    mail_cred = dict()
+    
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = mail_cred.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = mail_cred.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
