@@ -39,30 +39,13 @@ def RegisterView(request) :
     is_there_error = False
     required_fields = ('username', 'password', 'email', 'first_name', 'last_name')
 
-    if data.get('username') is None : 
-        is_there_error = True
-        data_resp = {'detail': 'Username field is required'}
-        status = 400
-    
-    elif data.get('first_name') is None : 
-        is_there_error = True
-        data_resp = {'detail': 'First name field is required'}
-        status = 400
-    
-    elif data.get('last_name') is None : 
-        is_there_error = True
-        data_resp = {'detail': 'Last name field is required'}
-        status = 400
-
-    elif data.get('email') is None : 
-        is_there_error = True
-        data_resp = {'detail': 'Email field is required'}
-        status = 400
-
-    elif data.get('password') is None : 
-        is_there_error = True
-        data_resp = {'detail': 'passwrd field is required'}
-        status = 400
+    for field in required_fields :
+        if field not in data :
+            is_there_error = True
+            field_rep = field.capitalize().replace('_', ' ', 1)
+            data_resp = {'detail': f'{field_rep} field is required'}
+            status = 400
+            break
     
     if is_there_error : return Response(data_resp, status=status, content_type='application/json')
     validated_data = dict([(field, data.get(field)) for field in required_fields])
