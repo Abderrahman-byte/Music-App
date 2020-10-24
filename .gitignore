@@ -12,3 +12,5 @@ artists.json
 
 *.log
 *.logs
+
+mail.json
