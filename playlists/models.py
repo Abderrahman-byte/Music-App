@@ -8,6 +8,7 @@ class TracksPlaylist(models.Model) :
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Account, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
+    is_public = models.BooleanField(default=True)
     tracks = models.ManyToManyField(Track)
 
     created_date = models.DateTimeField(auto_now_add=True)
