@@ -52,7 +52,7 @@ def RegisterView(request) :
 
     try :
         account =  AccountSerializer().create(**validated_data)
-        data_resp = {'success': 'User account is created. you check your email inbox to verifie your account.'}
+        data_resp = {'success': 'User account is created. Please check your email inbox to verifie your account.'}
         status = 201
     except Exception as ex :
         data_resp = {'detail': ex.__str__()}
