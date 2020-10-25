@@ -22,7 +22,7 @@ def sendActivationEmail(instance) :
             subject = 'Activation of your account on Music App', 
             message = message,
             from_email='support@musicapp.ma' , 
-            recipient_list = ['to@yourbestuser.com'], 
+            recipient_list = [instance.email], 
             fail_silently = False
         )
     except Exception as ex :
