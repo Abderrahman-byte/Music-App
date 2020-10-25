@@ -17,7 +17,6 @@ def LoginView(request) :
         return Response(resp_data , status=401, content_type='application/json')
 
     user = authenticate(request, username=data.get('username'), password=data.get('password'))
-    print('user is', user)
     
     if user is None :
         status = 401

@@ -26,9 +26,7 @@ def sendActivationEmail(instance) :
             fail_silently = False
         )
     except Exception as ex :
-        print(ex)
-        logging.getLogger('errors').error(f'Exception from sendActivationEmail : {ex.__str__()}')        
-    print(f'you must send a activation message to {instance.pk} user. url is {path}')
+        logging.getLogger('errors').error(f'Exception from sendActivationEmail : {ex.__str__()}')
 
 @receiver(post_save, sender=Account)
 def NewAccountCreated(sender, instance, created, *args, **kwargs) :
