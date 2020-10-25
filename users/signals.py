@@ -10,6 +10,12 @@ import logging
 
 from .tokens import activate_accounts_token
 from .models import Account
+from playlists.models import (
+    FavoriteTracksList, 
+    FavoriteArtistsList, 
+    FavoriteAlbumsList, 
+    FavoritePlaylistsList 
+)
 
 def sendActivationEmail(instance) :
     uidb64 = urlsafe_base64_encode(force_bytes(instance.id))
@@ -28,7 +34,14 @@ def sendActivationEmail(instance) :
     except Exception as ex :
         logging.getLogger('errors').error(f'Exception from sendActivationEmail : {ex.__str__()}')
 
+def createFavLists(instance) :
+    FavoriteTracksList(user=instance).save()
+    FavoriteArtistsList(user=instance).save()
+    FavoriteAlbumsList(user=instance).save()
+    FavoritePlaylistsList(user=instance).save()
+
 @receiver(post_save, sender=Account)
 def NewAccountCreated(sender, instance, created, *args, **kwargs) :
     if created and not instance.is_active :
         sendActivationEmail(instance)
+        createFavLists(instance)
