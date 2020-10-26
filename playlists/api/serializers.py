@@ -33,7 +33,17 @@ class PlaylistSimpleSerializer(serializers.ModelSerializer) :
             raise Exception(f'Something went wrong.')
     
     def update(self, instance, **validated_data) :
-        raise Exception('You Forgot to emplement PlaylistSimpleSerializer.update()')
+        try :
+            instance.title = validated_data.get('title', instance.title)
+            instance.is_public = validated_data.get('is_public', instance.is_public)
+            instance.description = validated_data.get('description', instance.description)
+            instance.save()
+            return instance
+        except utils.IntegrityError as ex :
+            raise Exception(f'Playlist "{instance.title}" already exist.')
+        except Exception as ex :
+            logging.getLogger('errors').error(f'Error in PlaylistSimpleSerializer.create() : {ex.__str__()}')
+            raise Exception(f'Something went wrong.')
 
 class PlaylistDetailedSerializer(serializers.ModelSerializer) :
     author = AccountSerializer()
