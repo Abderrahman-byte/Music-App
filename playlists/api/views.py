@@ -3,11 +3,20 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .serializers import PlaylistSimpleSerializer
+
 class UserPlaylists(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
-
+    
     def get(self, request) :
-        print(request.user)
+        user = request.user
+        user_playlists = user.tracksplaylist_set.all()
+        user_playlists_count = user.tracksplaylist_set.count()
 
-        return Response({'detail': 'bla bla bla'}, status=200, content_type='application/json')
+        context = {
+            'data': PlaylistSimpleSerializer(user_playlists, many=True).data,
+            'count': user_playlists_count 
+        }
+
+        return Response(context, status=200, content_type='application/json')
