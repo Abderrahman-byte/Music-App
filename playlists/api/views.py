@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import utils
 
-from .serializers import PlaylistSimpleSerializer, PlaylistDetailedSerializer
+from .serializers import PlaylistSimpleSerializer, PlaylistDetailedSerializer, FavoriteTracksSerializer
 from .permissions import IsAuthorReadOnlyIfPublic
 from ..models import TracksPlaylist, Follow
 from tracks.models import Track, Artist
@@ -153,3 +153,13 @@ class Subscription(APIView) :
             return Response(status=204)
         except Follow.DoesNotExist :
             return Response({'detail': 'User cannot unfollow artist.'}, status=404, content_type='application/json')
+
+
+class FavoriteTracksAPI(APIView) :
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request) :
+        user = request.user
+        fav_tracks = user.favoritetrackslist
+        context = FavoriteTracksSerializer(fav_tracks).data
+        return Response(context, status=200, content_type='application/json')
