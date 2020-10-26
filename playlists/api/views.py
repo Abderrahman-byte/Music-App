@@ -1,10 +1,13 @@
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-api_view(['GET', 'POST'])
-authentication_classes([SessionAuthentication])
-def UserPlaylists(request) :
-    print(request.user)
+class UserPlaylists(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    return Response({'detail': 'bla bla bla'}, status=200, content_type='application/json')
+    def get(self, request) :
+        print(request.user)
+
+        return Response({'detail': 'bla bla bla'}, status=200, content_type='application/json')
