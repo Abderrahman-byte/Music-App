@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.db import utils
 
-from tracks.api.serializers import TimeStampField
+from tracks.api.serializers import TimeStampField, TrackDetailedSerializer
 from users.api.serializers import AccountSerializer
 from ..models import TracksPlaylist
 
@@ -34,4 +34,15 @@ class PlaylistSimpleSerializer(serializers.ModelSerializer) :
     
     def update(self, instance, **validated_data) :
         raise Exception('You Forgot to emplement PlaylistSimpleSerializer.update()')
-    
+
+class PlaylistDetailedSerializer(serializers.ModelSerializer) :
+    author = AccountSerializer()
+    created_date = TimeStampField()
+    updated_date = TimeStampField()
+    tracks_count = serializers.IntegerField(source='tracks.count')
+    tracks = TrackDetailedSerializer(many=True, read_only=True)
+
+    class Meta :
+        model = TracksPlaylist
+        fields = ['id', 'title', 'author', 'is_public', 'created_date', 'updated_date', 'tracks_count',
+            'tracks', 'description']
