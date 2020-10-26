@@ -6,7 +6,7 @@ from django.db import utils
 
 from .serializers import PlaylistSimpleSerializer, PlaylistDetailedSerializer
 from .permissions import IsAuthorReadOnlyIfPublic
-from ..models import TracksPlaylist
+from ..models import TracksPlaylist, Follow
 from tracks.models import Track, Artist
 
 
@@ -138,3 +138,18 @@ class Subscription(APIView) :
             return Response(status=204)
         except utils.IntegrityError :
             return Response({'detail': 'User already following artist'}, status=400, content_type='application/json')
+
+    def delete(self, request, id) :
+        try :
+            artist = Artist.objects.get(pk=id)
+        except Artist.DoesNotExist :
+            return Response({'detail': 'Artist Doesnt exist.'}, status=404, content_type='application/json')
+
+        user = request.user
+        
+        try:
+            subscription = Follow.objects.get(user=user, artist=artist)
+            subscription.delete()
+            return Response(status=204)
+        except Follow.DoesNotExist :
+            return Response({'detail': 'User cannot unfollow artist.'}, status=404, content_type='application/json')
