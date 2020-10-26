@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from .serializers import PlaylistSimpleSerializer, PlaylistDetailedSerializer
 from .permissions import IsAuthorReadOnlyIfPublic
 from ..models import TracksPlaylist
+from tracks.models import Track
+
 
 class UserPlaylists(APIView):
     authentication_classes = [SessionAuthentication]
@@ -79,7 +81,34 @@ class PlaylistDetails(APIView) :
             return Response({'detail': f'Playlist with id {id} doesnt exist'}, status=404, content_type='application/json')
         
         self.check_object_permissions(request, pl)
-        return Response({'detail': f'{id} You can post this'}, status=201, content_type='application/json')
+        data = request.data
+        action = data.get('action')
+        tracks_ids = data.get('tracks_ids')
+
+        if tracks_ids is None :
+            return Response({'detail': 'tracks_ids field is required.'}, status=400, content_type='application/json')
+        elif type(tracks_ids) == str :
+            tracks_ids = [tracks_ids]
+        elif type(tracks_ids) != list :
+            return Response({'detail': 'tracks_ids field type unsupported'}, status=400, content_type='application/json')
+
+        try :
+            tracks_list = [Track.objects.get(pk=track_id) for track_id in tracks_ids]
+        except Track.DoesNotExist :
+            return Response({'detail': f'A Track in tracks list doesnt exist'}, status=400, content_type='application/json')
+
+        if action is None :
+            return Response({'detail': 'action field is required.'}, status=400, content_type='application/json')
+        elif action.lower() == 'add' :
+            pl.tracks.add(*tracks_list)
+            pl.save()
+            return Response({'success': f'add {len(tracks_ids)} items to playlist {id}'}, status=204, content_type='application/json')
+        elif action.lower() == 'remove':
+            pl.tracks.remove(*tracks_list)
+            pl.save()
+            return Response({'success': f'add {len(tracks_ids)} items to playlist {id}'}, status=204, content_type='application/json')
+        else :
+            return Response({'detail': f'Action doesnt exist'}, status=400, content_type='application/json')
 
     def delete(self, request, id) :
         try :
