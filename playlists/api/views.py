@@ -187,7 +187,23 @@ class FavoriteTracksAPI(APIView) :
         try :
             track = Track.objects.get(pk=track_id)
             fav_tracks.tracks.add(track)
-            return Response(204)
+            return Response(status=204)
+        except Track.DoesNotExist :
+            return Response({'details': f'track with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
+    def delete(self, request) :
+        data = request.data
+        track_id = data.get('id')
+        user = request.user
+        fav_tracks = user.favoritetrackslist
+
+        if track_id is None :
+            return Response({'detail': 'id of track is required'}, status=400, content_type='application/json')
+
+        try :
+            track = Track.objects.get(pk=track_id)
+            fav_tracks.tracks.remove(track)
+            return Response(status=204)
         except Track.DoesNotExist :
             return Response({'details': f'track with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
     
