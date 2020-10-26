@@ -46,4 +46,4 @@ class FavoriteArtistsList(FavoriteList) :
     artists = models.ManyToManyField(Artist)
 
 class FavoritePlaylistsList(FavoriteList) :
-    playlist = models.ManyToManyField(TracksPlaylist)
+    playlists = models.ManyToManyField(TracksPlaylist)
