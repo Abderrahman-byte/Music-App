@@ -2,11 +2,12 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.db import utils
 
 from .serializers import PlaylistSimpleSerializer, PlaylistDetailedSerializer
 from .permissions import IsAuthorReadOnlyIfPublic
 from ..models import TracksPlaylist
-from tracks.models import Track
+from tracks.models import Track, Artist
 
 
 class UserPlaylists(APIView):
@@ -102,11 +103,11 @@ class PlaylistDetails(APIView) :
         elif action.lower() == 'add' :
             pl.tracks.add(*tracks_list)
             pl.save()
-            return Response({'success': f'add {len(tracks_ids)} items to playlist {id}'}, status=204, content_type='application/json')
+            return Response(status=204, content_type='application/json')
         elif action.lower() == 'remove':
             pl.tracks.remove(*tracks_list)
             pl.save()
-            return Response({'success': f'add {len(tracks_ids)} items to playlist {id}'}, status=204, content_type='application/json')
+            return Response(status=204, content_type='application/json')
         else :
             return Response({'detail': f'Action doesnt exist'}, status=400, content_type='application/json')
 
@@ -119,3 +120,21 @@ class PlaylistDetails(APIView) :
         self.check_object_permissions(request, pl)
         pl.delete()
         return Response(status=204)
+
+
+class Subscription(APIView) :
+    authentication_classes = [SessionAuthentication]
+
+    def post(self, request, id) :
+        try :
+            artist = Artist.objects.get(pk=id)
+        except Artist.DoesNotExist :
+            return Response({'detail': 'Artist Doesnt exist.'}, status=404, content_type='application/json')
+
+        user = request.user
+        try :
+            artist.follow_set.create(user=user)
+            artist.save()
+            return Response(status=204)
+        except utils.IntegrityError :
+            return Response({'detail': 'User already following artist'}, status=400, content_type='application/json')
