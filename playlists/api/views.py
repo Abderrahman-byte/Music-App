@@ -55,7 +55,7 @@ class PlaylistDetails(APIView) :
         
         self.check_object_permissions(request, pl)
         context = PlaylistDetailedSerializer(pl).data
-        return Response(context, status=201, content_type='application/json')
+        return Response(context, status=200, content_type='application/json')
 
     def put(self, request, id) :
         try :
@@ -64,8 +64,14 @@ class PlaylistDetails(APIView) :
             return Response({'detail': f'Playlist with id {id} doesnt exist'}, status=404, content_type='application/json')
         
         self.check_object_permissions(request, pl)
-        return Response({'detail': f'{id} You can update this'}, status=201, content_type='application/json')
-
+        try :
+            data = request.data
+            pl = PlaylistSimpleSerializer().update(pl, **data)
+            context = PlaylistDetailedSerializer(pl).data
+            return Response(context, status=201, content_type='application/json')
+        except Exception as ex :
+            return Response({'detail': ex.__str__()}, content_type='application/json', status=400)
+            
     def post(self, request, id) :
         try :
             pl = TracksPlaylist.objects.get(pk=id)
