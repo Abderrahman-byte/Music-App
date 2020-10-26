@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from django.db import utils
 
-from tracks.api.serializers import TimeStampField, TrackDetailedSerializer
+from tracks.api.serializers import TimeStampField, TrackDetailedSerializer, ArtistSimpleSerializer, AlbumSimpleSerializer
 from users.api.serializers import AccountSerializer
-from ..models import TracksPlaylist
+from ..models import TracksPlaylist, FavoriteTracksList, FavoritePlaylistsList, FavoriteArtistsList, FavoriteAlbumsList
 
 import re, logging
 
@@ -56,3 +56,23 @@ class PlaylistDetailedSerializer(serializers.ModelSerializer) :
         model = TracksPlaylist
         fields = ['id', 'title', 'author', 'is_public', 'created_date', 'updated_date', 'tracks_count',
             'tracks', 'description']
+
+
+# FAVORITE LISTS
+
+class FavoriteTracksSerializer(serializers.Serializer) :
+    tracks = TrackDetailedSerializer(many=True, read_only=True)
+    tracks_count = serializers.IntegerField(source='tracks.count', read_only=True)
+
+
+class FavoriteArtistsSerializer(serializers.Serializer) :
+    artists = ArtistSimpleSerializer(many=True, read_only=True)
+    artists_count = serializers.IntegerField(source='artists.count', read_only=True)
+
+class FavoriteAlbumsSerializer(serializers.Serializer) :
+    albums = AlbumSimpleSerializer(many=True, read_only=True)
+    albums_count = serializers.IntegerField(source='albums.count', read_only=True)
+
+class FavoritePlaylistsSerializer(serializers.Serializer) :
+    playlists = PlaylistSimpleSerializer(many=True, read_only=True)
+    playlists_count = serializers.IntegerField(source='playlists.count', read_only=True)
