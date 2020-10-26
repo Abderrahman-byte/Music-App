@@ -4,7 +4,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import utils
 
-from .serializers import PlaylistSimpleSerializer, PlaylistDetailedSerializer, FavoriteTracksSerializer
+from .serializers import (
+    PlaylistSimpleSerializer, 
+    PlaylistDetailedSerializer, 
+    FavoriteTracksSerializer,
+    FavoriteArtistsSerializer,
+    FavoriteAlbumsSerializer,
+    FavoritePlaylistsSerializer
+)
 from .permissions import IsAuthorReadOnlyIfPublic
 from ..models import TracksPlaylist, Follow
 from tracks.models import Track, Artist
@@ -157,9 +164,43 @@ class Subscription(APIView) :
 
 class FavoriteTracksAPI(APIView) :
     authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request) :
         user = request.user
         fav_tracks = user.favoritetrackslist
         context = FavoriteTracksSerializer(fav_tracks).data
+        return Response(context, status=200, content_type='application/json')
+
+    
+class FavoriteArtistsAPI(APIView) :
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request) :
+        user = request.user
+        fav_artists = user.favoriteartistslist
+        context = FavoriteArtistsSerializer(fav_artists).data
+        return Response(context, status=200, content_type='application/json')
+
+
+class FavoriteAlbumsAPI(APIView) :
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request) :
+        user = request.user
+        fav_albums = user.favoritealbumslist
+        context = FavoriteAlbumsSerializer(fav_albums).data
+        return Response(context, status=200, content_type='application/json')
+
+
+class FavoritePlaylistsAPI(APIView) :
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request) :
+        user = request.user
+        fav_playlists = user.favoriteplaylistslist
+        context = FavoritePlaylistsSerializer(fav_playlists).data
         return Response(context, status=200, content_type='application/json')
