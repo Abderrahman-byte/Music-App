@@ -3,7 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import PlaylistSimpleSerializer
+from .serializers import PlaylistSimpleSerializer, PlaylistDetailedSerializer
+from .permissions import IsAuthorReadOnlyIfPublic
+from ..models import TracksPlaylist
 
 class UserPlaylists(APIView):
     authentication_classes = [SessionAuthentication]
@@ -43,15 +45,41 @@ class UserPlaylists(APIView):
 
 class PlaylistDetails(APIView) :
     authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthorReadOnlyIfPublic]
     
     def get(self, request, id) :
-        return Response({'detail': f'{id} You can get this'}, status=201, content_type='application/json')
+        try :
+            pl = TracksPlaylist.objects.get(pk=id)
+        except TracksPlaylist.DoesNotExist :
+            return Response({'detail': f'Playlist with id {id} doesnt exist'}, status=404, content_type='application/json')
+        
+        self.check_object_permissions(request, pl)
+        context = PlaylistDetailedSerializer(pl).data
+        return Response(context, status=201, content_type='application/json')
 
     def put(self, request, id) :
+        try :
+            pl = TracksPlaylist.objects.get(pk=id)
+        except TracksPlaylist.DoesNotExist :
+            return Response({'detail': f'Playlist with id {id} doesnt exist'}, status=404, content_type='application/json')
+        
+        self.check_object_permissions(request, pl)
         return Response({'detail': f'{id} You can update this'}, status=201, content_type='application/json')
 
     def post(self, request, id) :
+        try :
+            pl = TracksPlaylist.objects.get(pk=id)
+        except TracksPlaylist.DoesNotExist :
+            return Response({'detail': f'Playlist with id {id} doesnt exist'}, status=404, content_type='application/json')
+        
+        self.check_object_permissions(request, pl)
         return Response({'detail': f'{id} You can post this'}, status=201, content_type='application/json')
 
     def delete(self, request, id) :
+        try :
+            pl = TracksPlaylist.objects.get(pk=id)
+        except TracksPlaylist.DoesNotExist :
+            return Response({'detail': f'Playlist with id {id} doesnt exist'}, status=404, content_type='application/json')
+        
+        self.check_object_permissions(request, pl)
         return Response({'detail': f'{id} You can delete this'}, status=201, content_type='application/json')
