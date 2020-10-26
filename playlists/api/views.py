@@ -71,7 +71,7 @@ class PlaylistDetails(APIView) :
             return Response(context, status=201, content_type='application/json')
         except Exception as ex :
             return Response({'detail': ex.__str__()}, content_type='application/json', status=400)
-            
+
     def post(self, request, id) :
         try :
             pl = TracksPlaylist.objects.get(pk=id)
@@ -88,4 +88,5 @@ class PlaylistDetails(APIView) :
             return Response({'detail': f'Playlist with id {id} doesnt exist'}, status=404, content_type='application/json')
         
         self.check_object_permissions(request, pl)
-        return Response({'detail': f'{id} You can delete this'}, status=201, content_type='application/json')
+        pl.delete()
+        return Response(status=204)
