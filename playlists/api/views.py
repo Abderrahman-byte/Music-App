@@ -107,14 +107,17 @@ class PlaylistDetails(APIView) :
 
         if action is None :
             return Response({'detail': 'action field is required.'}, status=400, content_type='application/json')
+        
         elif action.lower() == 'add' :
             pl.tracks.add(*tracks_list)
             pl.save()
             return Response(status=204, content_type='application/json')
+        
         elif action.lower() == 'remove':
             pl.tracks.remove(*tracks_list)
             pl.save()
             return Response(status=204, content_type='application/json')
+        
         else :
             return Response({'detail': f'Action doesnt exist'}, status=400, content_type='application/json')
 
@@ -171,8 +174,24 @@ class FavoriteTracksAPI(APIView) :
         fav_tracks = user.favoritetrackslist
         context = FavoriteTracksSerializer(fav_tracks).data
         return Response(context, status=200, content_type='application/json')
-
     
+    def post(self, request) :
+        data = request.data
+        track_id = data.get('id')
+        user = request.user
+        fav_tracks = user.favoritetrackslist
+
+        if track_id is None :
+            return Response({'detail': 'id of track is required'}, status=400, content_type='application/json')
+
+        try :
+            track = Track.objects.get(pk=track_id)
+            fav_tracks.tracks.add(track)
+            return Response(204)
+        except Track.DoesNotExist :
+            return Response({'details': f'track with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
+
 class FavoriteArtistsAPI(APIView) :
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
