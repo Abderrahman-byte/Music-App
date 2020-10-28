@@ -290,3 +290,43 @@ def SearchArtists(request) :
     context = dict([(k, v) for k, v in context.items() if v is not None])
 
     return Response(context,content_type='application/json')
+
+
+@api_view(['GET'])
+def SearchAlbums(request) :
+    query = request.query_params.get('query')
+    limit = request.query_params.get('limit', 25)
+    index = request.query_params.get('index', 0)
+
+    try :
+        limit = int(limit)
+    except :
+        limit = 25
+
+    try :
+        index = int(index)
+    except :
+        index = 0
+
+    if query is None or query == '' : 
+        return Response({'detail': 'invalid query.'}, status=400, content_type='application/json')
+
+    albums_with_exact_title = Album.objects.filter(title=query)
+    excluded_albums_ids = [album.id for album in albums_with_exact_title]
+    albums_icontains = Album.objects.filter(title__icontains=query).exclude(id__in=excluded_albums_ids)
+    albums = albums_with_exact_title | albums_icontains
+
+    next_index = index + limit
+    prev_index = index - limit
+    total = albums.count()
+
+    context = {
+        'data': AlbumDetailedSerializer(albums[index: index+limit], many=True).data,
+        'total': total,
+        'next': f'{request.scheme}://{request.get_host()}/api/music/search/albums?query={query}&limit={limit}&index={next_index}' if next_index <= total else None,
+        'prev': f'{request.scheme}://{request.get_host()}/api/music/search/albums?query={query}&limit={limit}&index={prev_index}' if prev_index >= 0 else None,
+    }
+
+    context = dict([(k, v) for k, v in context.items() if v is not None])
+
+    return Response(context,content_type='application/json')
