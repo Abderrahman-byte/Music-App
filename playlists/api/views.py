@@ -14,7 +14,7 @@ from .serializers import (
 )
 from .permissions import IsAuthorReadOnlyIfPublic
 from ..models import TracksPlaylist, Follow
-from tracks.models import Track, Artist
+from tracks.models import Track, Artist, Album
 
 
 class UserPlaylists(APIView):
@@ -262,6 +262,38 @@ class FavoriteAlbumsAPI(APIView) :
         context = FavoriteAlbumsSerializer(fav_albums).data
         return Response(context, status=200, content_type='application/json')
 
+    def post(self, request) :
+        data = request.data
+        album_id = data.get('id')
+        user = request.user
+        fav_albums = user.favoritealbumslist
+
+        if album_id is None :
+            return Response({'detail': 'id of albums is required'}, status=400, content_type='application/json')
+
+        try :
+            album = Album.objects.get(pk=album_id)
+            fav_albums.albums.add(album)
+            return Response(status=204)
+        except Album.DoesNotExist :
+            return Response({'details': f'album with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
+    def delete(self, request) :
+        data = request.data
+        album_id = data.get('id')
+        user = request.user
+        fav_albums = user.favoritealbumslist
+
+        if album_id is None :
+            return Response({'detail': 'id of album is required'}, status=400, content_type='application/json')
+
+        try :
+            album = Album.objects.get(pk=album_id)
+            fav_albums.albums.remove(album)
+            return Response(status=204)
+        except Album.DoesNotExist :
+            return Response({'details': f'album with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
 
 class FavoritePlaylistsAPI(APIView) :
     authentication_classes = [SessionAuthentication]
