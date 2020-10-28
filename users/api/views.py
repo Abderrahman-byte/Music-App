@@ -1,5 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
@@ -81,3 +84,13 @@ def ActivateAccount(request, uidb64, token) :
     serializer = AccountSerializer(account)
 
     return Response({'data': serializer.data, 'success': 'User account has been activated'}, content_type='application/json')
+
+
+class AccountDetails(APIView) :
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request) :
+        user = request.user
+        context = AccountSerializer(user).data
+        return Response(context, content_type='application/json')
