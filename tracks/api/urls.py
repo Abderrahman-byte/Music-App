@@ -12,4 +12,5 @@ urlpatterns = [
     path('search', views.Search, name='search'),
     path('search/tracks', views.SearchTracks, name='search-tracks'),
     path('search/artists', views.SearchArtists, name='search-artists'),
+    path('search/albums', views.SearchAlbums, name='search-albums'),
 ]
