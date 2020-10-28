@@ -218,7 +218,39 @@ class FavoriteArtistsAPI(APIView) :
         fav_artists = user.favoriteartistslist
         context = FavoriteArtistsSerializer(fav_artists).data
         return Response(context, status=200, content_type='application/json')
+    
+    def post(self, request) :
+        data = request.data
+        artist_id = data.get('id')
+        user = request.user
+        fav_artists = user.favoriteartistslist
 
+        if artist_id is None :
+            return Response({'detail': 'id of artist is required'}, status=400, content_type='application/json')
+
+        try :
+            artist = Artist.objects.get(pk=artist_id)
+            fav_artists.artists.add(artist)
+            return Response(status=204)
+        except Artist.DoesNotExist :
+            return Response({'details': f'artist with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
+    def delete(self, request) :
+        data = request.data
+        artist_id = data.get('id')
+        user = request.user
+        fav_artists = user.favoriteartistslist
+
+        if artist_id is None :
+            return Response({'detail': 'id of artist is required'}, status=400, content_type='application/json')
+
+        try :
+            artist = Artist.objects.get(pk=artist_id)
+            fav_artists.artists.remove(artist)
+            return Response(status=204)
+        except Artist.DoesNotExist :
+            return Response({'details': f'artist with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
 
 class FavoriteAlbumsAPI(APIView) :
     authentication_classes = [SessionAuthentication]
