@@ -100,13 +100,14 @@ class AccountDetails(APIView) :
         user = request.user
         validated_data = {
             'username': data.get('username'),
-            'first_name': data.get('username'),
+            'first_name': data.get('first_name'),
             'last_name': data.get('last_name'),
             'email': data.get('email')
         }
-
+        validated_data = dict([(key, val)for key, val in validated_data.items() if val is not None])
+        
         try :
             AccountSerializer().update(user, **validated_data)
-            return Response(status=400)
+            return Response(status=204)
         except Exception as ex :
             return Response({'detail': ex.__str__()}, status=400, content_type='application/json')

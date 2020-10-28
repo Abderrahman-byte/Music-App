@@ -49,10 +49,9 @@ class AccountSerializer(serializers.ModelSerializer) :
             instance.save()
             return instance
         except utils.IntegrityError as ex :
-            print(ex)
             regex = re.compile('\((.+)\)\=\(.+\)')
             field_name = regex.search(ex.__str__()).group(1)
-            error_msg = account.unique_error_message(Account, (field_name, )).message
+            error_msg = instance.unique_error_message(Account, (field_name, )).message
             raise Exception(error_msg)
         except ValidationError as ex :
             raise Exception(', '.join(ex.messages))
