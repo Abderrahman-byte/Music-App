@@ -134,6 +134,7 @@ class PlaylistDetails(APIView) :
 
 class Subscription(APIView) :
     authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, id) :
         try :
