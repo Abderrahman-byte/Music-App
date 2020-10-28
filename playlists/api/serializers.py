@@ -21,7 +21,7 @@ class PlaylistSimpleSerializer(serializers.ModelSerializer) :
         try :
             user = validated_data.get('user')
             title = validated_data.get('title')
-            is_public = validated_data.get('is_publid', True)
+            is_public = validated_data.get('is_public', True)
             description = validated_data.get('description')
             playlist = TracksPlaylist(title=title, author=user, is_public=is_public, description=description)
             playlist.save()
