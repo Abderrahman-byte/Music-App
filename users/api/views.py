@@ -94,3 +94,19 @@ class AccountDetails(APIView) :
         user = request.user
         context = AccountSerializer(user).data
         return Response(context, content_type='application/json')
+
+    def put(self, request) :
+        data = request.data
+        user = request.user
+        validated_data = {
+            'username': data.get('username'),
+            'first_name': data.get('username'),
+            'last_name': data.get('last_name'),
+            'email': data.get('email')
+        }
+
+        try :
+            AccountSerializer().update(user, **validated_data)
+            return Response(status=400)
+        except Exception as ex :
+            return Response({'detail': ex.__str__()}, status=400, content_type='application/json')
