@@ -2,6 +2,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.db import utils
 
 from .serializers import (
@@ -15,6 +16,7 @@ from .serializers import (
 from .permissions import IsAuthorReadOnlyIfPublic
 from ..models import TracksPlaylist, Follow
 from tracks.models import Track, Artist, Album
+from tracks.api.serializers import ArtistSimpleSerializer
 
 
 class UserPlaylists(APIView):
@@ -130,6 +132,20 @@ class PlaylistDetails(APIView) :
         self.check_object_permissions(request, pl)
         pl.delete()
         return Response(status=204)
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def ListSubscriptions(request) :
+    user = request.user
+    subscriptions = user.follow_set.all()
+    following = [sub.artist for sub in subscriptions]
+    context = {
+        'artists': ArtistSimpleSerializer(following, many=True).data, 
+        'subscriptions_count': subscriptions.count()
+    }
+    return Response(context, content_type='application/json')
 
 
 class Subscription(APIView) :
