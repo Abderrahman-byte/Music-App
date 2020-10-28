@@ -191,15 +191,18 @@ def Search(request) :
         'artist': ArtistDetailedSerializer(artist_with_exact_name).data,
         'artists': {
             'data': ArtistDetailedSerializer(artists[0:limit], many=True).data ,
-            'total': artists.count()
+            'total': artists.count(),
+            'next': f'{request.scheme}://{request.get_host()}/api/music/search/artists?query={query}&limit={limit}&index={limit}' if limit <= artists.count() else None,
         },
         'tracks': {
             'data': TrackDetailedSerializer(tracks[0:limit], many=True).data,
-            'total': tracks.count()
+            'total': tracks.count(),
+            'next': f'{request.scheme}://{request.get_host()}/api/music/search/tracks?query={query}&limit={limit}&index={limit}' if limit <= tracks.count() else None,
         },
         'albums': {
             'data': AlbumDetailedSerializer(albums[0:limit], many=True).data,
-            'total': albums.count()
+            'total': albums.count(),
+            'next': f'{request.scheme}://{request.get_host()}/api/music/search/albums?query={query}&limit={limit}&index={limit}' if limit <= albums.count() else None,
         }
     }
 
