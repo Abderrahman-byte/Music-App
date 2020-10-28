@@ -304,3 +304,36 @@ class FavoritePlaylistsAPI(APIView) :
         fav_playlists = user.favoriteplaylistslist
         context = FavoritePlaylistsSerializer(fav_playlists).data
         return Response(context, status=200, content_type='application/json')
+
+    def post(self, request) :
+        data = request.data
+        playlist_id = data.get('id')
+        user = request.user
+        fav_playlists = user.favoriteplaylistslist
+
+        if playlist_id is None :
+            return Response({'detail': 'id of playlist is required'}, status=400, content_type='application/json')
+
+        try :
+            playlist = TracksPlaylist.objects.get(pk=playlist_id)
+            fav_playlists.playlists.add(playlist)
+            return Response(status=204)
+        except TracksPlaylist.DoesNotExist :
+            return Response({'details': f'playlist with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
+    def delete(self, request) :
+        data = request.data
+        playlist_id = data.get('id')
+        user = request.user
+        fav_playlists = user.favoriteplaylistslist
+
+        if playlist_id is None :
+            return Response({'detail': 'id of playlist is required'}, status=400, content_type='application/json')
+
+        try :
+            playlist = TracksPlaylist.objects.get(pk=playlist_id)
+            fav_playlists.playlists.remove(playlist)
+            return Response(status=204)
+        except TracksPlaylist.DoesNotExist :
+            return Response({'details': f'playlist with id {track_id} doesnt exist.'}, status=404, content_type='application/json')
+    
