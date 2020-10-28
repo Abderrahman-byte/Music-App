@@ -39,3 +39,23 @@ class AccountSerializer(serializers.ModelSerializer) :
         except Exception as ex :
             logging.getLogger('errors').error(f'Exception in "AccountSerializer.create" : {ex.__str__()}')
             raise Exception('Something goes wrong')
+
+    def update(self, instance, **validated_data) :
+        try :
+            instance.username = validated_data.get('username', instance.username)
+            instance.first_name = validated_data.get('first_name', instance.first_name)
+            instance.last_name = validated_data.get('last_name', instance.last_name)
+            instance.email = validated_data.get('email', instance.email)
+            instance.save()
+            return instance
+        except utils.IntegrityError as ex :
+            print(ex)
+            regex = re.compile('\((.+)\)\=\(.+\)')
+            field_name = regex.search(ex.__str__()).group(1)
+            error_msg = account.unique_error_message(Account, (field_name, )).message
+            raise Exception(error_msg)
+        except ValidationError as ex :
+            raise Exception(', '.join(ex.messages))
+        except Exception as ex :
+            logging.getLogger('errors').error(f'Exception in "AccountSerializer.create" : {ex.__str__()}')
+            raise Exception('Something goes wrong')
