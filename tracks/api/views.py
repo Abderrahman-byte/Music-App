@@ -152,7 +152,7 @@ def ArtistAlbumApiView(request, id) :
 @api_view(['GET'])
 def Search(request) :
     query = request.query_params.get('query')
-    limit = request.query_params.get('limit', 10)
+    limit = request.query_params.get('limit', 5)
 
     try :
         limit = int(limit)
@@ -202,5 +202,45 @@ def Search(request) :
             'total': albums.count()
         }
     }
+
+    return Response(context,content_type='application/json')
+
+
+@api_view(['GET'])
+def SearchTracks(request) :
+    query = request.query_params.get('query')
+    limit = request.query_params.get('limit', 25)
+    index = request.query_params.get('index', 0)
+
+    try :
+        limit = int(limit)
+    except :
+        limit = 25
+
+    try :
+        index = int(index)
+    except :
+        index = 0
+
+    if query is None or query == '' : 
+        return Response({'detail': 'invalid query.'}, status=400, content_type='application/json')
+
+    tracks_with_exact_title = Track.objects.filter(title=query).order_by('-rank')
+    excluded_tracks_ids = [track.id for track in tracks_with_exact_title]
+    tracks_icontains = Track.objects.filter(title__icontains=query).exclude(id__in=excluded_tracks_ids).order_by('-rank')
+    tracks = tracks_with_exact_title | tracks_icontains
+
+    next_index = index + limit
+    prev_index = index - limit
+    total = tracks.count()
+
+    context = {
+        'data': TrackDetailedSerializer(tracks[index: index+limit], many=True).data,
+        'total': total,
+        'next': f'{request.scheme}://{request.get_host()}/api/music/search/tracks?query={query}&limit={limit}&index={next_index}' if next_index <= total else None,
+        'prev': f'{request.scheme}://{request.get_host()}/api/music/search/tracks?query={query}&limit={limit}&index={prev_index}' if prev_index >= 0 else None,
+    }
+
+    context = dict([(k, v) for k, v in context.items() if v is not None])
 
     return Response(context,content_type='application/json')
