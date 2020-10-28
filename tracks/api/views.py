@@ -152,18 +152,12 @@ def ArtistAlbumApiView(request, id) :
 @api_view(['GET'])
 def Search(request) :
     query = request.query_params.get('query')
-    limit = request.query_params.get('limit', 25)
-    index = request.query_params.get('index', 0)
+    limit = request.query_params.get('limit', 10)
 
     try :
         limit = int(limit)
     except :
         limit = 25
-    
-    try :
-        index = int(index)
-    except :
-        index = index
 
     if query is None or query == '' : 
         return Response({'detail': 'invalid query.'}, status=400, content_type='application/json')
@@ -196,15 +190,15 @@ def Search(request) :
     context = {
         'artist': ArtistDetailedSerializer(artist_with_exact_name).data,
         'artists': {
-            'data': ArtistDetailedSerializer(artists[0:25], many=True).data ,
+            'data': ArtistDetailedSerializer(artists[0:limit], many=True).data ,
             'total': artists.count()
         },
         'tracks': {
-            'data': TrackDetailedSerializer(tracks[0:5], many=True).data,
+            'data': TrackDetailedSerializer(tracks[0:limit], many=True).data,
             'total': tracks.count()
         },
         'albums': {
-            'data': AlbumDetailedSerializer(albums[0:5], many=True).data,
+            'data': AlbumDetailedSerializer(albums[0:limit], many=True).data,
             'total': albums.count()
         }
     }
