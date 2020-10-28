@@ -147,3 +147,66 @@ def ArtistAlbumApiView(request, id) :
     except Exception as ex :
         logging.getLogger('errors').error(f'Request from view "ArtistApiView" error: {ex.__str__()}')
         return Response(status=403)
+
+
+@api_view(['GET'])
+def Search(request) :
+    query = request.query_params.get('query')
+    limit = request.query_params.get('limit', 25)
+    index = request.query_params.get('index', 0)
+
+    try :
+        limit = int(limit)
+    except :
+        limit = 25
+    
+    try :
+        index = int(index)
+    except :
+        index = index
+
+    if query is None or query == '' : 
+        return Response({'detail': 'invalid query.'}, status=400, content_type='application/json')
+
+    # Searching for artists
+    try :
+        artist_with_exact_name = Artist.objects.get(name=query)
+    except Artist.DoesNotExist :
+        artist_with_exact_name = None
+
+    if artist_with_exact_name is not None : excluded_artists_ids = [artist_with_exact_name.id]
+    else: excluded_artists_ids = []
+    artist_icontains = Artist.objects.filter(name__icontains=query).exclude(id__in=excluded_artists_ids)
+    if artist_with_exact_name is not None : artists = Artist.objects.filter(id=artist_with_exact_name.id) | artist_icontains
+    else: artists = artist_icontains
+    
+    # Searching for tracks
+    tracks_with_exact_title = Track.objects.filter(title=query).order_by('-rank')
+    excluded_tracks_ids = [track.id for track in tracks_with_exact_title]
+    tracks_icontains = Track.objects.filter(title__icontains=query).exclude(id__in=excluded_tracks_ids).order_by('-rank')
+    tracks = tracks_with_exact_title | tracks_icontains
+
+    # Searching for albums
+    albums_with_exact_title = Album.objects.filter(title=query)
+    excluded_albums_ids = [album.id for album in albums_with_exact_title]
+    albums_icontains = Album.objects.filter(title__icontains=query).exclude(id__in=excluded_albums_ids)
+    albums = albums_with_exact_title | albums_icontains
+
+    # Serializer data
+    context = {
+        'artist': ArtistDetailedSerializer(artist_with_exact_name).data,
+        'artists': {
+            'data': ArtistDetailedSerializer(artists[0:25], many=True).data ,
+            'total': artists.count()
+        },
+        'tracks': {
+            'data': TrackDetailedSerializer(tracks[0:5], many=True).data,
+            'total': tracks.count()
+        },
+        'albums': {
+            'data': AlbumDetailedSerializer(albums[0:5], many=True).data,
+            'total': albums.count()
+        }
+    }
+
+    return Response(context,content_type='application/json')
