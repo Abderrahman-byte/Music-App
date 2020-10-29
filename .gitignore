@@ -14,3 +14,4 @@ artists.json
 *.logs
 
 mail.json
+node_modules
