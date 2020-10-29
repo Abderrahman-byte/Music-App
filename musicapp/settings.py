@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_extensions',
+    'corsheaders',
 
     'tracks.apps.TracksConfig',
     'users.apps.UsersConfig',
@@ -51,6 +52,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -211,3 +215,10 @@ EMAIL_HOST_USER = mail_cred.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = mail_cred.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+# CORS Headers Config
+
+CORS_ALLOW_CREDENTIALS = True
+
+if DEBUG :
+    CORS_ORIGIN_ALLOW_ALL = True
