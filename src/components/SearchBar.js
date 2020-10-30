@@ -7,7 +7,7 @@ export const SearchBar = () => {
 
     return (
         <form className='SearchBar'>
-            <input name='query' value={query} onChange={(e) => setQuery(e.target.value)} autoComplete={false} />
+            <input name='query' value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="false" />
             <button>
                 <i className='fas fa-search'></i>
             </button>
