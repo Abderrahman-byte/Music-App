@@ -1,5 +1,14 @@
+const webpack = require('webpack')
+const Webpack = require('webpack')
+
 module.exports = {
     entry: './src/index.js',
+    
+    plugins: [
+        new Webpack.DefinePlugin({
+            'process.env.API_URL': JSON.stringify(process.env.API_URL || 'http://localhost:8000')
+        })
+    ],
 
     module: {
         rules : [
@@ -10,7 +19,10 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['@babel/preset-env', '@babel/preset-react'],
-                        plugins: ['@babel/plugin-proposal-class-properties']
+                        plugins: [
+                            '@babel/plugin-transform-runtime', 
+                            '@babel/plugin-proposal-class-properties'
+                        ]
                     }
                 }
             },
