@@ -11,5 +11,3 @@ ReactDOM.render(
     </StrictMode>,
     document.getElementById('root')
 )
-
-console.log('we good')
