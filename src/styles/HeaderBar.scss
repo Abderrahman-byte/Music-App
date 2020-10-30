@@ -1,0 +1,31 @@
+@import './variables.scss';
+
+.HeaderBar {
+    display: flex;
+    align-items: center;
+    padding: .75em 2%;
+    background-color: $secondary-black;
+
+    .nav-toggler {
+        font-size: 1.5rem;
+        margin-right: 3%;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        i {
+            color: whitesmoke;
+        }
+    }
+
+    .logo-div {
+        display: inline-block;
+        margin-right: 3%;
+
+        h1 {
+            color: whitesmoke;
+            font-size: 1.5rem;
+            font-weight: 100;
+        }
+    }
+}

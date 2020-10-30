@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
 @import './variables.scss';
 
 * {
@@ -9,4 +10,13 @@
 body {
     font-size: 1.125rem;
     background-color: $primary-black;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: .15em;
+}
+
+button, input, textarea {
+    outline: none;
 }
