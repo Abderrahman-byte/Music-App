@@ -6,12 +6,14 @@ export const AuthProvider = ({children}) => {
     const [user, setUser] = useState(undefined)
 
     const authenticate = async () => {
-        const req = await fetch(`${process.env.API_URL}/api/auth/account`)
+        const req = await fetch(`${process.env.API_URL}/api/auth/account`, {
+            credentials: 'include'
+        })
 
         if(req.status >= 200 && req.status < 300) {
-            console.log(await req.json())
+            const data = await req.json()
+            setUser(data)
         } else {
-            console.log(await req.text())
             setUser(null)
         }
     }
@@ -21,7 +23,9 @@ export const AuthProvider = ({children}) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{}}>
+        <AuthContext.Provider value={{
+            user,
+        }}>
             {children}
         </AuthContext.Provider>
     )
