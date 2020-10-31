@@ -11,7 +11,7 @@ export const HeaderBar = () => {
                 <i className='fas fa-bars'></i>
             </button>
             <div className='logo-div'>
-                <h1>Music App</h1>
+                <h1 role='logo'>Music App</h1>
             </div>
             <SearchBar />
         </header>

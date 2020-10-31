@@ -10,7 +10,7 @@ export const SearchBar = () => {
     }
 
     return (
-        <form className='SearchBar' onSubmit={handleSubmit}>
+        <form className='SearchBar' onSubmit={handleSubmit} role='search'>
             <input name='query' value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
             <button>
                 <i className='fas fa-search'></i>
