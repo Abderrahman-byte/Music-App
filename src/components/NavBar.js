@@ -11,19 +11,25 @@ export class NavBar extends React.Component {
         items : [
             {
                 'type': 1,
-                'iconClassName': '',
+                'iconClassName': 'fas fa-music',
                 'title': 'music',
                 'to': '/'
             },
             {
                 'type': 1,
-                'iconClassName': '',
+                'iconClassName': 'fas fa-guitar',
+                'title': 'subscriptions',
+                'to': '/subs'
+            },
+            {
+                'type': 1,
+                'iconClassName': 'fas fa-record-vinyl',
                 'title': 'playlists',
                 'to': '/playlists'
             },
             {
                 'type': 1,
-                'iconClassName': '',
+                'iconClassName': 'fas fa-heart',
                 'title': 'favorites',
                 'to': '/favs'
             }
@@ -42,9 +48,10 @@ export class NavBar extends React.Component {
             if(item.type === 1) {
                 return (
                     <NavLink exact key={index} className='nav-item' to={item.to}>
-                        {item.title.split(' ').map(item => {
+                        <i className={item.iconClassName}></i>
+                        <p>{item.title.split(' ').map(item => {
                             return item.split('').map((char, i) => i === 0 ? char.toUpperCase() : char).join('')
-                        }).join(' ')}
+                        }).join(' ')}</p>
                     </NavLink>
                 )
             } 

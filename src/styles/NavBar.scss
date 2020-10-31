@@ -24,19 +24,27 @@
     }
 
     .nav-item {
-        display: block;
+        display: flex;
         padding: .5em 1.5vw;
         text-decoration: none;
-        color: whitesmoke;
-        font-size: 1rem;
+        color: $secondary-grey;
+
+        i {
+            display: block;
+            margin-right: .75em;
+        }
+
+        p {
+            letter-spacing: .1em;
+            font-size: 1rem;
+        }
 
         &:hover {
             border-left: 3px solid $primary-purple;
         }
 
         &.active {
-            border-left: 3px solid $primary-purple;
-            background-image: linear-gradient(to right, $primary-purple , lighten($primary-purple, 6) 5%, transparent 75%);
+            background-image: linear-gradient(to right, $primary-purple , transparent);
         }
     }
 }
@@ -63,7 +71,31 @@
     }
 
     .NavBar.close-large {
-        width: 80px;
+        width: auto;
+
+        .nav-item {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: .75em .3em;
+    
+            i {
+                font-size: 1rem;
+                margin-right: 0;
+                margin-bottom: .5em;
+            }
+    
+            p {
+                font-size: .75rem;
+                text-align: center;
+            }
+    
+            &.active, &:hover {
+                border: none;
+                background-color: lighten($primary-purple, 6);
+            }
+        }
+
     }
 
     .NavBar.close-small {
