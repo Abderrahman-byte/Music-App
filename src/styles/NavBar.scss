@@ -1,8 +1,59 @@
 @import './variables.scss';
 
 .NavBar {
-    width: 30%;
-    max-width: $navbar-maxwidth;
-    // border: 1px solid whitesmoke;
+    width: 50%;
+    max-width: auto;
     background-color: $secondary-black;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    transition: .4s;
+    z-index: 100;
+
+    &.close-small {
+        transform: translateX(-100%);
+    }
+
+    .header {
+        padding: .75em 1.5vw;
+        .NavHeader {
+            width: 100% !important;
+        }
+    }
+}
+
+.backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(245, 245, 245, 0.25);
+    z-index: 99;
+}
+
+@media (min-width : $navbar-breack-point) {
+    .NavBar {
+        width: 30%;
+        max-width: $navbar-maxwidth;
+        position: static;
+        height: auto;
+        z-index: auto;
+
+        .header {
+            display: none;
+        }
+    }
+
+    .NavBar.close-large {
+        width: 80px;
+    }
+
+    .NavBar.close-small {
+        transform: translateX(0);
+    }
+
+    .backdrop {
+        display: none;
+    }
 }

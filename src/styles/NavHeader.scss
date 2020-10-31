@@ -1,31 +1,37 @@
 @import './variables.scss';
 
 .NavHeader {
-    width: 29.5%;
-    max-width: calc(#{$navbar-maxwidth} - (100vw * 1.5 / 100));
+    width: 50%;
     display: flex;
     margin-right: 2%;
     align-items: center;
-
+    
     .nav-toggler {
         font-size: 1.25rem;
         margin-right: 1.5em;
         background-color: transparent;
         border: none;
         cursor: pointer;
-
+        
         i {
             color: whitesmoke;
         }
     }
-
+    
     .logo-div {
         display: inline-block;
-
+        
         h1 {
             color: whitesmoke;
             font-size: 1.3rem;
             font-weight: 100;
         }
+    }
+}
+
+@media (min-width: $navbar-breack-point) {
+    .NavHeader {
+        width: 29.5%;
+        max-width: calc(#{$navbar-maxwidth} - (100vw * 1.5 / 100));
     }
 }

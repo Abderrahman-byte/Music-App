@@ -22,8 +22,6 @@ export const NavBarProvider = ({children}) => {
         return () => window.removeEventListener('resize', updateWindoWidth)
     }, [])
 
-    useEffect(() => console.log(windoWidth >= breackPoint ? 'is large': 'is small'), [windoWidth])
-
     return (
         <NavBarContext.Provider value={{
             isOpenLarge, isOpenSmall, breackPoint, windoWidth,
