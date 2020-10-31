@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react'
+import '../styles/Models.scss'
 
 export const ModelsContext = createContext({})
 
@@ -20,8 +21,14 @@ export const ModelsProvider = ({children}) => {
     }
 
     return (
-        <ModelsContext.Provider value={openModel, closeModel}>
+        <ModelsContext.Provider value={{openModel, closeModel}}>
             {children}
+            {model && isOpen ? (
+                <>
+                    {model}
+                    <div className='model-backdrop'></div>
+                </>
+            ) : null}
         </ModelsContext.Provider>
     )
 }

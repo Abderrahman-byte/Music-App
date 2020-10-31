@@ -1,11 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { LoadingModel } from './LoadingModel'
+import { ModelsContext } from './ModelsContext'
 
 const AuthContext = createContext({})
 
 export const AuthProvider = ({children}) => {
+    const { openModel, closeModel } = useContext(ModelsContext)
+
     const [user, setUser] = useState(undefined)
 
     const authenticate = async () => {
+        openModel(<LoadingModel msg='Loading user data' />, false)
+
         const req = await fetch(`${process.env.API_URL}/api/auth/account`, {
             credentials: 'include'
         })
@@ -16,6 +22,8 @@ export const AuthProvider = ({children}) => {
         } else {
             setUser(null)
         }
+        
+        closeModel()
     }
 
     useEffect(() => {
