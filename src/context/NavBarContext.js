@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { NavHeader } from '../components/NavHeader'
 
 export const NavBarContext = createContext({})
 
@@ -9,16 +8,27 @@ export const NavBarProvider = ({children}) => {
 
     const [breackPoint] = useState(700)
 
-    const [isSmall, setSmallStatus] = useState(() => {
-        return window.innerWidth <= breackPoint
-    })
+    const [windoWidth, setWindoWidth] = useState(() => window.innerWidth)
+
+    const updateWindoWidth = () => {
+        if(window.innerWidth !== windoWidth) {
+            setWindoWidth(window.innerWidth)
+        }
+    }
 
     useEffect(() => {
-        setSmallStatus(window.innerWidth <= breackPoint)
-    }, [window.innerWidth])
+        // On windows resized change windoWindth
+        window.addEventListener('resize', updateWindoWidth)
+        return () => window.removeEventListener('resize', updateWindoWidth)
+    }, [])
+
+    useEffect(() => console.log(windoWidth >= breackPoint ? 'is large': 'is small'), [windoWidth])
 
     return (
-        <NavBarContext.Provider>
+        <NavBarContext.Provider value={{
+            isOpenLarge, isOpenSmall, breackPoint, windoWidth,
+            setOpenLarge, setOpenSmall
+        }}>
             {children}
         </NavBarContext.Provider>
     )
