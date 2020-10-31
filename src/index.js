@@ -1,5 +1,6 @@
 import React, { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 
 import './styles/index.scss'
 
@@ -8,9 +9,11 @@ import { AuthProvider } from './context/AuthContext'
 
 ReactDOM.render(
     <StrictMode>
-        <AuthProvider>
-            <App /> 
-        </AuthProvider>
+        <BrowserRouter>
+            <AuthProvider>
+                <App /> 
+            </AuthProvider>
+        </BrowserRouter>
     </StrictMode>,
     document.getElementById('root')
 )
