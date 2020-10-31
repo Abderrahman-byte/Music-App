@@ -1,0 +1,8 @@
+@import './variables.scss';
+
+.NavBar {
+    width: 30%;
+    max-width: 250px;
+    border: 1px solid whitesmoke;
+    background-color: $secondary-black;
+}
