@@ -6,13 +6,16 @@ import './styles/index.scss'
 
 import App from './App'
 import { AuthProvider } from './context/AuthContext'
+import { ModelsProvider } from './context/ModelsContext'
 
 ReactDOM.render(
     <StrictMode>
         <BrowserRouter>
-            <AuthProvider>
-                <App /> 
-            </AuthProvider>
+            <ModelsProvider>
+                <AuthProvider>
+                    <App /> 
+                </AuthProvider>
+            </ModelsProvider>
         </BrowserRouter>
     </StrictMode>,
     document.getElementById('root')
