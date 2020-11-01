@@ -24,11 +24,15 @@ export const TrackCard = ({data}) => {
     }
 
     return (
-        <div className='TrackCard'>
+        <div className={`TrackCard${currentId === data.id ? ' active':''}`}>
             <div className='play-div'>
                 <img className='cover' src={data.album.cover_medium} alt={data.album.title} />
                 <button onClick={handlePlaybtnClicked} className='play'>
-                    <i className="fas fa-play"></i>
+                    {currentId === data.id && isPlaying ? (
+                        <i className="fas fa-pause"></i>
+                        ) : (
+                        <i className="fas fa-play"></i>
+                    )}
                 </button>
             </div>
             <div className='info'>

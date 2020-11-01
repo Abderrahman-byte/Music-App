@@ -31,8 +31,14 @@
         }
     }
 
-    &:hover {
+    &:hover, &.active {
         background-color: $primary-grey;
+    }
+
+    &.active {
+        .play-div > .play {
+            opacity: 1;
+        }
     }
 
     .cover {
