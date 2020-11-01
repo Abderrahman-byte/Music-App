@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { LoadingModel } from './LoadingModel'
+
+import { LoadingModel } from '../components/LoadingModel'
 import { ModelsContext } from './ModelsContext'
 
 const AuthContext = createContext({})
