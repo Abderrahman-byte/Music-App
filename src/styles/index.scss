@@ -19,10 +19,6 @@ body {
     display: flex;
 }
 
-#root {
-    flex: 1 0 ;
-}
-
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Anton', sans-serif;
     letter-spacing: .15em;
@@ -30,6 +26,16 @@ h1, h2, h3, h4, h5, h6 {
 
 button, input, textarea {
     outline: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
+#root {
+    flex: 1 0 ;
 }
 
 .page {
