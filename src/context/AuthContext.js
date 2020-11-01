@@ -24,7 +24,7 @@ export const AuthProvider = ({children}) => {
             setUser(null)
         }
         
-        closeModel()
+        // closeModel()
     }
 
     useEffect(() => {
