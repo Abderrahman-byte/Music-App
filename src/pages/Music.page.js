@@ -1,8 +1,12 @@
 import React from 'react'
 
+import { ModelsContext } from '../context/ModelsContext'
 import { PageHeader } from '../components/PageHeader'
+import { LoadingModel } from '../components/LoadingModel'
 
 export class MusicPage extends React.Component {
+    static contextType = ModelsContext
+
     state = {
         data: [],
         currentPage: 1,
@@ -16,6 +20,8 @@ export class MusicPage extends React.Component {
     }
 
     fetchMusicData = async () => {
+        const { openModel, closeModel } = this.context
+        openModel(<LoadingModel msg='Loading music data' />, false)
         this.setState({...this.state, isLoading: true})
         let response = {data: []}
         const index = (this.state.currentPage - 1) * this.state.itemsPerPage
@@ -37,6 +43,7 @@ export class MusicPage extends React.Component {
                 data : [...prevState.data, ...response.data]
             }   
         })
+        closeModel()
     }
 
     render = () => {
