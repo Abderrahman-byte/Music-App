@@ -3,6 +3,7 @@ import React from 'react'
 import { ModelsContext } from '../context/ModelsContext'
 import { PageHeader } from '../components/PageHeader'
 import { LoadingModel } from '../components/LoadingModel'
+import { TracksCardsContainer } from '../components/TracksCardsContainer'
 
 export class MusicPage extends React.Component {
     static contextType = ModelsContext
@@ -50,6 +51,7 @@ export class MusicPage extends React.Component {
         return (
             <div className='MusicPage page'>
                 <PageHeader title='Explore The Music' />
+                <TracksCardsContainer data={this.state.data} />
             </div>
         )
     }

@@ -1,0 +1,72 @@
+@import './variables.scss';
+
+.TrackCard {
+    display: flex;
+    margin-bottom: 2em;
+
+    .play-div {
+        position: relative;
+        margin-right: .75em;
+
+        .play {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background-color: rgba(245, 245, 245, 0.25);
+            color: $secondary-black;
+            opacity: 0;
+            cursor: pointer;
+            border: none;
+            font-size: 2rem;
+            
+            &:hover, &:focus, .active {
+                opacity: 1;
+            }
+        }
+    }
+
+    &:hover {
+        background-color: $primary-grey;
+    }
+
+    .cover {
+        width: 56px;
+        min-width: 56px;
+        height: 56px;
+        min-height: 100%;
+        object-fit: cover;
+    }
+
+    .info {
+        padding: .25em 0;
+
+        .title {
+            font-size: 1rem;
+            margin-bottom: .2em;
+            font-weight: 300;
+            letter-spacing: .1em;
+            color: whitesmoke;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .artist {
+            margin-bottom: .4em;
+        }
+
+        .artist, .album {
+            display: block;
+            font-size: .7em;
+            color: gray;
+            text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
