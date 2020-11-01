@@ -12,7 +12,7 @@ export const MusicProvider = ({children}) => {
         return new Audio()
     }, [])
 
-    const play = (playlist) => {
+    const play = (playlist, loop = false) => {
         const checked = playlist.every(item => item.hasOwnProperty('id') && item.hasOwnProperty('preview'))
         const isAllObjects = playlist.every(item => typeof item === 'object')
 
@@ -25,13 +25,29 @@ export const MusicProvider = ({children}) => {
         }
         
         setQueue(playlist)
+        setLoop(loop)
         setCurrentId(playlist[0].id)
         setPlayingStatus(true)
     }
 
+    const next = (e) => {
+        setPlayingStatus(false)
+        const currentIndex = queue.findIndex(item => item.id === currentId)
+        console.log(currentIndex)
+        if(currentId >= queue.length - 1 && onLoop) {
+            setCurrentId(queue[0].id)
+        } else if(currentId >= queue.length - 1 && !onLoop) {
+            setCurrentId(null)
+        } else {
+            setCurrentId(queue[currentIndex + 1].id)
+        }
+    }
+
     useEffect(() => {
         if(queue.length <= 0) return
-        const current = queue.find(item => item.id = currentId)
+        if(!currentId) return
+
+        const current = queue.find(item => item.id === currentId)
         audio.pause()
         audio.src = current.preview
         if(isPlaying) audio.play()
@@ -44,6 +60,11 @@ export const MusicProvider = ({children}) => {
             audio.pause()
         }
     }, [isPlaying])
+
+    useEffect(() => {
+        audio.addEventListener('ended', next)
+        return () => audio.removeEventListener('ended', next)
+    }, [audio])
 
     return (
         <MusicPlayer.Provider value={{

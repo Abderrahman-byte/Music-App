@@ -17,7 +17,7 @@ export class MusicPage extends React.Component {
     }
 
     componentDidMount = () => {
-        this.fetchMusicData()   
+        this.fetchMusicData()
     }
 
     fetchMusicData = async () => {
