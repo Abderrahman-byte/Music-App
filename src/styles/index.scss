@@ -20,7 +20,7 @@ body {
 }
 
 #root {
-    flex: 1 0 auto;
+    flex: 1 0 ;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -34,6 +34,6 @@ button, input, textarea {
 
 .page {
     border: 1px solid red;
-    flex: 1 0 auto;
+    flex: 1 0 ;
     padding: 0 3%;
 }
