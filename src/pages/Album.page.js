@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { LoadingModel } from '../components/LoadingModel'
+import { PlaylistHeader } from '../components/PlaylistHeader'
 import { ModelsContext } from '../context/ModelsContext'
 
 export class AlbumPage extends React.Component {
@@ -36,10 +37,26 @@ export class AlbumPage extends React.Component {
         closeModel()
     }
 
+    getHeaderData = () => {
+        return {
+            cover: this.state.data?.cover_medium,
+            title: this.state.data?.title,
+            itemsNb: this.state.data?.nb_tracks,
+            release_date: this.state.data?.release_date,
+            author: {
+                id: this.state.data?.artist?.id,
+                name: this.state.data?.artist?.name,
+                picture: this.state.data?.artist?.picture_small,
+            }
+        }
+    }
+
     render = () => {
         return (
-            <div className='AlbumPage'>
-                
+            <div className='AlbumPage page'>
+                {this.state.isLoading ? (null) : (
+                    <PlaylistHeader {...this.getHeaderData()}/>
+                )} 
             </div>
         )
     }
