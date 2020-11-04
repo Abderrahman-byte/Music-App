@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
 
 import '../styles/TrackCard.scss'
 
@@ -38,7 +39,7 @@ export const TrackCard = ({data}) => {
             <div className='info'>
                 <h6 className='title'>{data.title} </h6>
                 <a href='#' className='artist'>{data.artist.name} </a>
-                <a href='#' className='album'>{data.album.title}</a>
+                <Link to={`/album/${data.album.id}`} className='album'>{data.album.title}</Link>
             </div>
         </div>
     )
