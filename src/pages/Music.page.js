@@ -20,10 +20,11 @@ export class MusicPage extends React.Component {
         this.fetchMusicData()
     }
 
-    fetchMusicData = async () => {
+    fetchMusicData = async (withModel = true) => {
         const { openModel, closeModel } = this.context
-        openModel(<LoadingModel msg='Loading music data' />, false)
         this.setState({...this.state, isLoading: true})
+        if(withModel) openModel(<LoadingModel msg='Loading music data' />, false)
+
         let response = {data: []}
         const index = (this.state.currentPage - 1) * this.state.itemsPerPage
         const url = this.state.nextRequestUrl || `${process.env.API_URL}/api/music/tracks/top?index=${index}&limit=${this.state.itemsPerPage}`
@@ -52,6 +53,20 @@ export class MusicPage extends React.Component {
             <div className='MusicPage page'>
                 <PageHeader title='Explore The Music' />
                 <TracksCardsContainer data={this.state.data} />
+                {!this.state.isLoading ? (
+                    <div className='center-div'>
+                        <button onClick={() => this.fetchMusicData(false)} className='btn-more'>load more</button>
+                    </div>
+                ) : (
+                    <div className='center-div'>
+                        <div className='lds-ring'>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                )}
             </div>
         )
     }

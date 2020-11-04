@@ -33,7 +33,6 @@ export const MusicProvider = ({children}) => {
     const next = (e) => {
         setPlayingStatus(false)
         const currentIndex = queue.findIndex(item => item.id === currentId)
-        console.log(currentIndex)
         if(currentId >= queue.length - 1 && onLoop) {
             setCurrentId(queue[0].id)
         } else if(currentId >= queue.length - 1 && !onLoop) {

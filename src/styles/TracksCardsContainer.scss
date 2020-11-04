@@ -11,8 +11,7 @@ $lg-breack-point: 1150px;
     display: flex;
     flex-wrap: wrap;
     margin-top: 2em;
-    // align-items: stretch;
-
+    
     .TrackCard {
         width: calc((100% - 5%) / #{$items-per-page-xs});
         margin-right: calc(5% / (#{$items-per-page-xs} - 1));

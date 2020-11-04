@@ -42,3 +42,26 @@ img {
     flex: 1 0 ;
     padding: 0 3%;
 }
+
+.center-div {
+    padding: 1.25em 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-more {
+    background-color: $primary-purple;
+    border: none;
+    border-radius: 3px;
+    padding: .5em .75em;
+    font-size: 1.1rem;
+    color: whitesmoke;
+    letter-spacing: .1em;
+    text-transform: capitalize;
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken($primary-purple, 10);
+    }
+}
