@@ -6,7 +6,8 @@ module.exports = {
     
     output: {
         filename: '[name].js',
-        path: path.resolve(process.cwd(), 'dist')
+        path: path.resolve(process.cwd(), 'dist'),
+        publicPath: '/'
     },
 
     plugins : [
@@ -54,6 +55,7 @@ module.exports = {
     devServer: {
         contentBase: path.join(process.cwd(), 'dist'),
         compress: true,
-        port: 9000
+        port: 9000,
+        historyApiFallback: true
     }
 }
