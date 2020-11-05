@@ -134,6 +134,12 @@ $playlist-break-point: 975px;
                     opacity: 1;
                 }
             }
+
+            &.current {
+                .cover-frontdrop {
+                    opacity: 1;
+                }
+            }
         }
 
         .info-container {

@@ -1,17 +1,42 @@
-import React from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import '../styles/PlaylistHeader.scss'
 
-export const PlaylistHeader = ({cover, title, release_date, itemsNb, author}) => {
+import { MusicPlayer } from '../context/MusicPlayer'
+
+export const PlaylistHeader = ({cover, title, release_date, itemsNb, author, items}) => {
+    const { isPlaying, currentId, play, setPlayingStatus, queue } = useContext(MusicPlayer)
+
+    const isCurrent = useMemo(() => {
+        const isAllInQueue = items.every(plItem => queue.findIndex(queueItem => queueItem.id === plItem.id) >= 0)
+        const isQueueAllIn = queue.every(queueItem => queue.findIndex(plItem => queueItem.id === plItem.id) >= 0)
+        const isCurrentInItems = items.findIndex(item => item.id === currentId) >= 0
+        return isAllInQueue && isQueueAllIn && isCurrentInItems
+    }, [items, queue, currentId])
+
+    const handlePlayBtn = () => {
+        if(isCurrent && !isPlaying) {
+            setPlayingStatus(true)
+        } else if(isCurrent) {
+            setPlayingStatus(false)
+        } else {
+            play(items)
+        }
+    }
+
     return (
         <div className='PlaylistHeader'>
-            <div className='cover-container'>
+            <div className={`cover-container${isCurrent ? ' current': ''}`}>
                 <img className='cover' src={cover} alt={title} />
                 <div className='cover-frontdrop'>
-                    <button className='play-btn'>
-                        <i className='fas fa-play'></i>
+                    <button className='play-btn' onClick={handlePlayBtn}>
+                        {isCurrent && isPlaying ? (
+                            <i className='fas fa-pause'></i>
+                        ) :(
+                            <i className='fas fa-play'></i>
+                        )}
                     </button>
                 </div>
             </div>
@@ -40,5 +65,6 @@ PlaylistHeader.propTypes = {
         id: PropTypes.string,
         name: PropTypes.string.isRequired,
         picture: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    items: PropTypes.array
 }
