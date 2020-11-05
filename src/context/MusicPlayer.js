@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 
 export const MusicPlayer = createContext({})
 
@@ -30,17 +30,20 @@ export const MusicProvider = ({children}) => {
         setPlayingStatus(true)
     }
 
-    const next = (e) => {
+    const next = useCallback((e) => {
         setPlayingStatus(false)
         const currentIndex = queue.findIndex(item => item.id === currentId)
-        if(currentId >= queue.length - 1 && onLoop) {
+
+        if(currentIndex >= queue.length - 1 && onLoop) {
             setCurrentId(queue[0].id)
-        } else if(currentId >= queue.length - 1 && !onLoop) {
+            setPlayingStatus(true)
+        } else if(currentIndex >= queue.length - 1 && !onLoop) {
             setCurrentId(null)
         } else {
             setCurrentId(queue[currentIndex + 1].id)
+            setPlayingStatus(true)
         }
-    }
+    }, [currentId])
 
     useEffect(() => {
         if(queue.length <= 0) return
@@ -63,11 +66,11 @@ export const MusicProvider = ({children}) => {
     useEffect(() => {
         audio.addEventListener('ended', next)
         return () => audio.removeEventListener('ended', next)
-    }, [audio])
+    }, [audio, next])
 
     return (
         <MusicPlayer.Provider value={{
-            isPlaying, currentId, play, setPlayingStatus
+            isPlaying, currentId, play, setPlayingStatus, queue
         }}>
             {children}
         </MusicPlayer.Provider>
