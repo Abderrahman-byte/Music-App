@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 $playlist-break-point: 975px;
 
 .PlaylistHeader {
@@ -11,6 +13,7 @@ $playlist-break-point: 975px;
         position: relative;
         border-radius: 8px;
         overflow: hidden;
+        border: 1px solid rgba(245, 245, 245, 0.2);
     }
 
     .info-container {
@@ -34,17 +37,25 @@ $playlist-break-point: 975px;
 
             & > * {
                 display: inline-block;
-                margin-right: .75em;
+                margin-right: 1em;
             }
 
             & > *:last-child {
                 margin-right: 0;
             }
 
+            .date , .items-count {
+                font-size: .7em;
+                letter-spacing: .2em;
+                color: $primary-grey;
+            }
+
             .author {
                 display: flex;
                 align-items: center;
                 text-decoration: none;
+                border-radius: 25px;
+                padding-right: .3em;
 
                 .author-pic {
                     margin-right: .5em;
@@ -55,10 +66,15 @@ $playlist-break-point: 975px;
                 }
 
                 .name {
+                    font-family: 'Inter', sans-serif;
                     font-size: 1.2rem;
                     letter-spacing: .1em;
-                    font-weight: 600;
+                    font-weight: 300;
                     color: whitesmoke;
+                }
+
+                &:hover {
+                    background-color: $secondary-grey;
                 }
             }            
         }
