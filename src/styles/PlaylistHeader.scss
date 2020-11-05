@@ -14,6 +14,42 @@ $playlist-break-point: 975px;
         border-radius: 8px;
         overflow: hidden;
         border: 1px solid rgba(245, 245, 245, 0.2);
+
+        .cover-frontdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            
+            .play-btn {
+                position: absolute;
+                bottom: 5%;
+                right: 5%;
+                border: none;
+                background-color: whitesmoke;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: $secondary-grey;
+                cursor: pointer;
+                transition: .3s;
+
+                i {
+                    font-size: 1.2rem;
+                }
+
+                &:hover {
+                    background-color: darken(whitesmoke, 10);
+                    color: $primary-grey;
+                }
+            }
+        }
     }
 
     .info-container {
@@ -56,6 +92,7 @@ $playlist-break-point: 975px;
                 text-decoration: none;
                 border-radius: 25px;
                 padding-right: .3em;
+                transition: .3s;
 
                 .author-pic {
                     margin-right: .5em;
@@ -63,6 +100,7 @@ $playlist-break-point: 975px;
                     width: 50px;
                     height: 50px;
                     object-fit: cover;
+                    border: 1px solid $secondary-grey;
                 }
 
                 .name {
@@ -88,6 +126,14 @@ $playlist-break-point: 975px;
 
         .cover-container {
             margin-right: 1em;
+
+            .cover-frontdrop {
+                opacity: 0;
+                
+                &:hover {
+                    opacity: 1;
+                }
+            }
         }
 
         .info-container {

@@ -9,6 +9,11 @@ export const PlaylistHeader = ({cover, title, release_date, itemsNb, author}) =>
         <div className='PlaylistHeader'>
             <div className='cover-container'>
                 <img className='cover' src={cover} alt={title} />
+                <div className='cover-frontdrop'>
+                    <button className='play-btn'>
+                        <i className='fas fa-play'></i>
+                    </button>
+                </div>
             </div>
 
             <div className='info-container'>
