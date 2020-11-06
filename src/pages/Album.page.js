@@ -3,6 +3,7 @@ import React from 'react'
 import { LoadingModel } from '../components/LoadingModel'
 import { PlaylistHeader } from '../components/PlaylistHeader'
 import { ModelsContext } from '../context/ModelsContext'
+import { PlaylistTable } from '../components/PlaylistTable'
 
 export class AlbumPage extends React.Component {
     static contextType = ModelsContext
@@ -56,7 +57,10 @@ export class AlbumPage extends React.Component {
         return (
             <div className='AlbumPage page'>
                 {this.state.isLoading ? (null) : (
+                    <>
                     <PlaylistHeader {...this.getHeaderData()}/>
+                    <PlaylistTable items={this.state.items} withAlbum={false} withArtist={false} />
+                    </>
                 )} 
             </div>
         )
