@@ -42,7 +42,7 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
             ) : null}
             {withArtist ? (
                 <td className='artist'>
-                    <Link to='#'>{data.artist?.name}</Link>
+                    <Link to={data.artist ? `/artist/${data.artist.id}` : '#'}>{data.artist?.name}</Link>
                 </td>
             ) : null}
             <td className='btn-col'>

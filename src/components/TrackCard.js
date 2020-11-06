@@ -38,7 +38,7 @@ export const TrackCard = ({data}) => {
             </div>
             <div className='info'>
                 <h6 className='title'>{data.title} </h6>
-                <a href='#' className='artist'>{data.artist.name} </a>
+                <Link to={`/artist/${data.artist.id}`} className='artist'>{data.artist.name}</Link>
                 <Link to={`/album/${data.album.id}`} className='album'>{data.album.title}</Link>
             </div>
         </div>
