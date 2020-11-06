@@ -2,6 +2,7 @@
 
 .PlaylistTable {
     width: 100%;
+    border-top: 1px solid transparentize($primary-grey, .75);
     
     &, th, td {
         border-collapse: collapse;

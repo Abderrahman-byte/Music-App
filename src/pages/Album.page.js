@@ -59,7 +59,7 @@ export class AlbumPage extends React.Component {
                 {this.state.isLoading ? (null) : (
                     <>
                     <PlaylistHeader {...this.getHeaderData()}/>
-                    <PlaylistTable items={this.state.items} />
+                    <PlaylistTable items={this.state.items}/>
                     </>
                 )} 
             </div>
