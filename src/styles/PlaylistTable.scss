@@ -1,0 +1,36 @@
+@import './variables.scss';
+
+.PlaylistTable {
+    // border: 1px solid red;
+    width: 100%;
+    
+    th {
+        color: $secondary-grey;
+        text-transform: capitalize;
+        letter-spacing: .1em;
+    }
+
+    td, th {
+        padding: .5em 0;
+        font-weight: 300;
+        text-align: center;
+
+        &.btn-col {
+            max-width: 40px;
+            font-size: .8rem;
+        }
+
+        &.text-start {
+            text-align: start;
+            padding-left: 1%;
+        }
+    }
+
+    td:not(:first-child), th:not(:first-child) {
+        border-right: 1px solid whitesmoke;
+    }
+
+    td:last-child, th:last-child {
+        border-right: none;
+    }
+}
