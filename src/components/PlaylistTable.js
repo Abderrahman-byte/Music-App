@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types'
 
 import '../styles/PlaylistTable.scss'
 import { TrackRow } from './TrackRow';
+import { MusicPlayer } from '../context/MusicPlayer';
 
 export const PlaylistTable = ({items, withAlbum, withArtist}) => {
+    const { play } = useContext(MusicPlayer)
+
+    const playFrom = (id) => {
+        const itemToPlayIndex = items.findIndex(track => track.id === id)
+        if(itemToPlayIndex < 0) throw Error(`track with id ${id} not in playlist.`)
+        const queue = items.slice(itemToPlayIndex).concat(items.slice(0, itemToPlayIndex))
+        play(queue)
+    }
+
     return (
         <table className='PlaylistTable'>
             <thead>
@@ -26,6 +36,7 @@ export const PlaylistTable = ({items, withAlbum, withArtist}) => {
                     index={i + 1} 
                     withAlbum={withAlbum || false}
                     withArtist={withArtist || false}
+                    playFunc={playFrom}
                 />)}
             </tbody>
         </table>

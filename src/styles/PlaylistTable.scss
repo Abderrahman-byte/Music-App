@@ -1,11 +1,14 @@
 @import './variables.scss';
 
 .PlaylistTable {
-    // border: 1px solid red;
     width: 100%;
-
+    
     &, th, td {
         border-collapse: collapse;
+    }
+
+    tr {
+        border-bottom: 1px solid transparentize($primary-grey, .75);
     }
 
     th {
@@ -15,14 +18,13 @@
     }
 
     td, th {
-        padding: .5em 0;
+        padding: 1em 0;
         font-weight: 300;
         text-align: center;
 
         &.btn-col {
             max-width: 40px;
             font-size: .8rem;
-            border: 1px solid red;
         }
 
         &.text-start {

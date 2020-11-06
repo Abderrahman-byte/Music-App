@@ -3,6 +3,10 @@
 .TrackRow {
     color: whitesmoke;
 
+    &.current {
+        background-color: transparentize($primary-grey, .8);
+    }
+
     .play-btn {
         background-color: whitesmoke;
         color: $secondary-grey;
