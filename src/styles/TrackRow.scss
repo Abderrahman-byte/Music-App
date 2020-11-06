@@ -2,16 +2,18 @@
 
 .TrackRow {
     color: whitesmoke;
+    font-size: 1rem;
 
-    &.current {
+    &.current, &:hover {
         background-color: transparentize($primary-grey, .8);
+
     }
 
     .play-btn {
-        background-color: whitesmoke;
+        background-color: transparent;
         color: $secondary-grey;
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -22,12 +24,83 @@
         margin: auto;
 
         i {
-            font-size: 1.2rem;
+            font-size: .95rem;
         }
 
         &:hover {
             color: $primary-grey;
             background-color: darken(whitesmoke,10);
+        }
+    }
+
+    &.current {
+        .play-btn {
+            color: $primary-grey;
+            background-color: darken(whitesmoke,10);
+        }
+    }
+
+    .artist, .album {
+        color: $primary-grey;
+        font-size: .85rem;
+
+        a {
+            color: $primary-grey;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .add-btn, .fav-btn {
+        padding: .75em .5em;
+        font-size: 1rem;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+
+    .fav-btn {
+        i {
+            color: transparentize(whitesmoke, .5);
+        }
+
+        &:hover {
+            i {
+                color: #DD2E44;
+            }
+        }
+    }
+
+    .add-btn {
+        i {
+            color: transparentize(whitesmoke, .5);
+        }
+
+        &:hover {
+            i {
+                color: whitesmoke;
+            }
+        }
+    }
+}
+
+@media (min-width: $playlist-table-break-point) {
+    .TrackRow {
+        .play-btn {
+            width: 40px;
+            height: 40px;
+
+            i {
+                font-size: 1.2rem;
+            }
+        }
+
+        .artist, .album {
+            color: $primary-grey;
+            font-size: 1rem;
         }
     }
 }

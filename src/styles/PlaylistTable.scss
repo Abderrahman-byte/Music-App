@@ -18,7 +18,10 @@
     }
 
     td, th {
-        padding: 1em 0;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        padding-left: .5em;
+        padding-right: .5em;
         font-weight: 300;
         text-align: center;
 
@@ -30,6 +33,23 @@
         &.text-start {
             text-align: start;
             padding-left: 1%;
+        }
+    }
+
+    &.mini {
+        max-width: 600px;
+        td, th {
+            padding-top: .5em;
+            padding-bottom: .5em;
+        }
+    }
+}
+
+@media (min-width: $playlist-table-break-point) {
+    .PlaylistTable {
+        td, th {
+            padding-left: 0;
+            padding-right: 0;
         }
     }
 }

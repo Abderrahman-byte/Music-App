@@ -5,7 +5,7 @@ import '../styles/PlaylistTable.scss'
 import { TrackRow } from './TrackRow';
 import { MusicPlayer } from '../context/MusicPlayer';
 
-export const PlaylistTable = ({items, withAlbum, withArtist}) => {
+export const PlaylistTable = ({items, withAlbum, withArtist, small}) => {
     const { play } = useContext(MusicPlayer)
 
     const playFrom = (id) => {
@@ -16,7 +16,7 @@ export const PlaylistTable = ({items, withAlbum, withArtist}) => {
     }
 
     return (
-        <table className='PlaylistTable'>
+        <table className={`PlaylistTable${small ? ' mini': ''}`}>
             <thead>
                 <tr>
                     <th>#</th>
@@ -24,8 +24,8 @@ export const PlaylistTable = ({items, withAlbum, withArtist}) => {
                     <th className='text-start'>title</th>
                     {withAlbum ? (<th>Album</th>): (null)}
                     {withArtist ? (<th>Artist</th>): (null)}
-                    <th className='btn-col'>Favorite</th>
-                    <th className='btn-col'>Add To Playlist</th>
+                    <th className='btn-col'></th>
+                    <th className='btn-col'></th>
                 </tr>
             </thead>
 
@@ -47,4 +47,5 @@ PlaylistTable.propTypes = {
     items : PropTypes.array.isRequired,
     withAlbum: PropTypes.bool,
     withArtist: PropTypes.bool,
+    small: PropTypes.bool
 }

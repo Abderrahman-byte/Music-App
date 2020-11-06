@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import '../styles/TrackRow.scss'
 import { MusicPlayer } from '../context/MusicPlayer'
+import { Link } from 'react-router-dom'
 
 export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
     const { isPlaying, currentId, setPlayingStatus } = useContext(MusicPlayer)
@@ -15,6 +16,10 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
         } else {
             playFunc(data.id)
         }
+    }
+
+    const addToFav = () => {
+        console.error('You forgot to ampleilent add to fav functionality')
     }
 
     return (
@@ -30,10 +35,26 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
                 </button>
             </td>
             <td className='text-start'>{data.title}</td>
-            {withAlbum ? <td>{data.album?.title} </td> : null}
-            {withArtist ? <td>{data.artist?.name} </td> : null}
-            <td className='btn-col'></td>
-            <td className='btn-col'></td>
+            {withAlbum ? (
+                <td className='album'>
+                    <Link to={data.album ? `/album/${data.album.id}` : '#'}>{data.album?.title}</Link>
+                </td>
+            ) : null}
+            {withArtist ? (
+                <td className='artist'>
+                    <Link to='#'>{data.artist?.name}</Link>
+                </td>
+            ) : null}
+            <td className='btn-col'>
+                <button className='fav-btn' onClick={addToFav}>
+                    <i className='fas fa-heart'></i>
+                </button>
+            </td>
+            <td className='btn-col'>
+                <button className='add-btn' onClick={addToFav}>
+                    <i className='fas fa-plus'></i>
+                </button>
+            </td>
         </tr>
     )
 }
