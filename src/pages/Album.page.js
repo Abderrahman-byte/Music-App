@@ -4,6 +4,7 @@ import { LoadingModel } from '../components/LoadingModel'
 import { PlaylistHeader } from '../components/PlaylistHeader'
 import { ModelsContext } from '../context/ModelsContext'
 import { PlaylistTable } from '../components/PlaylistTable'
+import { AlbumNotFound } from '../components/NotFound'
 
 export class AlbumPage extends React.Component {
     static contextType = ModelsContext
@@ -54,15 +55,23 @@ export class AlbumPage extends React.Component {
     }
 
     render = () => {
-        return (
-            <div className='AlbumPage page'>
-                {this.state.isLoading ? (null) : (
-                    <>
-                    <PlaylistHeader {...this.getHeaderData()}/>
-                    <PlaylistTable items={this.state.items}/>
-                    </>
-                )} 
-            </div>
-        )
+        if(this.state.error) {
+            return (
+                <div className='AlbumPage page'>
+                    <AlbumNotFound />
+                </div>
+            )
+        } else {
+            return (
+                <div className='AlbumPage page'>
+                    {this.state.isLoading ? (null) : (
+                        <>
+                        <PlaylistHeader {...this.getHeaderData()}/>
+                        <PlaylistTable items={this.state.items}/>
+                        </>
+                    )} 
+                </div>
+            )
+        }
     }
 }
