@@ -3,7 +3,11 @@
 .PlaylistTable {
     // border: 1px solid red;
     width: 100%;
-    
+
+    &, th, td {
+        border-collapse: collapse;
+    }
+
     th {
         color: $secondary-grey;
         text-transform: capitalize;
@@ -18,19 +22,12 @@
         &.btn-col {
             max-width: 40px;
             font-size: .8rem;
+            border: 1px solid red;
         }
 
         &.text-start {
             text-align: start;
             padding-left: 1%;
         }
-    }
-
-    td:not(:first-child), th:not(:first-child) {
-        border-right: 1px solid whitesmoke;
-    }
-
-    td:last-child, th:last-child {
-        border-right: none;
     }
 }

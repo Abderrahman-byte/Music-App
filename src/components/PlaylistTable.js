@@ -10,7 +10,7 @@ export const PlaylistTable = ({items, withAlbum, withArtist}) => {
             <thead>
                 <tr>
                     <th>#</th>
-                    <th></th>
+                    <th className='btn-col'></th>
                     <th className='text-start'>title</th>
                     {withAlbum ? (<th>Album</th>): (null)}
                     {withArtist ? (<th>Artist</th>): (null)}

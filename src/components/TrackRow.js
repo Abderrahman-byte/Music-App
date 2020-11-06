@@ -8,7 +8,11 @@ export const TrackRow = ({data, index, withAlbum, withArtist}) => {
     return (
         <tr className='TrackRow'>
             <td>{index}</td>
-            <td></td>
+            <td className='btn-col'>
+                <button className='play-btn'>
+                    <i className='fas fa-play'></i>
+                </button>
+            </td>
             <td className='text-start'>{data.title}</td>
             {withAlbum ? <td>{data.album?.title} </td> : null}
             {withArtist ? <td>{data.artist?.name} </td> : null}
