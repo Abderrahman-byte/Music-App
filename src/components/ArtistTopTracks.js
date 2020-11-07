@@ -1,5 +1,7 @@
 import React from 'react'
-import PropTypes, { array } from 'prop-types'
+import PropTypes from 'prop-types'
+
+import '../styles/ArtistTopTracks.scss'
 
 import { PlaylistTable } from './PlaylistTable'
 
@@ -11,6 +13,8 @@ export class ArtistTopTracks extends React.Component {
     }
 
     fetchTopTracks = async () => {
+        if(this.state.data >= this.props.top.total) return
+
         const nextPage = this.state.currentPage + 1
         const startIndex = (nextPage * this.state.itemsPerPage) - this.state.itemsPerPage
         const url = `api/music/artist/${this.props.id}/top?index=${startIndex}&limit=${this.state.itemsPerPage}`
@@ -33,7 +37,10 @@ export class ArtistTopTracks extends React.Component {
             <div className='ArtistTopTracks'>
                 <h6>Top Tracks</h6>
                 <PlaylistTable items={this.state.data} small withAlbum />
-                <button onClick={this.fetchTopTracks} className='more-btn'>load more</button>
+
+                {this.state.data.length < this.props.max ? (
+                    <button onClick={this.fetchTopTracks} className='more-btn'>load more</button>
+                ) :null}
             </div>
         )
     }
@@ -45,5 +52,10 @@ ArtistTopTracks.propTypes = {
         total: PropTypes.number,
         next: PropTypes.string
     }).isRequired,
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    max: PropTypes.number
+}
+
+ArtistTopTracks.defaultProps = {
+    max: 10
 }

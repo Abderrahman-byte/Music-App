@@ -1,0 +1,31 @@
+@import './variables.scss';
+
+.ArtistTopTracks {
+    margin-bottom: 1em;
+    
+    h6 {
+        font-size: 1.3rem;
+        margin-bottom: .75em;
+        color: whitesmoke;
+        letter-spacing: .1em;
+        font-weight: 300;
+        font-family: 'Inter', sans-serif;
+        text-transform: uppercase;
+    }
+
+    .more-btn {
+        cursor: pointer;
+        color: $secondary-grey;
+        margin-top: 1em;
+        width: 100%;
+        text-align: center;
+        max-width: 600px;
+        font-size: 1rem;
+        letter-spacing: .1em;
+        padding: .4em 0;
+        border: 0;
+        border-radius: 5px;
+        background-color: $primary-purple;
+        text-transform: capitalize;
+    }
+}
