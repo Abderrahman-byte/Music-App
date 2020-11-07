@@ -88,7 +88,7 @@ class ArtistDetailedSerializer(serializers.ModelSerializer) :
         tracks_list = Track.objects.filter(album_id__in=albums_ids).order_by('-rank')
         nb_tracks = tracks_list.count()
         data =  {
-            'data': TrackSimpleSerializer(tracks_list[index:index + limit], many=True).data, 
+            'data': TrackDetailedSerializer(tracks_list[index:index + limit], many=True).data, 
             'total': nb_tracks,
             'next': f'{settings.SITE_PROTO}://{settings.ROOT_HOSTCONF}/api/music/artist/{instance.id}/top?index={limit + index}&limit={limit}'
         }
