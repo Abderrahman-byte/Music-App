@@ -1,0 +1,89 @@
+@import './variables.scss';
+
+.ArtistHeader {
+    border: 1px solid red;
+    display: flex;
+
+    .picture {
+        border-radius: 8px;
+        border: 1px solid rgba(245, 245, 245, 0.2);
+    }
+
+    .info-container {
+        border: 1px solid yellow;
+        .name {
+            font-size: 3rem;
+            letter-spacing: .2em;
+            font-weight: 300;
+            color: whitesmoke;
+            margin-bottom: .5em;
+            border: 1px solid green;
+        }
+
+        .info-row {
+            margin-bottom: .75em;
+            border: 1px solid green;
+            display: flex;
+
+            span {
+                display: block;
+                margin-right: .5em;
+                color: $secondary-grey;
+                font-size: .85em;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .fav-btn {
+        cursor: pointer;
+        background-color: transparent;
+        font-size: 1.3rem;
+        border: none;
+
+        i {
+            color: transparentize(whitesmoke, .5);
+        }
+
+        &:hover {
+            i {
+                color: #DD2E44;
+            }
+        }
+    }
+
+    .subcribe-btn {
+        display: flex;
+        padding: .4em;
+        cursor: pointer;
+        color: $secondary-grey;
+        background-color: whitesmoke;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        margin-right: 1em;
+
+        &:hover {
+            background-color: #DD2E44;
+        }
+
+        p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: .1em;
+            text-transform: capitalize;
+        }
+
+        i {
+            margin-right: .3em;
+            font-size: 1.2rem;
+        }
+    }
+}
