@@ -2,6 +2,7 @@ import React from 'react'
 
 import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from '../components/LoadingModel'
+import { ArtistHeader } from '../components/ArtistHeader'
 
 export class ArtistPage extends React.Component {
     static contextType = ModelsContext
@@ -29,7 +30,13 @@ export class ArtistPage extends React.Component {
             const topTracksData = {...data.top}
             delete(data.top)
 
-            this.setState({data: {...data}, topTracks: {...topTracksData}, isLoading: false, error: false})
+            this.setState({
+                data: {...data}, 
+                topTracks: {...topTracksData}, 
+                isLoading: false, 
+                error: false
+            })
+
         } else {
             const data = await req.json()
             console.error(data)
@@ -42,7 +49,17 @@ export class ArtistPage extends React.Component {
     render = () => {
         return (
             <div className='ArtistPage page'>
-                Artist id {this.props.match?.params?.id}
+                {!this.state.isLoading ? (
+                    <>
+                        <ArtistHeader 
+                            id={this.state.data?.id}
+                            name={this.state.data?.name} 
+                            picture={this.state.data?.picture_medium}
+                            nb_albums={this.state.data?.nb_album}
+                            nb_tracks={this.state.topTracks?.total}
+                        />
+                    </>
+                ) : null}
             </div>
         )
     }
