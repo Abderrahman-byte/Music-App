@@ -11,6 +11,11 @@ $playlist-break-point: 975px;
     margin-bottom: 2em;
 
     .cover-container {
+        min-width: 250px;
+        width: 250px;
+        height: 250px;
+        max-height: 250px;
+        object-fit: cover;
         position: relative;
         border-radius: 8px;
         overflow: hidden;
