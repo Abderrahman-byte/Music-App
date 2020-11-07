@@ -59,6 +59,7 @@ $artist-header-breack-point: 880px;
 
         i {
             color: transparentize(whitesmoke, .5);
+            transition: .3s;
         }
 
         &:hover {
@@ -78,9 +79,11 @@ $artist-header-breack-point: 880px;
         border: none;
         border-radius: 5px;
         margin-right: 1em;
+        transition: .3s;
 
         &:hover {
             background-color: #DD2E44;
+            color: $primary-grey;
         }
 
         p {
