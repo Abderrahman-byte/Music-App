@@ -3,12 +3,15 @@ import PropTypes from 'prop-types'
 
 import '../styles/ArtistAlbums.scss'
 
+import { AlbumCard } from './AlbumCard'
+
 export class ArtistAlbums extends React.Component {
     state = {
         data: [],
         isLoading: true,
         currentPage: 1,
         itemsPerPage: 5,
+        total: null
     }
 
     componentDidMount = () => {
@@ -21,11 +24,23 @@ export class ArtistAlbums extends React.Component {
         const req = await fetch(`${process.env.API_URL}/${url}`)
 
         if(req.status >= 200 && req.status < 300) {
-            const data = await req.json()
-            console.log(data)
+            const response = await req.json()
+            this.setState((prevState) => {
+                return {
+                    currentPage: prevState.currentPage + 1,
+                    data: [...prevState.data, ...response.data],
+                    total: response.total,
+                    isLoading: false
+                }
+            })
         } else {
             console.error(await req.json())
         }
+    }
+
+    getAlbumCards = () => {
+        if(this.state.data.length <= 0) return null
+        return this.state.data.map(item => <AlbumCard data={item} key={item.id} />)
     }
 
     render = () => {
@@ -40,7 +55,13 @@ export class ArtistAlbums extends React.Component {
                             <div></div>
                         </div>
                     </div>
-                ) : null}
+                ) : (
+                    <>
+                        <div className='albums-container'>
+                            {this.getAlbumCards()}
+                        </div>
+                    </>
+                )}
             </div>
         )
     }
