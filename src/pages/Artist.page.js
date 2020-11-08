@@ -4,6 +4,7 @@ import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from '../components/LoadingModel'
 import { ArtistHeader } from '../components/ArtistHeader'
 import { ArtistTopTracks } from '../components/ArtistTopTracks'
+import { ArtistAlbums } from '../components/ArtistAlbums'
 
 export class ArtistPage extends React.Component {
     static contextType = ModelsContext
@@ -61,6 +62,8 @@ export class ArtistPage extends React.Component {
                         />
 
                         <ArtistTopTracks top={this.state.topTracks} id={this.state.data?.id} />
+                        
+                        <ArtistAlbums id={this.state.data?.id} />
                     </>
                 ) : null}
             </div>

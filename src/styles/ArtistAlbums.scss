@@ -1,0 +1,14 @@
+@import './variables.scss';
+
+.ArtistAlbums {
+    padding: 1em 0;
+
+    .loading {
+        background-color: $primary-grey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 3px;
+        height: 150px;
+    }
+}
