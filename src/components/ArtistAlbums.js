@@ -13,7 +13,7 @@ export class ArtistAlbums extends React.Component {
     render = () => {
         return (
             <div className='ArtistAlbums'>
-                {isLoading ? (
+                {this.state.isLoading ? (
                     <div className='loading'>
                         <div className='lds-ring big'>
                             <div></div>
