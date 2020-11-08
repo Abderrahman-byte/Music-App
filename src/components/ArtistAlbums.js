@@ -10,7 +10,7 @@ export class ArtistAlbums extends React.Component {
         data: [],
         isLoading: true,
         currentPage: 1,
-        itemsPerPage: 5,
+        itemsPerPage: this.props.data?.total || 10,
         total: null
     }
 
@@ -20,7 +20,7 @@ export class ArtistAlbums extends React.Component {
 
     fetchAlbumsData = async () => {
         const startIndex = (this.state.currentPage * this.state.itemsPerPage ) - this.state.itemsPerPage
-        const url = `api/music/artist/${this.props.id}/albums`
+        const url = `api/music/artist/${this.props.id}/albums?index=${startIndex}&limit=${this.state.itemsPerPage}`
         const req = await fetch(`${process.env.API_URL}/${url}`)
 
         if(req.status >= 200 && req.status < 300) {
