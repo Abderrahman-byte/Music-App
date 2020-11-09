@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef } from 'react'
 import PropTypes from 'prop-types'
 
 import '../styles/ArtistAlbums.scss'
@@ -11,11 +11,25 @@ export class ArtistAlbums extends React.Component {
         isLoading: true,
         currentPage: 1,
         itemsPerPage: this.props.data?.total || 10,
-        total: null
+        total: null,
+        containerRef: createRef(),
+        itemsPerLine: null
     }
 
     componentDidMount = () => {
         this.fetchAlbumsData()
+        this.getItemsPerLine()
+        window.addEventListener('resize', this.getItemsPerLine)
+    }
+    
+    componentWillUnmount = () => {
+        window.removeEventListener('resize', this.getItemsPerLine)
+    }
+
+    getItemsPerLine = () => {
+        const container = this.state.containerRef.current
+        const itemsPerLine = Math.floor(parseFloat(getComputedStyle(container).width) / 150)
+        this.setState({itemsPerLine: itemsPerLine})
     }
 
     fetchAlbumsData = async () => {
@@ -40,12 +54,12 @@ export class ArtistAlbums extends React.Component {
 
     getAlbumCards = () => {
         if(this.state.data.length <= 0) return null
-        return this.state.data.map(item => <AlbumCard data={item} key={item.id} />)
+        return this.state.data.map(item => <AlbumCard itemsPerLine={this.state.itemsPerLine} data={item} key={item.id} />)
     }
 
     render = () => {
         return (
-            <div className='ArtistAlbums'>
+            <div className='ArtistAlbums' ref={this.state.containerRef}>
                 {this.state.isLoading ? (
                     <div className='loading'>
                         <div className='lds-ring big'>
