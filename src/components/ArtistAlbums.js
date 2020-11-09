@@ -28,7 +28,7 @@ export class ArtistAlbums extends React.Component {
 
     getItemsPerLine = () => {
         const container = this.state.containerRef.current
-        const itemsPerLine = Math.floor(parseFloat(getComputedStyle(container).width) / 150)
+        const itemsPerLine = Math.floor(parseFloat(getComputedStyle(container).width) / 170)
         this.setState({itemsPerLine: itemsPerLine})
     }
 
