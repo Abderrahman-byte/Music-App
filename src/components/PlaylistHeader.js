@@ -26,8 +26,6 @@ export const PlaylistHeader = ({cover, title, release_date, itemsNb, author, ite
         }
     }
 
-    console.log(author)
-
     return (
         <div className='PlaylistHeader'>
             <div className={`cover-container${isCurrent ? ' current': ''}`}>
