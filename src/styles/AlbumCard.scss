@@ -3,10 +3,57 @@
 .AlbumCard {
     width: 150px;
     margin: 0;
-
+    margin-bottom: 1.5em;
+    
     .cover-container {
+        display: block;
+        color: whitesmoke;
+        text-decoration: none;
+        position: relative;
         border-radius: 8px;
         overflow: hidden;
+        border: 1px solid $primary-grey;
+
+        .front-drop {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: .3s;
+
+            .play-btn {
+                position: absolute;
+                bottom: 6%;
+                right: 5%;
+                background-color: whitesmoke;
+                width: 35px;
+                height: 35px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 1.1rem;
+                color: $primary-grey;
+                border: none;
+                text-decoration: none;
+                border-radius: 50%;
+                transition: .4s;
+
+                &:hover {
+                    background-color: darken(whitesmoke, .5);
+                    color: $secondary-grey;
+                }
+            }
+        }
+
+        &:hover {
+            .front-drop {
+                opacity: 1;
+            }
+        }
     }
 
 }
@@ -15,7 +62,7 @@
     .AlbumCard.perline-#{$i} {
         margin-right: calc((100% - (#{$i} * 150px)) / (#{$i} - 1));
 
-        &:nth-child(#{$i}) {
+        &:nth-child(#{$i}n) {
             margin-right: 0;
         }
 
