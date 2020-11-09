@@ -10,7 +10,7 @@ export class ArtistAlbums extends React.Component {
         data: [],
         isLoading: true,
         currentPage: 1,
-        itemsPerPage: this.props.data?.total || 10,
+        itemsPerPage: 5,
         total: null,
         containerRef: createRef(),
         itemsPerLine: null
@@ -74,6 +74,10 @@ export class ArtistAlbums extends React.Component {
                         <div className='albums-container'>
                             {this.getAlbumCards()}
                         </div>
+
+                        {this.state.total && this.state.data.length < this.state.total? (
+                            <button onClick={this.fetchAlbumsData} className='add-more'>Load more</button>
+                        ): (null) }
                     </>
                 )}
             </div>
