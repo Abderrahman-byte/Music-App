@@ -5,6 +5,7 @@ import { LoadingModel } from '../components/LoadingModel'
 import { ArtistHeader } from '../components/ArtistHeader'
 import { ArtistTopTracks } from '../components/ArtistTopTracks'
 import { ArtistAlbums } from '../components/ArtistAlbums'
+import { ArtistNotFound } from '../components/NotFound'
 
 export class ArtistPage extends React.Component {
     static contextType = ModelsContext
@@ -49,24 +50,32 @@ export class ArtistPage extends React.Component {
     }
 
     render = () => {
-        return (
-            <div className='ArtistPage page'>
-                {!this.state.isLoading ? (
-                    <>
-                        <ArtistHeader 
-                            id={this.state.data?.id}
-                            name={this.state.data?.name} 
-                            picture={this.state.data?.picture_medium}
-                            nb_albums={this.state.data?.nb_album}
-                            nb_tracks={this.state.topTracks?.total}
-                        />
-
-                        <ArtistTopTracks top={this.state.topTracks} id={this.state.data?.id} />
-                        
-                        <ArtistAlbums id={this.state.data?.id} />
-                    </>
-                ) : null}
-            </div>
-        )
+        if(this.state.error && !this.state.isLoading) {
+            return (
+                <div className='ArtistPage page'>
+                    <ArtistNotFound />
+                </div>
+            )
+        } else {
+            return (
+                <div className='ArtistPage page'>
+                    {!this.state.isLoading ? (
+                        <>
+                            <ArtistHeader 
+                                id={this.state.data?.id}
+                                name={this.state.data?.name} 
+                                picture={this.state.data?.picture_medium}
+                                nb_albums={this.state.data?.nb_album}
+                                nb_tracks={this.state.topTracks?.total}
+                            />
+    
+                            <ArtistTopTracks top={this.state.topTracks} id={this.state.data?.id} />
+                            
+                            <ArtistAlbums id={this.state.data?.id} />
+                        </>
+                    ) : null}
+                </div>
+            )
+        }
     }
 }

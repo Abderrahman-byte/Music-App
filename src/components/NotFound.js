@@ -12,3 +12,14 @@ export const AlbumNotFound = () => {
         </div>
     )
 }
+
+export const ArtistNotFound = () => {
+    return (
+        <div className='NotFound ArtistNotFound'>
+            <div className='container'>
+                <h2>404 Error</h2>
+                <p>The Album You Looking For doesn't exist.</p>
+            </div>
+        </div>
+    )
+}
