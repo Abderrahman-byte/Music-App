@@ -1,12 +1,26 @@
+@import './variables.scss';
 
 .AlbumCard {
     width: 150px;
-    margin: 0 auto;
+    margin: 0;
 
     .cover-container {
         border-radius: 8px;
         overflow: hidden;
-        
-
     }
+
+}
+
+@for $i from 1 through 8 {
+    .AlbumCard.perline-#{$i} {
+        margin-right: calc((100% - (#{$i} * 150px)) / (#{$i} - 1));
+
+        &:nth-child(#{$i}) {
+            margin-right: 0;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }    
 }
