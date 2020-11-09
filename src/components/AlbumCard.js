@@ -7,10 +7,15 @@ import '../styles/AlbumCard.scss'
 export const AlbumCard = ({data, itemsPerLine}) => {
     return (
         <div className={`AlbumCard perline-${itemsPerLine}`}>
-            <Link to='#' className='cover-container'>
+            <Link to={`/album/${data.id}`} className='cover-container'>
                 <img className='cover' src={data.cover_medium} alt={data.title} />
                 <div className='front-drop'>
-                    <Link className='play-btn' to='#'>
+                    <Link className='play-btn' to={{
+                        pathname: `/album/${data.id}`,
+                        state: {
+                            autoPlay: true
+                        }
+                    }}>
                         <i className='fas fa-play'></i>
                     </Link>
                 </div>
