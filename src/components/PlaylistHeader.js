@@ -6,7 +6,7 @@ import '../styles/PlaylistHeader.scss'
 
 import { MusicPlayer } from '../context/MusicPlayer'
 
-export const PlaylistHeader = ({cover, title, release_date, itemsNb, author, items}) => {
+export const PlaylistHeader = ({cover, title, release_date, itemsNb, author, items, autoPlay}) => {
     const { isPlaying, currentId, play, setPlayingStatus, queue } = useContext(MusicPlayer)
 
     const isCurrent = useMemo(() => {
@@ -25,6 +25,12 @@ export const PlaylistHeader = ({cover, title, release_date, itemsNb, author, ite
             play(items)
         }
     }
+
+    useEffect(() => {
+        if(autoPlay) {
+            play(items)
+        }
+    }, [])
 
     return (
         <div className='PlaylistHeader'>
@@ -66,5 +72,6 @@ PlaylistHeader.propTypes = {
         name: PropTypes.string.isRequired,
         picture: PropTypes.string
     }).isRequired,
-    items: PropTypes.array
+    items: PropTypes.array,
+    autoPlay: PropTypes.bool
 }

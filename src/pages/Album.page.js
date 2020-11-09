@@ -50,7 +50,8 @@ export class AlbumPage extends React.Component {
                 name: this.state.data?.artist?.name,
                 picture: this.state.data?.artist?.picture_small,
             },
-            items: this.state.items
+            items: this.state.items,
+            autoPlay: this.props.location?.state?.autoPlay || false
         }
     }
 
