@@ -3,6 +3,16 @@
 .ArtistAlbums {
     padding: 1em 0;
 
+    h6 {
+        font-size: 1.3rem;
+        margin-bottom: .75em;
+        color: whitesmoke;
+        letter-spacing: .1em;
+        font-weight: 300;
+        font-family: 'Inter', sans-serif;
+        text-transform: uppercase;
+    }
+
     .loading {
         background-color: $primary-grey;
         display: flex;

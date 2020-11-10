@@ -70,7 +70,8 @@ export class ArtistAlbums extends React.Component {
                         </div>
                     </div>
                 ) : (
-                    <>
+                    <>  
+                        <h6>Albums</h6>
                         <div className='albums-container'>
                             {this.getAlbumCards()}
                         </div>
