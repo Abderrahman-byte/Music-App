@@ -7,7 +7,7 @@ export const parseQuery = (queryString) => {
             if(Array.isArray(parsedQuery[key])) {
                 parsedQuery[key].push(value)
             } else {
-                parsedQuery[key] = [oldValue, value]
+                parsedQuery[key] = [parsedQuery[key], value]
             }
 
         } else {
