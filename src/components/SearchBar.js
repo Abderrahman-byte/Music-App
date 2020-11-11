@@ -6,11 +6,11 @@ export const SearchBar = () => {
     const [query, setQuery] = useState('')
 
     const handleSubmit = e => {
-        e.preventDefault()
+        if(query === '' || query === null || query === undefined) e.preventDefault()
     }
 
     return (
-        <form className='SearchBar' onSubmit={handleSubmit} role='search'>
+        <form className='SearchBar' onSubmit={handleSubmit} role='search' action='/search'>
             <input name='query' value={query} onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
             <button>
                 <i className='fas fa-search'></i>
