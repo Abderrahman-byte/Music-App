@@ -188,7 +188,7 @@ def Search(request) :
 
     # Serializer data
     context = {
-        'artist': ArtistDetailedSerializer(artist_with_exact_name).data,
+        'artist': ArtistDetailedSerializer(artist_with_exact_name).data if artist_with_exact_name is not None else None,
         'artists': {
             'data': ArtistDetailedSerializer(artists[0:limit], many=True).data ,
             'total': artists.count(),
