@@ -1,0 +1,114 @@
+@import './variables.scss';
+
+.ArtistDetailedCard {
+    padding: .5em .75em;
+    display: flex;
+    width: fit-content;
+    border-radius: 3px;
+    margin: 1em 0;
+    pointer-events: none;
+    
+
+    &:hover {
+        background-color: $primary-grey;
+    }
+    
+    .cover-container {
+        text-decoration: none;
+        color: whitesmoke;
+        pointer-events: auto;
+
+        .cover {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1em;
+        }
+    }
+
+    .info-container {
+        align-self: center;
+        .name {
+            font-size: 2rem;
+            letter-spacing: .15em;
+            font-weight: 300;
+            color: whitesmoke;
+            margin-bottom: .25em;
+        }
+
+        .info-row {
+            margin-bottom: .75em;
+            display: flex;
+
+            span {
+                display: block;
+                margin-right: 1em;
+                color: $secondary-grey;
+                font-size: .75em;
+                letter-spacing: .1em;
+                font-weight: 500;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        .fav-btn {
+            cursor: pointer;
+            background-color: transparent;
+            font-size: 1.3rem;
+            border: none;
+            pointer-events: auto;
+    
+            i {
+                color: transparentize(whitesmoke, .5);
+                transition: .3s;
+            }
+    
+            &:hover {
+                i {
+                    color: #DD2E44;
+                }
+            }
+        }
+    
+        .subcribe-btn {
+            display: flex;
+            padding: .4em;
+            cursor: pointer;
+            color: $secondary-grey;
+            background-color: whitesmoke;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            margin-right: 1em;
+            transition: .3s;
+            pointer-events: auto;
+    
+            &:hover {
+                background-color: #DD2E44;
+                color: $primary-grey;
+            }
+    
+            p {
+                font-size: 1.1rem;
+                font-weight: 600;
+                letter-spacing: .1em;
+                text-transform: capitalize;
+            }
+    
+            i {
+                margin-right: .3em;
+                font-size: 1.2rem;
+            }
+        }
+    }
+
+
+}
