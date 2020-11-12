@@ -3,6 +3,7 @@ import React from 'react'
 import { parseQuery } from '../utils/generic'
 import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from '../components/LoadingModel'
+import { ArtistDetailedCard } from '../components/ArtistDetailedCard'
 
 export class SearchPage extends React.Component {
     static contextType = ModelsContext
@@ -100,7 +101,11 @@ export class SearchPage extends React.Component {
     
     render = () => {
         return (
-            <div className='SearchPage page'></div>
+            <div className='SearchPage page'>
+                {this.state.artist ? (
+                    <ArtistDetailedCard data={this.state.artist} />
+                ) : null}
+            </div>
         )
     }
 }
