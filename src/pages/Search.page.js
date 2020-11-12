@@ -10,7 +10,26 @@ export class SearchPage extends React.Component {
     state = {
         query: null,
         isLoading: true,
-        error: false
+        error: false,
+        artist: null,
+        artists: {
+            data: [],
+            total: undefined,
+            currentPage: 1,
+            itemsPerReq: 5
+        },
+        albums: {
+            data: [],
+            total: undefined,
+            currentPage: 1,
+            itemsPerReq: 5
+        },
+        tracks: {
+            data: [],
+            total: undefined,
+            currentPage: 1,
+            itemsPerReq: 5
+        }
     }
 
     componentDidMount = () => {
@@ -30,7 +49,28 @@ export class SearchPage extends React.Component {
         
         if(req.status >= 200 && req.status < 300) {
             const data = await req.json()
-            console.log(data)
+            this.setState((prevState) => {
+                return {
+                    ...prevState,
+                    artist: data.artist || null,
+                    artists: {
+                        ...prevState.artists,
+                        data: [...(data.artists?.data||[])],
+                        total: data.artists.total
+                    },
+                    albums: {
+                        ...prevState.albums,
+                        data: [...(data.albums?.data||[])],
+                        total: data.albums.total
+                    },
+                    tracks: {
+                        ...prevState.tracks,
+                        data: [...(data.tracks?.data||[])],
+                        total: data.tracks.total
+                    },
+                    isLoading: false  
+                }
+            })
         } else {
             console.error(await req.json())
             this.setState({error: false})
