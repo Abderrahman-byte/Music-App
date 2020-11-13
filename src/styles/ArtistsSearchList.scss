@@ -1,0 +1,19 @@
+.ArtistsSearchList {
+    border: 1px solid red;
+    margin: .75em 0 1em 0;
+
+    .title {
+        font-size: 2rem;
+        letter-spacing: .1em;
+        font-family: 'Inter', sans-serif;
+        color: whitesmoke;
+        font-weight: 300;
+        text-transform: uppercase;
+        margin-bottom: .75em;
+    }
+
+    .cards-container {
+        display: flex;
+        padding: .5em 0;
+    }
+}
