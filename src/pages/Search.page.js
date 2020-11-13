@@ -142,7 +142,7 @@ export class SearchPage extends React.Component {
                     <AlbumsSearchList 
                         data={this.state.albums.data} 
                         query={this.state.query}
-                        total={this.state.tracks.total}
+                        total={this.state.albums.total}
                         max={15}
                     />
                 ) : null}
