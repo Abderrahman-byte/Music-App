@@ -4,8 +4,12 @@ import PropTypes from 'prop-types'
 import '../styles/TracksSearchList.scss'
 
 import { PlaylistTable } from './PlaylistTable'
+import { ModelsContext } from '../context/ModelsContext'
+import { LoadingModel } from './LoadingModel'
 
 export class TracksSearchList extends React.Component {
+    static contextType = ModelsContext
+
     state = {
         data: [...this.props.data],
         currentPage: 1,
@@ -13,6 +17,8 @@ export class TracksSearchList extends React.Component {
     }
 
     getNextData = async () => {
+        const { openModel, closeModel } = this.context
+        openModel(<LoadingModel msg='Loading More Tracks'/>, false) 
         const nextPage = this.state.currentPage + 1
         const index = (nextPage * this.state.itemsPerPage) - this.state.itemsPerPage
         const url = `api/music/search/tracks?query=${this.props.query}&limit=${this.state.itemsPerPage}&index=${index}`
@@ -26,6 +32,7 @@ export class TracksSearchList extends React.Component {
         } else {
             console.error(await req.json())
         }
+        closeModel()
     }
 
     render = () => {

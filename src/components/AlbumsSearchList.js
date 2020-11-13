@@ -2,8 +2,12 @@ import React, { createRef } from 'react'
 import PropTypes from 'prop-types'
 
 import { AlbumCard } from './AlbumCard'
+import { ModelsContext } from '../context/ModelsContext'
+import { LoadingModel } from './LoadingModel'
 
 export class AlbumsSearchList extends React.Component {
+    static contextType = ModelsContext
+
     state = {
         data: [...this.props.data],
         currentPage: 1,
@@ -29,6 +33,8 @@ export class AlbumsSearchList extends React.Component {
     }
 
     fetchNextAlbumsData = async () => {
+        const { openModel, closeModel } = this.context
+        openModel(<LoadingModel msg='Load More Albums' />)
         const nextPage = this.state.currentPage + 1
         const index = (nextPage * this.state.itemsPerPage) - this.state.itemsPerPage
         const url = `api/music/search/albums?query=${this.props.query}&limit=${this.state.itemsPerPage}&index=${index}`
@@ -46,6 +52,7 @@ export class AlbumsSearchList extends React.Component {
         } else {
             console.error(await req.json())
         }
+        closeModel()
     }
 
     render = () => {
