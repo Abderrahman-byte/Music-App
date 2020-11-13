@@ -4,6 +4,7 @@ import { parseQuery } from '../utils/generic'
 import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from '../components/LoadingModel'
 import { ArtistDetailedCard } from '../components/ArtistDetailedCard'
+import { TracksSearchList } from '../components/TracksSearchList'
 
 export class SearchPage extends React.Component {
     static contextType = ModelsContext
@@ -107,6 +108,15 @@ export class SearchPage extends React.Component {
                     <ArtistDetailedCard data={this.state.artist} />
                     <div className='border'></div>
                     </>
+                ) : null}
+
+                {this.state.tracks.data.length > 0 && this.state.query ? (
+                    <TracksSearchList 
+                        data={this.state.tracks.data} 
+                        max={10}
+                        total={this.state.tracks.total}
+                        query={this.state.query}
+                    />
                 ) : null}
             </div>
         )
