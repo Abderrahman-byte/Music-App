@@ -6,6 +6,7 @@ import { LoadingModel } from '../components/LoadingModel'
 import { ArtistDetailedCard } from '../components/ArtistDetailedCard'
 import { TracksSearchList } from '../components/TracksSearchList'
 import { AlbumsSearchList } from '../components/AlbumsSearchList'
+import { ArtistsSearchList } from '../components/ArtistsSearchList'
 
 export class SearchPage extends React.Component {
     static contextType = ModelsContext
@@ -118,6 +119,17 @@ export class SearchPage extends React.Component {
                         total={this.state.tracks.total}
                         query={this.state.query}
                     />
+                ) : null}
+
+                {this.state.artists.data.length > 0 && this.state.query ? (
+                    <>
+                    <div className='border' />
+                    <ArtistsSearchList
+                        total={this.state.artists.total}
+                        query={this.state.query}
+                        data={this.state.artists.data}
+                    />
+                    </>
                 ) : null}
 
                 {this.state.albums.data.length > 0 && this.state.query ? (
