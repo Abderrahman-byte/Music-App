@@ -121,27 +121,30 @@ export class SearchPage extends React.Component {
                     />
                 ) : null}
 
-                {this.state.artists.data.length > 0 && this.state.query ? (
-                    <>
+                {this.state.artists.data.length > 0 && this.state.tracks.data.length > 0 ? (
                     <div className='border' />
+                ) : null}
+
+                {this.state.artists.data.length > 0 && this.state.query ? (
                     <ArtistsSearchList
                         total={this.state.artists.total}
                         query={this.state.query}
                         data={this.state.artists.data}
                     />
-                    </>
+                ) : null}
+
+                {(this.state.artists.data.length > 0 || this.state.tracks.data.length > 0) &&
+                this.state.albums.data.length > 0 ? (
+                    <div className='border' />
                 ) : null}
 
                 {this.state.albums.data.length > 0 && this.state.query ? (
-                    <>
-                    <div className='border'/>
                     <AlbumsSearchList 
                         data={this.state.albums.data} 
                         query={this.state.query}
                         total={this.state.tracks.total}
                         max={15}
                     />
-                    </>
                 ) : null}
             </div>
         )
