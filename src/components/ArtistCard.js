@@ -6,7 +6,7 @@ import '../styles/ArtistCard.scss'
 
 export const ArtistCard = ({data, itemsPerLine}) => {
     return (
-        <Link className={`ArtistCard perline-${itemsPerLine}`} to='#'>
+        <Link className={`ArtistCard perline-${itemsPerLine}`} to={`/artist/${data.id}`}>
             <img className='cover' src={data.picture_medium} alt={data.name} />
             <h6 className='name'>{data.name}</h6>
         </Link>
