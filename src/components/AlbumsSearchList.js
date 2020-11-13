@@ -1,6 +1,8 @@
 import React, { createRef } from 'react'
 import PropTypes from 'prop-types'
 
+import '../styles/AlbumsSearchList.scss'
+
 import { AlbumCard } from './AlbumCard'
 import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from './LoadingModel'
@@ -13,8 +15,7 @@ export class AlbumsSearchList extends React.Component {
         currentPage: 1,
         itemsPerPage: 5,
         containerRef: createRef(),
-        itemsPerLine: 5,
-        total: undefined
+        itemsPerLine: 5
     }
 
     componentDidMount = () => {
@@ -45,7 +46,6 @@ export class AlbumsSearchList extends React.Component {
             this.setState(prevState => {
                 return {
                     data: [...prevState.data, ...data.data],
-                    total: data.total,
                     currentPage: nextPage
                 }
             })
@@ -57,11 +57,15 @@ export class AlbumsSearchList extends React.Component {
 
     render = () => {
         return (
-            <div className='ArtistAlbums' ref={this.state.containerRef}>
+            <div className='ArtistAlbums AlbumsSearchList' ref={this.state.containerRef}>
+                <h6 className='title'>Albums</h6>
                 <div className='albums-container'>
-                    {this.state.data.map(item => <AlbumCard itemsPerLine={this.state.itemsPerLine} key={item.id} data={item} />)}
-                    <button onClick={this.fetchNextAlbumsData} className='add-more'>Load More</button>
+                    {this.state.data.map(item => <AlbumCard itemsPerLine={this.state.itemsPerLine} key={item.id} data={item} />)}    
                 </div>
+
+                {this.state.data.length < this.props.max && (this.props.total ? this.state.data.length < this.props.total : true) ? (
+                    <button onClick={this.fetchNextAlbumsData} className='add-more'>Load More</button>
+                ): null }
             </div>
         )
     }
@@ -69,5 +73,10 @@ export class AlbumsSearchList extends React.Component {
 
 AlbumsSearchList.propTypes = {
     data: PropTypes.array.isRequired,
-    query: PropTypes.string.isRequired
+    query: PropTypes.string.isRequired,
+    max: PropTypes.number.isRequired
+}
+
+AlbumsSearchList.defaultProps = {
+    max: 15
 }
