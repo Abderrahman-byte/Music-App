@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Link } from 'react-router-dom'
+
 import { parseQuery } from '../utils/generic'
 import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from '../components/LoadingModel'
@@ -41,7 +43,40 @@ export class SearchPage extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if(!prevState.query && this.state.query !== null && this.state.query !== undefined) this.getSearchData()
+        if(this.state.query !== null && this.state.query !== undefined && prevState.query !== this.state.query) {
+            console.log(`query change "${prevState.query}" ==> "${this.state.query}"`)
+            this.getSearchData()
+        }
+
+        if(prevProps.location?.search !== this.props.location?.search) {
+            console.log(`url change "${prevProps.location?.search}" ==> "${this.props.location?.search}"`)
+            this.getQuery()
+            this.resetState()
+        }
+    }
+
+    resetState = () => {
+        this.setState({
+            artist: null,
+            artists: {
+                data: [],
+                total: undefined,
+                currentPage: 1,
+                itemsPerReq: 5
+            },
+            albums: {
+                data: [],
+                total: undefined,
+                currentPage: 1,
+                itemsPerReq: 5
+            },
+            tracks: {
+                data: [],
+                total: undefined,
+                currentPage: 1,
+                itemsPerReq: 5
+            }
+        })
     }
 
     getSearchData = async () => {
