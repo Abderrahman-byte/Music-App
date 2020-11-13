@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import '../styles/ArtistDetailedCard.scss'
@@ -6,7 +7,7 @@ import '../styles/ArtistDetailedCard.scss'
 export const ArtistDetailedCard = ({data}) => {
     return (
         <div className='ArtistDetailedCard'>
-            <Link className='cover-container' to='#'>
+            <Link className='cover-container' to={`/artist/${data.id}`}>
                 <img src={data.picture_medium} className='cover' />
             </Link>
 
@@ -31,4 +32,13 @@ export const ArtistDetailedCard = ({data}) => {
             </div>
         </div>
     )
+}
+
+ArtistDetailedCard.propTypes = {
+    data: PropTypes.shape({
+        picture_medium: PropTypes.string.isRequired,
+        nb_album: PropTypes.number.isRequired,
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+    }).isRequired
 }
