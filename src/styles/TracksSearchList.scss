@@ -1,0 +1,42 @@
+@import './variables.scss';
+
+.TracksSearchList {
+    margin: .75em;
+    
+    .title {
+        font-size: 2rem;
+        letter-spacing: .1em;
+        font-family: 'Inter', sans-serif;
+        color: whitesmoke;
+        font-weight: 300;
+        margin-bottom: .5em;
+    }
+
+    .add-more {
+        display: block;
+        margin-top: 1em;
+        background-color: $primary-purple;
+        color: whitesmoke;
+        font-size: 1.2rem;
+        padding: .25em .75em;
+        letter-spacing: .1em;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: .3s;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        &:hover {
+            background-color: darken($primary-purple, 10);
+        }
+
+        &.small {
+            max-width: 600px;
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+}
