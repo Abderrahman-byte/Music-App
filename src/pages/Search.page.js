@@ -103,7 +103,10 @@ export class SearchPage extends React.Component {
         return (
             <div className='SearchPage page'>
                 {this.state.artist ? (
+                    <>
                     <ArtistDetailedCard data={this.state.artist} />
+                    <div className='border'></div>
+                    </>
                 ) : null}
             </div>
         )

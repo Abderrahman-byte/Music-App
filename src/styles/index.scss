@@ -66,3 +66,9 @@ img {
         background-color: darken($primary-purple, 10);
     }
 }
+
+.border {
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid whitesmoke;
+}
