@@ -35,7 +35,7 @@
     }
 }
 
-@for $i from 1 through 8 {
+@for $i from 2 through 8 {
     .ArtistCard.perline-#{$i} {
         margin-right: calc((100% - (#{$i} * 150px)) / (#{$i} - 1));
 
@@ -46,5 +46,9 @@
         &:last-child {
             margin-right: 0;
         }
-    }    
+    }
+}
+
+.ArtistCard.perline-1 {
+    margin: 0 auto;
 }
