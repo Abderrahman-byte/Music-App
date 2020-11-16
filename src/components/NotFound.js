@@ -23,3 +23,14 @@ export const ArtistNotFound = () => {
         </div>
     )
 }
+
+export const UnkownError = () => {
+    return (
+        <div className='NotFound UnkownError'>
+            <div className='container'>
+                <h2>We Are Sorry</h2>
+                <p>Something Went wrong, Please try later.</p>
+            </div>
+        </div>
+    )
+}
