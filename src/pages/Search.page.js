@@ -7,7 +7,7 @@ import { ArtistDetailedCard } from '../components/ArtistDetailedCard'
 import { TracksSearchList } from '../components/TracksSearchList'
 import { AlbumsSearchList } from '../components/AlbumsSearchList'
 import { ArtistsSearchList } from '../components/ArtistsSearchList'
-import { UnkownError } from '../components/NotFound'
+import { UnknownError } from '../components/NotFound'
 
 export class SearchPage extends React.Component {
     static contextType = ModelsContext
@@ -138,7 +138,7 @@ export class SearchPage extends React.Component {
         if(this.state.error && !this.state.isLoading) {
             return (
                 <div className='SearchPage page'>
-                    <UnkownError />
+                    <UnknownError />
                 </div>
             )
         }
