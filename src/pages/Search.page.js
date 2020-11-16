@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { Link } from 'react-router-dom'
-
 import { parseQuery } from '../utils/generic'
 import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from '../components/LoadingModel'
@@ -9,6 +7,7 @@ import { ArtistDetailedCard } from '../components/ArtistDetailedCard'
 import { TracksSearchList } from '../components/TracksSearchList'
 import { AlbumsSearchList } from '../components/AlbumsSearchList'
 import { ArtistsSearchList } from '../components/ArtistsSearchList'
+import { UnkownError } from '../components/NotFound'
 
 export class SearchPage extends React.Component {
     static contextType = ModelsContext
@@ -44,12 +43,10 @@ export class SearchPage extends React.Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         if(this.state.query !== null && this.state.query !== undefined && prevState.query !== this.state.query) {
-            console.log(`query change "${prevState.query}" ==> "${this.state.query}"`)
             this.getSearchData()
         }
 
         if(prevProps.location?.search !== this.props.location?.search) {
-            console.log(`url change "${prevProps.location?.search}" ==> "${this.props.location?.search}"`)
             this.getQuery()
             this.resetState()
         }
@@ -126,7 +123,7 @@ export class SearchPage extends React.Component {
         if(parsed.query === null || parsed.query === undefined || parsed.query === '') {
             this.setState({query: null, isLoading: false, error: true})
             return
-        } 
+        }
         
         if(Array.isArray(parsed.query)) {
             query = parsed.query[0]
@@ -138,6 +135,14 @@ export class SearchPage extends React.Component {
     }
     
     render = () => {
+        if(this.state.error && !this.state.isLoading) {
+            return (
+                <div className='SearchPage page'>
+                    <UnkownError />
+                </div>
+            )
+        }
+
         return (
             <div className='SearchPage page'>
                 {this.state.artist ? (
