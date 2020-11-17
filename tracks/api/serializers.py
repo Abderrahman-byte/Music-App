@@ -43,10 +43,11 @@ class AlbumSimpleSerializer(serializers.ModelSerializer) :
 
 class ArtistSimpleSerializer(serializers.ModelSerializer) :
     nb_album = serializers.IntegerField(source='album_set.count', read_only=True)
+    nb_follow = serializers.IntegerField(source='follow_set.count', read_only=True)
 
     class Meta :
         model = Artist
-        fields = ['id', 'name', 'picture', 'picture_small', 'picture_medium', 'picture_big', 'picture_xl', 'nb_album']
+        fields = ['id', 'name', 'picture', 'picture_small', 'picture_medium', 'picture_big', 'picture_xl', 'nb_album', 'nb_follow']
 
 
 class TrackDetailedSerializer(serializers.ModelSerializer) :
@@ -73,12 +74,13 @@ class AlbumDetailedSerializer(serializers.ModelSerializer) :
 
 class ArtistDetailedSerializer(serializers.ModelSerializer) :
     nb_album = serializers.IntegerField(source='album_set.count', read_only=True)
+    nb_follow = serializers.IntegerField(source='follow_set.count', read_only=True)
     top = serializers.SerializerMethodField(method_name='get_top')
 
     class Meta :
         model = Artist
         fields = ['id', 'name', 'picture', 'picture_small', 'picture_medium', 'picture_big', 'picture_xl', 
-        'nb_album', 'top']
+        'nb_album', 'top', 'nb_follow']
 
     def get_top(self, instance) :
         limit = 5
