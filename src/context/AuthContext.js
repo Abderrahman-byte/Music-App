@@ -3,14 +3,17 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { LoadingModel } from '../components/LoadingModel'
 import { ModelsContext } from './ModelsContext'
 
-const AuthContext = createContext({})
+export const AuthContext = createContext({})
+AuthContext.displayName = 'AuthContext'
 
 export const AuthProvider = ({children}) => {
     const { openModel, closeModel } = useContext(ModelsContext)
 
     const [user, setUser] = useState(undefined)
+    const [isLoading, setLoadingState] = useState(true)
 
     const authenticate = async () => {
+        setLoadingState(true)
         openModel(<LoadingModel msg='Loading user data' />, false)
 
         const req = await fetch(`${process.env.API_URL}/api/auth/account`, {
@@ -25,6 +28,7 @@ export const AuthProvider = ({children}) => {
         }
         
         // closeModel()
+        setLoadingState(false)        
     }
 
     useEffect(() => {
@@ -34,6 +38,7 @@ export const AuthProvider = ({children}) => {
     return (
         <AuthContext.Provider value={{
             user,
+            isLoading
         }}>
             {children}
         </AuthContext.Provider>
