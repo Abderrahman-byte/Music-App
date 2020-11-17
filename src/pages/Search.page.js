@@ -8,10 +8,10 @@ import { TracksSearchList } from '../components/TracksSearchList'
 import { AlbumsSearchList } from '../components/AlbumsSearchList'
 import { ArtistsSearchList } from '../components/ArtistsSearchList'
 import { UnknownError } from '../components/NotFound'
+import { ClassWithMultipleContexts } from '../components/ClassWithMultipleContexts'
+import { AuthContext } from '../context/AuthContext' 
 
 export class SearchPage extends React.Component {
-    static contextType = ModelsContext
-
     state = {
         query: null,
         isLoading: true,
@@ -78,7 +78,7 @@ export class SearchPage extends React.Component {
 
     getSearchData = async () => {
         if(this.state.error || !this.state.query) return
-        const { openModel, closeModel } = this.context
+        const { openModel, closeModel } = this.context.ModelsContext
         openModel(<LoadingModel msg='Sync search data' />)
 
         const req = await fetch(`${process.env.API_URL}/api/music/search?query=${this.state.query}`)
@@ -115,6 +115,17 @@ export class SearchPage extends React.Component {
         closeModel()
     }
 
+    closeIfAuthLoaded = () => {
+        const { closeModel } = this.context.ModelsContext
+        let AuthIsLoading = this.context.AuthContext?.isLoading || false
+         
+        if(AuthIsLoading) {
+            setTimeout(this.closeIfAuthLoaded, 1000)
+        } else {
+            closeModel()
+        }
+    }
+
     getQuery = () => {
         const queryString = this.props.location?.search
         const parsed = parseQuery(queryString)
@@ -122,6 +133,7 @@ export class SearchPage extends React.Component {
 
         if(parsed.query === null || parsed.query === undefined || parsed.query === '') {
             this.setState({query: null, isLoading: false, error: true})
+            this.closeIfAuthLoaded()
             return
         }
         
@@ -190,3 +202,5 @@ export class SearchPage extends React.Component {
         )
     }
 }
+
+export default ClassWithMultipleContexts(SearchPage, {ModelsContext, AuthContext})
