@@ -16,8 +16,7 @@ export const ArtistDetailedCard = ({data}) => {
 
                 <div className='info-row'>
                     <span>{data.nb_album} album{data.nb_album !== 1 ? 's':''}</span>
-                    {/* <span>{nb_followers} follower{nb_followers !== 1 ? 's':''}</span> */}
-                    <span>545 follower</span>
+                    <span>{data.nb_follow} follower{data.nb_follow !== 1 ? 's':''}</span>
                 </div>
 
                 <div className='info-row'>
@@ -38,6 +37,7 @@ ArtistDetailedCard.propTypes = {
     data: PropTypes.shape({
         picture_medium: PropTypes.string.isRequired,
         nb_album: PropTypes.number.isRequired,
+        nb_follow: PropTypes.number.isRequired,
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
     }).isRequired

@@ -67,6 +67,7 @@ export class ArtistPage extends React.Component {
                                 picture={this.state.data?.picture_medium}
                                 nb_albums={this.state.data?.nb_album}
                                 nb_tracks={this.state.topTracks?.total}
+                                nb_followers={this.state.data?.nb_follow}
                             />
     
                             <ArtistTopTracks top={this.state.topTracks} id={this.state.data?.id} />

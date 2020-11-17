@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import '../styles/ArtistHeader.scss'
 
-export const ArtistHeader = ({name, picture, nb_albums, nb_tracks}) => {
+export const ArtistHeader = ({name, picture, nb_albums, nb_tracks, nb_followers}) => {
     return (
         <div className='ArtistHeader'>
             <img className='picture' src={picture} alt={name} />
@@ -13,8 +13,8 @@ export const ArtistHeader = ({name, picture, nb_albums, nb_tracks}) => {
                 <div className='info-row'>
                     <span>{nb_albums} album{nb_albums !== 1 ? 's':''}</span>
                     <span>{nb_tracks} track{nb_tracks !== 1 ? 's':''}</span>
-                    {/* <span>{nb_followers} follower{nb_followers !== 1 ? 's':''}</span> */}
-                    <span>545 follower</span>
+                    <span>{nb_followers} follower{nb_followers !== 1 ? 's':''}</span>
+                    {/* <span>545 follower</span> */}
                 </div>
 
                 <div className='info-row'>
@@ -37,5 +37,5 @@ ArtistHeader.propTypes = {
     picture: PropTypes.string,
     nb_albums: PropTypes.number.isRequired,
     nb_tracks: PropTypes.number.isRequired,
-    // nb_followers: PropTypes.number.isRequired,
+    nb_followers: PropTypes.number.isRequired,
 }
