@@ -7,7 +7,7 @@ export const ModelsProvider = ({children}) => {
     const [isOpen, setOpenStatus] = useState(false)
     const [model, setModel] = useState(null)
     const [isClosable, setClosableState] = useState(false)
-    
+
     const openModel = (model, isClosable = false) => {
         setModel(model)
         setOpenStatus(true)
