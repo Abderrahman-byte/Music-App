@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useState } from 'react'
 import '../styles/Models.scss'
 
 export const ModelsContext = createContext({})
+ModelsContext.displayName = 'ModelsContext'
 
 export const ModelsProvider = ({children}) => {
     const [isOpen, setOpenStatus] = useState(false)
