@@ -26,3 +26,23 @@
         }
     } 
 }
+
+
+.MessageAlert {
+    background-color: whitesmoke;
+    margin: 1em auto;
+    padding: 1em .75em;
+    border-radius: 5px;
+    width: fit-content;
+    max-width: 600px;
+    
+    .text {
+        color: $primary-grey;
+        text-align: center;
+        font-size: 1.1rem;
+        letter-spacing: .1em;
+        font-weight: 300;
+        font-family: 'Inter', sans-serif;
+        line-height: 40px;
+    }
+}

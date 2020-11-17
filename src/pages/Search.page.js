@@ -153,53 +153,65 @@ export class SearchPage extends React.Component {
                     <UnknownError />
                 </div>
             )
+        } else if(!this.state.isLoading && 
+        this.state.artists.data.length <= 0 &&
+        this.state.tracks.data.length <= 0 &&
+        this.state.albums.data.length <= 0 &&
+        !this.state.artist ) {
+            return (
+                <div className='SearchPage page'>
+                    <div className='MessageAlert'>
+                        <h6 className='text'>No Results Provided For "{this.state.query || ''}"</h6>
+                    </div>
+                </div>
+            )   
+        } else {
+            return (
+                <div className='SearchPage page'>
+                    {this.state.artist ? (
+                        <>
+                        <ArtistDetailedCard data={this.state.artist} />
+                        <div className='border' />
+                        </>
+                    ) : null}
+    
+                    {this.state.tracks.data.length > 0 && this.state.query ? (
+                        <TracksSearchList 
+                            data={this.state.tracks.data} 
+                            max={10}
+                            total={this.state.tracks.total}
+                            query={this.state.query}
+                        />
+                    ) : null}
+    
+                    {this.state.artists.data.length > 0 && this.state.tracks.data.length > 0 ? (
+                        <div className='border' />
+                    ) : null}
+    
+                    {this.state.artists.data.length > 0 && this.state.query ? (
+                        <ArtistsSearchList
+                            total={this.state.artists.total}
+                            query={this.state.query}
+                            data={this.state.artists.data}
+                        />
+                    ) : null}
+    
+                    {(this.state.artists.data.length > 0 || this.state.tracks.data.length > 0) &&
+                    this.state.albums.data.length > 0 ? (
+                        <div className='border' />
+                    ) : null}
+    
+                    {this.state.albums.data.length > 0 && this.state.query ? (
+                        <AlbumsSearchList 
+                            data={this.state.albums.data} 
+                            query={this.state.query}
+                            total={this.state.albums.total}
+                            max={15}
+                        />
+                    ) : null}
+                </div>
+            )
         }
-
-        return (
-            <div className='SearchPage page'>
-                {this.state.artist ? (
-                    <>
-                    <ArtistDetailedCard data={this.state.artist} />
-                    <div className='border' />
-                    </>
-                ) : null}
-
-                {this.state.tracks.data.length > 0 && this.state.query ? (
-                    <TracksSearchList 
-                        data={this.state.tracks.data} 
-                        max={10}
-                        total={this.state.tracks.total}
-                        query={this.state.query}
-                    />
-                ) : null}
-
-                {this.state.artists.data.length > 0 && this.state.tracks.data.length > 0 ? (
-                    <div className='border' />
-                ) : null}
-
-                {this.state.artists.data.length > 0 && this.state.query ? (
-                    <ArtistsSearchList
-                        total={this.state.artists.total}
-                        query={this.state.query}
-                        data={this.state.artists.data}
-                    />
-                ) : null}
-
-                {(this.state.artists.data.length > 0 || this.state.tracks.data.length > 0) &&
-                this.state.albums.data.length > 0 ? (
-                    <div className='border' />
-                ) : null}
-
-                {this.state.albums.data.length > 0 && this.state.query ? (
-                    <AlbumsSearchList 
-                        data={this.state.albums.data} 
-                        query={this.state.query}
-                        total={this.state.albums.total}
-                        max={15}
-                    />
-                ) : null}
-            </div>
-        )
     }
 }
 
