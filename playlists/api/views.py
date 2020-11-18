@@ -152,6 +152,19 @@ class Subscription(APIView) :
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
+    def get(self, request, id) :
+        try :
+            artist = Artist.objects.get(pk=id)
+        except Artist.DoesNotExist :
+            return Response({'detail': 'Artist Doesnt exist.'}, status=404, content_type='application/json')
+
+        user = request.user
+        try :
+            Follow.objects.get(user=user, artist=artist)
+            return Response(status=204)
+        except Follow.DoesNotExist :
+            return Response({'detail': 'User is not following this artist'}, status=404, content_type='application/json')
+
     def post(self, request, id) :
         try :
             artist = Artist.objects.get(pk=id)
