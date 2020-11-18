@@ -6,7 +6,7 @@ import '../styles/FollowBtn.scss'
 import { AuthContext } from '../context/AuthContext'
 import { getCookie } from '../utils/http'
 
-export const FollowBtn = ({id}) => {
+export const FollowBtn = ({id, callback}) => {
     const { user } = useContext(AuthContext)
     const [isUserFollowing, setFollowingState] = useState(false)
     const [isLoading, setLoadingState] = useState(false)
@@ -29,6 +29,7 @@ export const FollowBtn = ({id}) => {
         } else {
             setLoadingState(true)
             const method = isUserFollowing ? 'DELETE': 'POST'
+            const updater = isUserFollowing ? -1 : 1
             const req = await fetch(`${process.env.API_URL}/api/playlists/subscription/${id}`, {
                 method,
                 credentials: 'include', 
@@ -40,6 +41,7 @@ export const FollowBtn = ({id}) => {
 
             if(req.status >= 200 && req.status < 300) {
                 setFollowingState(!isUserFollowing)
+                if(callback) callback(updater)
             }
             setLoadingState(false)
         }
@@ -72,5 +74,6 @@ export const FollowBtn = ({id}) => {
 }
 
 FollowBtn.propTypes = {
-    id: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired,
+    callback: PropTypes.func
 }

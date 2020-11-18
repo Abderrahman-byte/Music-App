@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import '../styles/ArtistHeader.scss'
@@ -6,6 +6,10 @@ import '../styles/ArtistHeader.scss'
 import { FollowBtn } from './FollowBtn'
 
 export const ArtistHeader = ({id, name, picture, nb_albums, nb_tracks, nb_followers}) => {
+    const [nb_follow, setFollowNb] = useState(nb_followers || 0)
+
+    const updateFollows = (updater) => setFollowNb(nb_follow + updater)
+
     return (
         <div className='ArtistHeader'>
             <img className='picture' src={picture} alt={name} />
@@ -15,11 +19,11 @@ export const ArtistHeader = ({id, name, picture, nb_albums, nb_tracks, nb_follow
                 <div className='info-row'>
                     <span>{nb_albums} album{nb_albums !== 1 ? 's':''}</span>
                     <span>{nb_tracks} track{nb_tracks !== 1 ? 's':''}</span>
-                    <span>{nb_followers} follower{nb_followers !== 1 ? 's':''}</span>
+                    <span>{nb_follow} follower{nb_follow !== 1 ? 's':''}</span>
                 </div>
 
                 <div className='info-row'>
-                    <FollowBtn id={id} />
+                    <FollowBtn id={id} callback={updateFollows} />
                     <button className='fav-btn'>
                         <i className='fas fa-heart'></i>
                     </button>
