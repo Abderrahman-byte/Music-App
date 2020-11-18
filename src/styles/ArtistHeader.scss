@@ -36,9 +36,12 @@ $artist-header-breack-point: 880px;
             justify-content: space-around;
 
             span {
-                display: block;
-                margin-right: 1em;
                 color: $secondary-grey;
+            }
+
+            span, button {
+                display: inline-block;
+                margin-right: 1em;
                 font-size: .85em;
 
                 &:last-child {
@@ -67,36 +70,6 @@ $artist-header-breack-point: 880px;
             i {
                 color: #DD2E44;
             }
-        }
-    }
-
-    .subcribe-btn {
-        display: flex;
-        padding: .4em;
-        cursor: pointer;
-        color: $secondary-grey;
-        background-color: whitesmoke;
-        font-size: 1rem;
-        border: none;
-        border-radius: 5px;
-        margin-right: 1em;
-        transition: .3s;
-
-        &:hover {
-            background-color: #DD2E44;
-            color: $primary-grey;
-        }
-
-        p {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: .1em;
-            text-transform: capitalize;
-        }
-
-        i {
-            margin-right: .3em;
-            font-size: 1.2rem;
         }
     }
 }
