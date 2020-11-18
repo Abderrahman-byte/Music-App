@@ -1,17 +1,62 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import '../styles/FollowBtn.scss'
 
+import { AuthContext } from '../context/AuthContext'
+import { getCookie } from '../utils/http'
+
 export const FollowBtn = ({id}) => {
+    const { user } = useContext(AuthContext)
     const [isUserFollowing, setFollowingState] = useState(false)
+    const [isLoading, setLoadingState] = useState(false)
+
+    const checkFollow = async () => {
+        setLoadingState(true)
+        const req = await fetch(`${process.env.API_URL}/api/playlists/subscription/${id}`, {
+            credentials: 'include', redirect: 'manual'
+        })
+
+        if(req.status >= 200 && req.status < 300) {
+            setFollowingState(true)
+        }
+        setLoadingState(false)
+    }
+
+    const toggleSubscription = async () => {
+        if(isLoading) {
+            setTimeout(toggleSubscription, 500)
+        } else {
+            setLoadingState(true)
+            const method = isUserFollowing ? 'DELETE': 'POST'
+            const req = await fetch(`${process.env.API_URL}/api/playlists/subscription/${id}`, {
+                method,
+                credentials: 'include', 
+                redirect: 'manual',
+                headers: {
+                    'X-CSRFTOKEN': getCookie('csrftoken')
+                }
+            })
+
+            if(req.status >= 200 && req.status < 300) {
+                setFollowingState(!isUserFollowing)
+            }
+            setLoadingState(false)
+        }
+    }
 
     const clickHandler = e => {
         if(e.detail === 1) {
-            
+            toggleSubscription()
         }
     }
- 
+            
+    useEffect(() => {
+        if(user && user.id) {
+            checkFollow()
+        }
+    }, [user])
+
     return (
         <button 
             className={`FollowBtn${isUserFollowing ? ' active' : ''}`}
