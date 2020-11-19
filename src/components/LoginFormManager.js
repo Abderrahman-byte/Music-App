@@ -1,16 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export class LoginFormManager extends React.Component {
+import { LoginForm } from './LoginForm'
 
-    render = () => {
-        console.log(this.props)
-        return (
-            <div className='LoginFormManager'>
-                this login form class manager
-            </div>
-        )
+export class LoginFormManager extends React.Component {
+    state = {
+        data: {...this.props.initData}
     }
+
+    dataUpdater = (e) => {
+        let newData = {...this.state.data}
+        newData[e.target.name] = e.target.value
+        this.setState({ data: {...newData}})
+    }
+
+    submitHandler = (e) => {
+        e.preventDefault()
+    }
+
+    render = () => (<LoginForm 
+        {...this.state.data} 
+        updater={this.dataUpdater} 
+        submitHandler={this.submitHandler} 
+    />)
 }
 
 LoginFormManager.propTypes = {
