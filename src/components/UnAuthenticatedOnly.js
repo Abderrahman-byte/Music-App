@@ -7,7 +7,8 @@ import { ModelsContext } from '../context/ModelsContext'
 
 export class UnAuthenticatedOnly extends React.Component {
     state = {
-        isAuthenticated: false
+        isAuthenticated: false,
+        isLoaded: false
     }
 
     componentDidMount = () => {
@@ -21,12 +22,15 @@ export class UnAuthenticatedOnly extends React.Component {
             if(this.context.AuthContext?.user && this.context.AuthContext?.user?.id) {
                 this.setState({ isAuthenticated: true })
             }
+            this.setState({ isLoaded: true })
             this.context.ModelsContext.closeModel()
         }
     }
 
     render = () => {
-        if(this.state.isAuthenticated) {
+        if(!this.state.isLoaded) {
+            return <></>
+        } else if(this.state.isAuthenticated) {
             return <Redirect to={this.props.redirectTo || '/'}></Redirect>
         } else {
             return (
