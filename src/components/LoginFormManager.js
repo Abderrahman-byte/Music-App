@@ -22,6 +22,7 @@ export class LoginFormManager extends React.Component {
         {...this.state.data} 
         updater={this.dataUpdater} 
         submitHandler={this.submitHandler} 
+        className={this.props.className}
     />)
 }
 
