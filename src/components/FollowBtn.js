@@ -4,10 +4,13 @@ import PropTypes from 'prop-types'
 import '../styles/FollowBtn.scss'
 
 import { AuthContext } from '../context/AuthContext'
+import { ModelsContext } from '../context/ModelsContext'
 import { getCookie } from '../utils/http'
+import { LoginFormManager } from './LoginFormManager'
 
 export const FollowBtn = ({id, callback}) => {
     const { user } = useContext(AuthContext)
+    const { closeModel, openModel } = useContext(ModelsContext)
     const [isUserFollowing, setFollowingState] = useState(false)
     const [isLoading, setLoadingState] = useState(false)
 
@@ -25,7 +28,7 @@ export const FollowBtn = ({id, callback}) => {
 
     const toggleSubscription = async () => {
         if(!user || !user.id ) {
-            console.log('Youre not logged in')
+            openModel(<LoginFormManager isModel className='model' />, true)
             return
         }
         
