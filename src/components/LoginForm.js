@@ -1,17 +1,39 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import '../styles/LoginForm.scss'
 
-export const LoginForm = ({username, password, updater, submitHandler}) => {
+export const LoginForm = ({username, password, updater, submitHandler, className}) => {
     return (
-        <form className='LoginForm form' onSubmit={submitHandler}>
+        <form className={`form LoginForm ${className || ''}`} onSubmit={submitHandler}>
+            <div className='form-div form-header'>
+                <h6>Login</h6>
+            </div>
             <div className='form-div'>
-                <input type='text' name='username' value={username} onChange={updater} />
+                <input type='text' name='username' className='form-control' 
+                    value={username} 
+                    onChange={updater} 
+                    placeholder='username' 
+                    autoComplete='off'
+                />
             </div>
 
             <div className='form-div'>
-                <input type='password' name='password' value={password} onChange={updater} />
+                <input type='password' name='password' className='form-control' 
+                    value={password} 
+                    onChange={updater} 
+                    placeholder='password' 
+                    autoComplete='off'
+                />
+            </div>
+
+            <div className='form-div'>
+                <button className='submit-btn'>Login</button>
+            </div>
+
+            <div className='form-div form-footer'>
+                <Link to='/signin'>Not Member Yet? Create account</Link>
             </div>
         </form>
     )
