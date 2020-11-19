@@ -41,12 +41,15 @@
             display: flex;
 
             span {
-                display: block;
-                margin-right: 1em;
                 color: $secondary-grey;
-                font-size: .75em;
                 letter-spacing: .1em;
+                font-size: .75em;
+                display: block;
                 font-weight: 500;
+            }
+
+            span, button {
+                margin-right: 1em;
 
                 &:last-child {
                     margin-right: 0;
