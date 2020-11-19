@@ -2,7 +2,7 @@
 
 .form {
     width: fit-content;
-    padding: 1.5em 1.5em 2em 1.5em;
+    padding: 1.5em 2em;
     border: 1px solid transparentize(whitesmoke, .9) ;
     width: 95%;
     margin: 0 auto;
@@ -71,5 +71,26 @@
             letter-spacing: .1em;
             color: $primary-purple;
         }
+    }
+}
+
+.form.model {
+    box-shadow: 0 8px 6px -6px $primary-grey;
+    .form-header {
+        border-bottom: 1px solid $primary-purple ;
+
+        h6 {
+            color: $primary-purple;
+        }
+    }
+
+    .form-footer {
+        border-top: 1px solid $primary-purple ;
+    }
+
+    .form-control {
+        border: 1px solid transparentize($primary-grey, .8);
+        // background-color: $secondary-grey;
+        // color: $primary-grey;
     }
 }
