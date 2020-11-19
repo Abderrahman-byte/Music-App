@@ -24,6 +24,11 @@ export const FollowBtn = ({id, callback}) => {
     }
 
     const toggleSubscription = async () => {
+        if(!user || !user.id ) {
+            console.log('Youre not logged in')
+            return
+        }
+        
         if(isLoading) {
             setTimeout(toggleSubscription, 500)
         } else {
