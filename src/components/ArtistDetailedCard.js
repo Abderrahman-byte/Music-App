@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import '../styles/ArtistDetailedCard.scss'
+import { FollowBtn } from './FollowBtn'
 
 export const ArtistDetailedCard = ({data}) => {
+    const [nb_followers, setFollowers] = useState(data.nb_follow)
+
+    const updateFollow = (updater) => setFollowers(nb_followers + updater)
+
     return (
         <div className='ArtistDetailedCard'>
             <Link className='cover-container' to={`/artist/${data.id}`}>
@@ -16,14 +21,11 @@ export const ArtistDetailedCard = ({data}) => {
 
                 <div className='info-row'>
                     <span>{data.nb_album} album{data.nb_album !== 1 ? 's':''}</span>
-                    <span>{data.nb_follow} follower{data.nb_follow !== 1 ? 's':''}</span>
+                    <span>{nb_followers} follower{nb_followers !== 1 ? 's':''}</span>
                 </div>
 
                 <div className='info-row'>
-                    <button className='subcribe-btn'>
-                        <i className='fas fa-plus'></i>
-                        <p>follow</p>
-                    </button>
+                    <FollowBtn id={data.id} callback={updateFollow} />
                     <button className='fav-btn'>
                         <i className='fas fa-heart'></i>
                     </button>
