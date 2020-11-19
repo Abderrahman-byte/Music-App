@@ -1,0 +1,75 @@
+@import './variables.scss';
+
+.form {
+    width: fit-content;
+    padding: 1.5em 1.5em 2em 1.5em;
+    border: 1px solid transparentize(whitesmoke, .9) ;
+    width: 95%;
+    margin: 0 auto;
+    max-width: 400px;
+    background-color: $secondary-black;
+
+    .form-header {
+        border-bottom: 1px solid transparentize(whitesmoke, .5) ;
+        padding-bottom: 1em;
+
+        h6 {
+            text-align: center;
+            font-size: 2rem;
+            letter-spacing: .1em;
+            font-weight: 300;
+            font-family: 'Inter', sans-serif;
+            color: transparentize(whitesmoke, .5) ;
+        }
+    }
+
+    .form-div {
+        display: flex;
+        margin-bottom: 1.5em;
+        flex-direction: column;
+
+        &:last-child {
+            margin: 0;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: .5em;
+        }
+
+
+        .form-control {
+            font-size: 1.2rem;
+            width: 100%;
+            padding: .75em;
+            color: $primary-black;
+            letter-spacing: .1em;
+            border-radius: 3px;
+            border: 0;
+        }
+
+        .submit-btn {
+            padding: .5em 0;
+            font-size: 1rem;
+            color: whitesmoke;
+            border: 0;
+            letter-spacing: .1em;
+            background-color: $primary-purple;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    }
+
+    .form-footer {
+        border-top: 1px solid transparentize(whitesmoke, .5) ;
+        padding-top: 1em;
+
+        text-align: center;
+
+        a {
+            font-size: .9rem;
+            letter-spacing: .1em;
+            color: $primary-purple;
+        }
+    }
+}
