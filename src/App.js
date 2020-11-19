@@ -8,6 +8,8 @@ import { NavBar } from './components/NavBar'
 import { NavBarProvider } from './context/NavBarContext'
 import { MainPages } from './pages/Main.pages'
 import { MusicProvider } from './context/MusicPlayer'
+import { LoginPage } from './pages/Login.page'
+import UnAuthenticatedOnly from './components/UnAuthenticatedOnly'
 
 class App extends React.Component {
     render = () => {
@@ -20,6 +22,11 @@ class App extends React.Component {
                             <NavBar />
                             
                             <Switch>
+                                <Route exact path='/login'>
+                                    <UnAuthenticatedOnly >
+                                        <LoginPage />
+                                    </UnAuthenticatedOnly>
+                                </Route>
                                 <Route path='/' component={MainPages} />
                             </Switch>
                         </div>
