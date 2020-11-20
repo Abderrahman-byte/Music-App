@@ -6,7 +6,7 @@ import '../styles/FollowBtn.scss'
 import { AuthContext } from '../context/AuthContext'
 import { ModelsContext } from '../context/ModelsContext'
 import { getCookie } from '../utils/http'
-import { LoginFormManager } from './LoginFormManager'
+import LoginFormManager from './LoginFormManager'
 
 export const FollowBtn = ({id, callback}) => {
     const { user } = useContext(AuthContext)
