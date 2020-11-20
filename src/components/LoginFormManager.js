@@ -6,6 +6,7 @@ import { ClassWithMultipleContexts } from './ClassWithMultipleContexts'
 import { getCookie } from '../utils/http'
 import { ModelsContext } from '../context/ModelsContext'
 import { AuthContext } from '../context/AuthContext'
+import { LoadingModel } from './LoadingModel'
 
 export class LoginFormManager extends React.Component {
     state = {
@@ -45,6 +46,10 @@ export class LoginFormManager extends React.Component {
     }
 
     login = async () => {
+        // Open Loading Model
+        this.context.ModelsContext.openModel(<LoadingModel msg='fetching user data' />, false)
+        
+        // BEGIN Login 
         const data = JSON.stringify({username: this.state.data.username, password: this.state.data.password})
         const req = await fetch(`${process.env.API_URL}/api/auth/login`, {
             method: 'POST',
@@ -61,6 +66,10 @@ export class LoginFormManager extends React.Component {
             console.log(userData)
         } else {
             console.error(await req.json())
+        }
+
+        if(!this.props.isModel) {
+            this.context.ModelsContext.closeModel()
         }
     }
 
