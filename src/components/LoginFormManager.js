@@ -2,6 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { LoginForm } from './LoginForm'
+import { ClassWithMultipleContexts } from './ClassWithMultipleContexts'
+import { getCookie } from '../utils/http'
+import { ModelsContext } from '../context/ModelsContext'
+import { AuthContext } from '../context/AuthContext'
 
 export class LoginFormManager extends React.Component {
     state = {
@@ -40,10 +44,33 @@ export class LoginFormManager extends React.Component {
         return true
     }
 
-    submitHandler = (e) => {
+    login = async () => {
+        const data = JSON.stringify({username: this.state.data.username, password: this.state.data.password})
+        const req = await fetch(`${process.env.API_URL}/api/auth/login`, {
+            method: 'POST',
+            body: data,
+            headers : {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') || ''
+            }
+        })
+
+        if(req.status >= 200 && req.status < 300) {
+            const response = await req.json()
+            const userData = response.data
+            console.log(userData)
+        } else {
+            console.error(await req.json())
+        }
+    }
+
+    submitHandler = async (e) => {
         e.preventDefault()
         const dataIsValidated = this.checkData()
-        
+
+        if(dataIsValidated) {
+            this.login()
+        }
     }
 
     render = () => (<LoginForm 
@@ -71,3 +98,5 @@ LoginFormManager.defaultProps = {
     isModel: false,
     className: ''
 }
+
+export default ClassWithMultipleContexts(LoginFormManager,{ ModelsContext, AuthContext })

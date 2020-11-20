@@ -2,7 +2,7 @@ import React from 'react'
 
 import '../styles/LoginPage.scss'
 
-import { LoginFormManager } from '../components/LoginFormManager'
+import LoginFormManager from '../components/LoginFormManager'
 
 export const LoginPage = () => {
     return (
