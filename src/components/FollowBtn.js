@@ -10,7 +10,7 @@ import { LoginFormManager } from './LoginFormManager'
 
 export const FollowBtn = ({id, callback}) => {
     const { user } = useContext(AuthContext)
-    const { closeModel, openModel } = useContext(ModelsContext)
+    const { openModel } = useContext(ModelsContext)
     const [isUserFollowing, setFollowingState] = useState(false)
     const [isLoading, setLoadingState] = useState(false)
 
