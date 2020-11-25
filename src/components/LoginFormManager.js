@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { LoginForm } from './LoginForm'
-import { ClassWithMultipleContextsProvided } from './ClassWithMultipleContexts'
+import { ClassWithMultipleContexts } from './ClassWithMultipleContexts'
 import { getCookie } from '../utils/http'
 import { ModelsContext, ModelsProvider } from '../context/ModelsContext'
 import { AuthContext, AuthProvider } from '../context/AuthContext'
@@ -56,8 +56,8 @@ export class LoginFormManager extends React.Component {
         const data = JSON.stringify({username: this.state.data.username, password: this.state.data.password})
         const req = await fetch(`${process.env.API_URL}/api/auth/login`, {
             method: 'POST',
-            // credentials: 'include',
-            // redirect: 'manual',
+            credentials: 'include',
+            redirect: 'manual',
             body: data,
             headers : {
                 'Content-Type': 'application/json',
@@ -68,24 +68,35 @@ export class LoginFormManager extends React.Component {
         if(req.status >= 200 && req.status < 300) {
             const response = await req.json()
             const userData = response.data
-            console.log(this.context)
-            // this.context.ModelsContext.closeModel()
+            // Set User data to auth context
+            this.context.AuthContext.setUser(userData)
+
+            if(this.props.isModel) {
+                // just close model
+                this.context.ModelsContext.closeModel()
+            } else {
+                // redirect and close model
+                const to = this.props.history?.location?.state?.from || '/'
+                this.context.ModelsContext.closeModel()
+                this.props.history.push(to)
+            }
         } else {
             const dataClone = {...this.state.data}
             console.error(await req.json())
+
             if(this.props.isModel) {
+                // Reopen with init errors
                 const CloneComponent = ClassWithMultipleContexts(LoginFormManager,{ ModelsContext, AuthContext })
                 this.context.ModelsContext.openModel(<CloneComponent 
                     initData={dataClone} 
                     className='model'
-                    isModel />
-                    )
-                }
-            }
-            
-            if(!this.props.isModel) {
+                    isModel 
+                />)
+            } else {
+                // Close model and display error
                 this.context.ModelsContext.closeModel()
             }
+        }
     }
     
     submitHandler = async (e) => {
@@ -111,7 +122,8 @@ LoginFormManager.propTypes = {
         password: PropTypes.string
     }),
     isModel: PropTypes.bool,
-    className: PropTypes.string
+    className: PropTypes.string,
+    history: PropTypes.object
 }
 
 LoginFormManager.defaultProps = {
@@ -124,13 +136,4 @@ LoginFormManager.defaultProps = {
 }
     
     
-export default ClassWithMultipleContextsProvided(LoginFormManager, [
-    {
-        'context': ModelsContext,
-        'provider': ModelsProvider
-    },
-    {
-        'context': AuthContext,
-        'provider': AuthProvider
-    }
-]) 
+export default ClassWithMultipleContexts(LoginFormManager, {AuthContext, ModelsContext}) 
