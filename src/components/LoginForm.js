@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import '../styles/LoginForm.scss'
 
-export const LoginForm = ({username, password, updater, submitHandler, className}) => {
+export const LoginForm = ({username, password, updater, submitHandler, className, errors}) => {
     return (
         <form className={`form LoginForm ${className || ''}`} onSubmit={submitHandler}>
             <div className='form-div form-header'>
@@ -28,6 +28,12 @@ export const LoginForm = ({username, password, updater, submitHandler, className
                 />
             </div>
 
+            {errors && errors.length > 0 ? (
+                <div className='form-div errors-div'>
+                    {errors.map((error, i) => <p key={i} className='error'>{error}</p>)}
+                </div>
+            ) : null}
+
             <div className='form-div'>
                 <button className='submit-btn'>Login</button>
             </div>
@@ -44,4 +50,5 @@ LoginForm.propTypes = {
     password: PropTypes.string.isRequired,
     updater: PropTypes.func.isRequired,
     submitHandler: PropTypes.func.isRequired,
+    errors: PropTypes.array
 }
