@@ -4,17 +4,18 @@ import PropTypes from 'prop-types'
 import { LoginForm } from './LoginForm'
 import { ClassWithMultipleContexts } from './ClassWithMultipleContexts'
 import { getCookie } from '../utils/http'
-import { ModelsContext, ModelsProvider } from '../context/ModelsContext'
-import { AuthContext, AuthProvider } from '../context/AuthContext'
+import { ModelsContext } from '../context/ModelsContext'
+import { AuthContext } from '../context/AuthContext'
 import { LoadingModel } from './LoadingModel'
 
 
 export class LoginFormManager extends React.Component {
     state = {
-        data: {...this.props.initData}
+        data: {...this.props.initData},
+        errors: [...this.props.initErrors]
     }
 
-    componentDidMount = () => console.log(this.context)
+    // componentDidMount = () => console.log(this.context)
 
     dataUpdater = (e) => {
         let newData = {...this.state.data}
@@ -26,25 +27,26 @@ export class LoginFormManager extends React.Component {
         const data = {...this.state.data}
         
         if(data.username === '') {
-            console.error('Username field is required')
+            this.setState({ errors: ['Username field is required'] })
             return false
         }
         
         if(data.password === '') {
-            console.error('Password field is required')
+            this.setState({ errors: ['Password field is required'] })
             return false
         }
         
         if(data.username.length < 6) {
-            console.error('Username field length is not enough.')
+            this.setState({ errors: ['Username field length is not enough.']})
             return false
         }
         
         if(data.password.length < 6) {
-            console.error('Password field length is not enough.')
+            this.setState({ errors: ['Password field length is not enough.']})
             return false
         }
         
+        this.setState({ errors: []})
         return true
     }
     
@@ -81,19 +83,22 @@ export class LoginFormManager extends React.Component {
                 this.props.history.push(to)
             }
         } else {
-            const dataClone = {...this.state.data}
-            console.error(await req.json())
-
+            const data = await req.json()
+            const detail = data.detail || "Something went wrong."
+            
             if(this.props.isModel) {
                 // Reopen with init errors
+                const dataClone = {...this.state.data}
                 const CloneComponent = ClassWithMultipleContexts(LoginFormManager,{ ModelsContext, AuthContext })
                 this.context.ModelsContext.openModel(<CloneComponent 
                     initData={dataClone} 
                     className='model'
                     isModel 
+                    initErrors={[detail]}
                 />)
             } else {
                 // Close model and display error
+                this.setState({ errors: [detail] })
                 this.context.ModelsContext.closeModel()
             }
         }
@@ -113,6 +118,7 @@ export class LoginFormManager extends React.Component {
         updater={this.dataUpdater} 
         submitHandler={this.submitHandler} 
         className={this.props.className}
+        errors={this.state.errors}
     />)
 }
     
@@ -121,6 +127,7 @@ LoginFormManager.propTypes = {
         username: PropTypes.string,
         password: PropTypes.string
     }),
+    initErrors: PropTypes.array,
     isModel: PropTypes.bool,
     className: PropTypes.string,
     history: PropTypes.object
@@ -132,7 +139,8 @@ LoginFormManager.defaultProps = {
         password: ''
     },
     isModel: false,
-    className: ''
+    className: '',
+    initErrors: []
 }
     
     
