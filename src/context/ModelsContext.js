@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useState } from 'react'
-import '../styles/Models.scss'
 
 export const ModelsContext = createContext({})
 ModelsContext.displayName = 'ModelsContext'
@@ -28,14 +27,14 @@ export const ModelsProvider = ({children}) => {
     }, [isClosable])
 
     return (
-        <ModelsContext.Provider value={{openModel, closeModel}}>
+        <ModelsContext.Provider value={{openModel, closeModel, isOpen, model, backdropClickEvent}}>
             {children}
-            {model && isOpen ? (
+            {/* {model && isOpen ? (
                 <>
                     {model}
                     <div onClick={backdropClickEvent} className='model-backdrop'></div>
                 </>
-            ) : null}
+            ) : null} */}
         </ModelsContext.Provider>
     )
 }
