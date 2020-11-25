@@ -29,12 +29,6 @@ export const ModelsProvider = ({children}) => {
     return (
         <ModelsContext.Provider value={{openModel, closeModel, isOpen, model, backdropClickEvent}}>
             {children}
-            {/* {model && isOpen ? (
-                <>
-                    {model}
-                    <div onClick={backdropClickEvent} className='model-backdrop'></div>
-                </>
-            ) : null} */}
         </ModelsContext.Provider>
     )
 }
