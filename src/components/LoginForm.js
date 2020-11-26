@@ -39,7 +39,7 @@ export const LoginForm = ({username, password, updater, submitHandler, className
             </div>
 
             <div className='form-div form-footer'>
-                <Link to='/signin'>Not Member Yet? Create account</Link>
+                <Link to='/register'>Not Member Yet? Create account</Link>
             </div>
         </form>
     )
