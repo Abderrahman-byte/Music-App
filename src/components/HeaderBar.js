@@ -8,15 +8,20 @@ import { SearchBar } from './SearchBar'
 import { NavHeader } from './NavHeader'
 import { ModelsContext } from '../context/ModelsContext'
 import { LoadingModel } from './LoadingModel'
+import { ConfirmModel } from './ConfirmModel'
 
 export const HeaderBar = () => {
     const { user, logout } = useContext(AuthContext)
     const { openModel, closeModel } = useContext(ModelsContext)
     
     const LogoutBtnClicked = () => {
-        openModel(<LoadingModel msg='Flush user data' />, false)
-        logout()
-        setTimeout(closeModel, 1000)
+        const callback = () => {
+            openModel(<LoadingModel msg='Flush user data' />, false)
+            logout()
+            setTimeout(closeModel, 1000)
+        }
+
+        openModel(<ConfirmModel callback={callback} action='logout' msg='Do want to logout...?' />, true)
     }
 
     return (
@@ -29,7 +34,7 @@ export const HeaderBar = () => {
                 {user !== undefined ? user && user.id ? (
                     <button onClick={LogoutBtnClicked} className='login-btn'>Logout</button>
                 ) : (
-                    <Link className='login-btn' to='#'>Login</Link>
+                    <Link className='login-btn' to='/login'>Login</Link>
                 ): null}
             </div>
         </header>
