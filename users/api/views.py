@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 
@@ -111,3 +111,9 @@ class AccountDetails(APIView) :
             return Response(status=204)
         except Exception as ex :
             return Response({'detail': ex.__str__()}, status=400, content_type='application/json')
+
+
+@api_view(['POST'])
+def LogoutView(request) :
+    logout(request)
+    return Response(status=204)
