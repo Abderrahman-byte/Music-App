@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import '../styles/LoginForm.scss'
+// import '../styles/LoginForm.scss'
 
 export const LoginForm = ({username, password, updater, submitHandler, className, errors}) => {
     return (
