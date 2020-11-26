@@ -12,6 +12,7 @@ import { MainPages } from './pages/Main.pages'
 import { MusicProvider } from './context/MusicPlayer'
 import { LoginPage } from './pages/Login.page'
 import UnAuthenticatedOnly from './components/UnAuthenticatedOnly'
+import { RegisterPage } from './pages/Register.page'
 
 class App extends React.Component {
     static contextType = ModelsContext
@@ -26,11 +27,21 @@ class App extends React.Component {
                             <NavBar />
                             
                             <Switch>
+                                {/* Login page route */}
                                 <Route exact path='/login'>
                                     <UnAuthenticatedOnly >
                                         <LoginPage />
                                     </UnAuthenticatedOnly>
                                 </Route>
+
+                                {/* Register page route */}
+                                <Route exact path='/register'>
+                                    <UnAuthenticatedOnly >
+                                        <RegisterPage />
+                                    </UnAuthenticatedOnly>
+                                </Route>
+
+                                {/* Main pages routes */}
                                 <Route path='/' component={MainPages} />
                             </Switch>
                         </div>
