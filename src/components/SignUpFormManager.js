@@ -1,8 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { AuthContext } from '../context/AuthContext'
+import { ModelsContext } from '../context/ModelsContext'
 import { SignUpForm } from './SignUpForm'
 import { registerFormRules } from '../utils/forms'
+import { ClassWithMultipleContexts } from './ClassWithMultipleContexts'
 
 export class SignUpFormManager extends React.Component {
     state = {
@@ -15,6 +18,10 @@ export class SignUpFormManager extends React.Component {
         const stateClone = {...this.state}
         stateClone.data[target.name] = target.value
         this.setState(stateClone)
+    }
+
+    register = () => {
+        
     }
 
     verifieData = () => {
@@ -93,3 +100,5 @@ SignUpFormManager.defaultProps = {
     },
     className: ''
 }
+
+export default ClassWithMultipleContexts(SignUpFormManager, { AuthContext, ModelsContext })

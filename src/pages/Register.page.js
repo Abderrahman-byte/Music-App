@@ -1,5 +1,5 @@
 import React from 'react'
-import { SignUpFormManager } from '../components/SignUpFormManager'
+import SignUpFormManager from '../components/SignUpFormManager'
 
 import '../styles/RegisterPage.scss'
 
