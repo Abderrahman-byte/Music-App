@@ -45,7 +45,6 @@ export const AuthProvider = ({children}) => {
                     'X-CSRFToken': getCookie('csrftoken')
                 }
             })
-            console.log(req)
 
         } catch(err) {
             console.error(err)
