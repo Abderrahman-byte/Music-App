@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import '../styles/SignUpForm.scss'
 import { Link } from 'react-router-dom'
 
-export const SignUpForm = ({data, updater, className}) => {
+export const SignUpForm = ({data, updater, className, errors}) => {
     return (
         <div className={`form SignInForm ${className}`}>
             <div className='form-div form-header'>
@@ -56,6 +56,12 @@ export const SignUpForm = ({data, updater, className}) => {
                 />
             </div>
 
+            {errors && errors.length > 0 ? (
+                <div className='form-div errors-div'>
+                    {errors.map((error, i) => <p key={i} className='error'>{errors}</p>)}
+                </div>
+            ) : null}
+
             <div className='form-div'>
                 <button className='submit-btn'>Create</button>
             </div>
@@ -76,7 +82,8 @@ SignUpForm.propTypes = {
         password2: PropTypes.string.isRequired
     }).isRequired,
     updater: PropTypes.func.isRequired,
-    className: PropTypes.string
+    className: PropTypes.string,
+    errors: PropTypes.array
 }
 
 SignUpForm.defaultProps = {

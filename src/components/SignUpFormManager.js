@@ -4,7 +4,8 @@ import { SignUpForm } from './SignUpForm'
 
 export class SignUpFormManager extends React.Component {
     state = {
-        data: {...this.props.initData}
+        data: {...this.props.initData},
+        errors: []
     }
 
     updateFormData = (e) => {
@@ -19,6 +20,7 @@ export class SignUpFormManager extends React.Component {
             className={this.state.className}
             data={this.state.data}
             updater={this.updateFormData} 
+            errors={this.state.errors}
         />
     ) 
 }
