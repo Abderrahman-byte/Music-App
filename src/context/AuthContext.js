@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import { LoadingModel } from '../components/LoadingModel'
 import { ModelsContext } from './ModelsContext'
+import { getCookie } from '../utils/http'
 
 export const AuthContext = createContext({})
 AuthContext.displayName = 'AuthContext'
@@ -31,6 +32,30 @@ export const AuthProvider = ({children}) => {
         setLoadingState(false)        
     }
 
+    const logout = async () => {
+        setLoadingState(true)
+        setUser(null)
+
+        try {
+            const req = await fetch(`${process.env.API_URL}/api/auth/logout`, {
+                method: 'POST',
+                credentials: 'include',
+                redirect: 'manual',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            console.log(req)
+
+        } catch(err) {
+            console.error(err)
+        }
+
+        setLoadingState(false)
+        
+        return
+    }
+
     useEffect(() => {
         authenticate()
     }, [])
@@ -39,7 +64,8 @@ export const AuthProvider = ({children}) => {
         <AuthContext.Provider value={{
             user,
             isLoading,
-            setUser
+            setUser,
+            logout
         }}>
             {children}
         </AuthContext.Provider>
