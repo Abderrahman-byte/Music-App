@@ -8,6 +8,7 @@ import { SignUpForm } from './SignUpForm'
 import { registerFormRules } from '../utils/forms'
 import { getCookie } from '../utils/http'
 import { LoadingModel } from './LoadingModel'
+import { AccountCreatedModel } from './AccountCreatedModel'
 
 export class SignUpFormManager extends React.Component {
     state = {
@@ -47,18 +48,19 @@ export class SignUpFormManager extends React.Component {
 
             if(req.status >= 200 && req.status < 300) {
                 const response = await req.json()
-                console.log(response)
+                this.context.ModelsContext.openModel(<AccountCreatedModel msg={response.success} />, true)
+                this.props.history.push('/login')
             } else {
                 const data = await req.json()
                 const message = data.detail || 'Something went wrong.'
                 this.setState({ errors: [message]})
+                this.context.ModelsContext.closeModel()
             }
 
         } catch(e) {
             console.error(e)
         }
 
-        this.context.ModelsContext.closeModel()
     }
 
     verifieData = () => {
@@ -125,7 +127,8 @@ SignUpFormManager.propTypes = {
         password: PropTypes.string,
         password2: PropTypes.string
     }),
-    className: PropTypes.string
+    className: PropTypes.string,
+    history: PropTypes.object.isRequired
 }
 
 SignUpFormManager.defaultProps = {
