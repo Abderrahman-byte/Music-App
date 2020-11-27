@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 
 import { AuthContext } from '../context/AuthContext'
 import { ModelsContext } from '../context/ModelsContext'
+import { ClassWithMultipleContexts } from './ClassWithMultipleContexts'
 import { SignUpForm } from './SignUpForm'
 import { registerFormRules } from '../utils/forms'
-import { ClassWithMultipleContexts } from './ClassWithMultipleContexts'
+import { getCookie } from '../utils/http'
+import { LoadingModel } from './LoadingModel'
 
 export class SignUpFormManager extends React.Component {
     state = {
@@ -17,11 +19,46 @@ export class SignUpFormManager extends React.Component {
         const target = e.target
         const stateClone = {...this.state}
         stateClone.data[target.name] = target.value
+        if(target.name === 'username') {
+            stateClone.data.first_name = target.value
+            stateClone.data.last_name = target.value
+        }
         this.setState(stateClone)
     }
 
-    register = () => {
-        
+    register = async () => {
+        this.context.ModelsContext.openModel(<LoadingModel msg='Creating user Account' />)
+        let body = {username: '', email: '', password: '', first_name: '', last_name: ''}
+        for(let field in body) {
+            body[field] = this.state.data[field]
+        }
+        body = JSON.stringify(body)
+
+        try {
+            const req = await fetch(`${process.env.API_URL}/api/auth/register`, {
+                method: 'POST',
+                credentials: 'include',
+                body: body,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+
+            if(req.status >= 200 && req.status < 300) {
+                const response = await req.json()
+                console.log(response)
+            } else {
+                const data = await req.json()
+                const message = data.detail || 'Something went wrong.'
+                this.setState({ errors: [message]})
+            }
+
+        } catch(e) {
+            console.error(e)
+        }
+
+        this.context.ModelsContext.closeModel()
     }
 
     verifieData = () => {
@@ -66,7 +103,7 @@ export class SignUpFormManager extends React.Component {
         const formVerified = this.verifieData()
 
         if(formVerified) {
-            console.log('form is verified')
+            this.register()
         }
     }
 
@@ -94,6 +131,8 @@ SignUpFormManager.propTypes = {
 SignUpFormManager.defaultProps = {
     initData: {
         username: '',
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
         password2: ''
