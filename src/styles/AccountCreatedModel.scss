@@ -1,0 +1,23 @@
+@import './variables.scss';
+
+.AccountCreatedModel {
+    width: min-content;
+    padding: 1em 1.25em;
+    padding-bottom: 1.5em;
+
+    .title {
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+        font-size: 2rem;
+        letter-spacing: .1em;
+        margin-bottom: .5em;
+    }
+
+    .msg {
+        text-align: center;
+        letter-spacing: .1em;
+        font-size: .95rem;
+        color: $primary-grey;
+    }
+}
