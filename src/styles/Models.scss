@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .model-backdrop {
     position: fixed;
     top: 0;
@@ -13,7 +15,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: whitesmoke;
     z-index: 200;
+    border: 1px solid transparentize($secondary-grey, .8);
 }
