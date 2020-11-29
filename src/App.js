@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import  { Route, Switch } from 'react-router-dom'
 
 import './styles/App.scss'
@@ -13,6 +13,7 @@ import { MusicProvider } from './context/MusicPlayer'
 import { LoginPage } from './pages/Login.page'
 import UnAuthenticatedOnly from './components/UnAuthenticatedOnly'
 import { RegisterPage } from './pages/Register.page'
+import FeedPages from './pages/Feed.pages'
 
 class App extends React.Component {
     static contextType = ModelsContext
@@ -42,6 +43,7 @@ class App extends React.Component {
                                 </Route>
 
                                 {/* Main pages routes */}
+                                <Route path='/feed' component={FeedPages} />
                                 <Route path='/' component={MainPages} />
                             </Switch>
                         </div>
