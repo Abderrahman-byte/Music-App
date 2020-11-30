@@ -1,0 +1,23 @@
+@import './variables.scss';
+
+.SubscriptionsPage {
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        padding-top: .75em;
+        margin-top: .5em;
+    }
+
+    .add-more {
+        display: block;
+        margin: 0 auto;
+        padding: .5em 1em;
+        background-color: $primary-purple;
+        border-radius: 5px;
+        color: whitesmoke;
+        letter-spacing: .1em;
+        font-size: 1.1rem;
+        cursor: pointer;
+        border: 1px solid transparentize(whitesmoke, .8);
+    }
+}
