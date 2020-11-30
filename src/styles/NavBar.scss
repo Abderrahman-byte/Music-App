@@ -28,6 +28,11 @@
         padding: .5em 1.5vw;
         text-decoration: none;
         color: $secondary-grey;
+        background-color: transparent;
+        cursor: pointer;
+        border: 0;
+        font-family: 'Inter', sans-serif;
+        font-size: 1.125rem;
 
         i {
             display: block;
