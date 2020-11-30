@@ -3,12 +3,14 @@ import React from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { ModelsContext } from '../context/ModelsContext'
 import { ClassWithMultipleContexts } from '../components/ClassWithMultipleContexts'
+import { PageHeader } from '../components/PageHeader'
 
 export class SubscriptionPage extends React.Component {
     state = {
         data: [],
         total: null,
-        
+        currentPage: 0,
+        itemsPerPage: 5
     }
 
     componentDidMount = () => {
@@ -21,7 +23,9 @@ export class SubscriptionPage extends React.Component {
             return
         }
 
-        const req = await fetch(`${process.env.API_URL}/api/playlists/following`, {
+        const nextPage = this.state.currentPage + 1
+        const index = (nextPage - 1) * this.state.itemsPerPage
+        const req = await fetch(`${process.env.API_URL}/api/playlists/following?limit=${this.state.itemsPerPage}&index=${index}`, {
             credentials: 'include'
         })
         
@@ -38,7 +42,7 @@ export class SubscriptionPage extends React.Component {
     render = () => {
         return (
             <div className='SubscriptionPage page'>
-                SubscriptionPage
+                <PageHeader title='Subscriptions' />
             </div>
         )
     }
