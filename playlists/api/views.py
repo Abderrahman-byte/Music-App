@@ -138,9 +138,23 @@ class PlaylistDetails(APIView) :
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def ListSubscriptions(request) :
+    data = request.query_params
     user = request.user
+    limit = 25
+    index = 0
+
+    try :
+        limit = int(data.get('limit', 25))
+    except :
+        limit = 25
+
+    try :
+        index = int(data.get('index', 0))
+    except :
+        index = 0
+
     subscriptions = user.follow_set.all()
-    following = [sub.artist for sub in subscriptions]
+    following = [sub.artist for sub in subscriptions][index: index + limit]
     context = {
         'artists': ArtistSimpleSerializer(following, many=True).data, 
         'subscriptions_count': subscriptions.count()
