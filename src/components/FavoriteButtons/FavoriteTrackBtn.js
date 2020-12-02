@@ -6,7 +6,7 @@ import '../../styles/FavoriteButtons.scss'
 import { PlaylistsContext } from '../../context/PlaylistsContext'
 
 export const FavoriteTracksBtn = ({ id }) => {
-    const { getFavoriteTracks } = useContext(PlaylistsContext)
+    const { getFavoriteTracks, removeFromFavoriteTracks } = useContext(PlaylistsContext)
     const [isInFavorite, setInFavorite] = useState(false)
 
     const checkIfInFavorite = async () => {
@@ -14,12 +14,20 @@ export const FavoriteTracksBtn = ({ id }) => {
         setInFavorite(favoriteTracks.some(track => track.id === id))
     }
 
+    const toggleFromFavorite = () => {
+        if(isInFavorite) {
+            removeFromFavoriteTracks(id)
+        }
+
+        setInFavorite(!isInFavorite)
+    }
+
     useEffect(() => {
-        checkIfInFavorite()    
+        checkIfInFavorite()
     }, [])
 
     return (
-        <button className={`FavoriteButton ${isInFavorite ? 'active': ''}`}>
+        <button onClick={toggleFromFavorite} className={`FavoriteButton ${isInFavorite ? 'active': ''}`}>
             <i className='fas fa-heart'></i>
         </button>
     )
