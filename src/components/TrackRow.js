@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import '../styles/TrackRow.scss'
+
 import { MusicPlayer } from '../context/MusicPlayer'
 import { Link } from 'react-router-dom'
 
@@ -45,11 +46,13 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
                     <Link to={data.artist ? `/artist/${data.artist.id}` : '#'}>{data.artist?.name}</Link>
                 </td>
             ) : null}
+
             <td className='btn-col'>
-                <button className='fav-btn' onClick={addToFav}>
+                <button className='fav-btn active' onClick={addToFav}>
                     <i className='fas fa-heart'></i>
                 </button>
             </td>
+
             <td className='btn-col'>
                 <button className='add-btn' onClick={addToFav}>
                     <i className='fas fa-plus'></i>
