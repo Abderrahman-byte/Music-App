@@ -4,9 +4,10 @@ import PropTypes from 'prop-types'
 import '../../styles/FavoriteButtons.scss'
 
 import { PlaylistsContext } from '../../context/PlaylistsContext'
+import { getCookie } from '../../utils/http'
 
-export const FavoriteTracksBtn = ({ id }) => {
-    const { getFavoriteTracks, removeFromFavoriteTracks } = useContext(PlaylistsContext)
+export const FavoriteTracksBtn = ({ id, data }) => {
+    const { getFavoriteTracks, removeFromFavoriteTracks, addToFavoriteTracks } = useContext(PlaylistsContext)
     const [isInFavorite, setInFavorite] = useState(false)
 
     const checkIfInFavorite = async () => {
@@ -15,10 +16,18 @@ export const FavoriteTracksBtn = ({ id }) => {
     }
 
     const toggleFromFavorite = () => {
-        if(isInFavorite) {
-            removeFromFavoriteTracks(id)
-        }
+        fetch(`${process.env.API_URL}/api/playlists/favorite/tracks`, {
+            credentials: 'include',
+            method: isInFavorite ? 'DELETE' : 'POST',
+            body: JSON.stringify({ id }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')    
+            }
+        })
 
+        if(isInFavorite) removeFromFavoriteTracks(id)
+        else addToFavoriteTracks(data)
         setInFavorite(!isInFavorite)
     }
 
