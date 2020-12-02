@@ -14,6 +14,7 @@ import { LoginPage } from './pages/Login.page'
 import UnAuthenticatedOnly from './components/UnAuthenticatedOnly'
 import { RegisterPage } from './pages/Register.page'
 import FeedPages from './pages/Feed.pages'
+import { PlaylistsProvider } from './context/PlaylistsContext'
 
 class App extends React.Component {
     static contextType = ModelsContext
@@ -22,6 +23,8 @@ class App extends React.Component {
         return (
             <div className='App'>
                 <MusicProvider>
+                <PlaylistsProvider>
+
                     <NavBarProvider>
                         <HeaderBar />
                         <div className='content'>
@@ -48,6 +51,8 @@ class App extends React.Component {
                             </Switch>
                         </div>
                     </NavBarProvider>
+                
+                </PlaylistsProvider>
                 </MusicProvider>
 
                 {this.context.model && this.context.isOpen ? (
