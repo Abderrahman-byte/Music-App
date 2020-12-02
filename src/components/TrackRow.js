@@ -49,7 +49,7 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
             ) : null}
 
             <td className='btn-col'>
-                <FavoriteTracksBtn id={data.id} />
+                <FavoriteTracksBtn id={data.id} data={data} />
             </td>
 
             <td className='btn-col'>
