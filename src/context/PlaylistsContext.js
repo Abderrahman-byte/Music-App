@@ -83,6 +83,14 @@ export class PlaylistsProvider extends React.Component {
         }
     }
 
+    generateAddTo = (to) => {
+        return (data) => {
+            const newState = {...this.state}
+            newState[to] = [...newState[to], data] 
+            this.setState({...newState})
+        }
+    }
+
     render = () => {
         const contextData = {
             getFavoriteAlbums: this.getFavoriteAlbums,
@@ -90,7 +98,8 @@ export class PlaylistsProvider extends React.Component {
             getFavoritePlaylists: this.getFavoritePlaylists,
             getFavoriteTracks: this.getFavoriteTracks,
             getPlaylists: this.getPlaylists,
-            removeFromFavoriteTracks: this.getRemoveFrom('favoriteTracks')
+            removeFromFavoriteTracks: this.getRemoveFrom('favoriteTracks'),
+            addToFavoriteTracks: this.generateAddTo('favoriteTracks'),
         }
 
         return (
