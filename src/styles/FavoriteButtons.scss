@@ -1,0 +1,29 @@
+.FavoriteButton {
+    padding: .75em .5em;
+    font-size: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    
+    i {
+        color: transparentize(whitesmoke, .5);
+    }
+
+    &:hover {
+        i {
+            color: #DD2E44;
+        }
+    }
+}
+
+.FavoriteButton.active {
+    i {
+        color: #DD2E44;
+    }
+    
+    &:hover {
+        i {
+            color: transparentize(whitesmoke, .5);
+        }
+    }
+}

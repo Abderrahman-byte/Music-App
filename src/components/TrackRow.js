@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import '../styles/TrackRow.scss'
 
 import { MusicPlayer } from '../context/MusicPlayer'
-import { Link } from 'react-router-dom'
+import { FavoriteTracksBtn } from './FavoriteButtons/FavoriteTrackBtn'
 
 export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
     const { isPlaying, currentId, setPlayingStatus } = useContext(MusicPlayer)
@@ -48,9 +49,7 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
             ) : null}
 
             <td className='btn-col'>
-                <button className='fav-btn active' onClick={addToFav}>
-                    <i className='fas fa-heart'></i>
-                </button>
+                <FavoriteTracksBtn />
             </td>
 
             <td className='btn-col'>
