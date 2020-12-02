@@ -75,13 +75,22 @@ export class PlaylistsProvider extends React.Component {
         }
     }
 
+    getRemoveFrom = (from) => {
+        return (id) => {
+            const newState = {}
+            newState[from] = this.state[from].filter(item => item.id !== id)
+            this.setState({...newState})
+        }
+    }
+
     render = () => {
         const contextData = {
             getFavoriteAlbums: this.getFavoriteAlbums,
             getFavoriteArtists: this.getFavoriteArtists,
             getFavoritePlaylists: this.getFavoritePlaylists,
             getFavoriteTracks: this.getFavoriteTracks,
-            getPlaylists: this.getPlaylists
+            getPlaylists: this.getPlaylists,
+            removeFromFavoriteTracks: this.getRemoveFrom('favoriteTracks')
         }
 
         return (
