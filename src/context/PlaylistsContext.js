@@ -10,6 +10,8 @@ export class PlaylistsProvider extends React.Component {
     state = {}
 
     initList = async (path, dataName, type) => {
+        if(!this.context.user) return []
+
         if(this.context.isLoading) {
             return new Promise((resolve, reject) => {
                 setTimeout(async () => {
@@ -75,18 +77,28 @@ export class PlaylistsProvider extends React.Component {
         }
     }
 
-    getRemoveFrom = (from) => {
-        return (id) => {
-            const newState = {}
-            newState[from] = this.state[from].filter(item => item.id !== id)
+    getRemoveFrom = (from, path, type) => {
+        return async (id) => {
+            let newState = {}
+            if(!this.state[from]) {
+                newState[from] = await this.initList(path, from, type)
+                newState[from] = newState[from].filter(item => item.id !== id)
+            } else {
+                newState[from] = this.state[from].filter(item => item.id !== id)
+            }
             this.setState({...newState})
         }
     }
 
-    generateAddTo = (to) => {
-        return (data) => {
-            const newState = {...this.state}
-            newState[to] = [...newState[to], data] 
+    generateAddTo = (to, path, type) => {
+        return async (data) => {
+            let newState = {...this.state}
+
+            if(!newState[to]) {
+                newState[to] = await this.initList(path, to, type)
+            }
+
+            newState[to] = [...(newState[to] || []), data] 
             this.setState({...newState})
         }
     }
@@ -98,8 +110,8 @@ export class PlaylistsProvider extends React.Component {
             getFavoritePlaylists: this.getFavoritePlaylists,
             getFavoriteTracks: this.getFavoriteTracks,
             getPlaylists: this.getPlaylists,
-            removeFromFavoriteTracks: this.getRemoveFrom('favoriteTracks'),
-            addToFavoriteTracks: this.generateAddTo('favoriteTracks'),
+            removeFromFavoriteTracks: this.getRemoveFrom('favoriteTracks', 'favorite/tracks', 'tracks'),
+            addToFavoriteTracks: this.generateAddTo('favoriteTracks', 'favorite/tracks', 'tracks'),
         }
 
         return (
