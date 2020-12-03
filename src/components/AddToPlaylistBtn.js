@@ -48,8 +48,7 @@ export const AddToPlaylistBtn = ({ id, data }) => {
         } else {
             openModel(<LoadingModel msg='Loading playlists data' />, false)
             const playlists = await getPlaylistsWithTracks()
-            openModel(<AddToPlaylistModel playlists={playlists} />, true)
-            console.log(playlists)
+            openModel(<AddToPlaylistModel playlists={playlists} id={id} data={data} />, true)
         }
     }
 
