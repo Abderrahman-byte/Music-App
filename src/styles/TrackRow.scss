@@ -54,13 +54,13 @@
         }
     }
 
-    .add-btn, .fav-btn {
-        padding: .75em .5em;
-        font-size: 1rem;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-    }
+    // .add-btn, .fav-btn {
+    //     padding: .75em .5em;
+    //     font-size: 1rem;
+    //     background-color: transparent;
+    //     border: none;
+    //     cursor: pointer;
+    // }
 
     // .fav-btn {
     //     i {
@@ -86,17 +86,17 @@
     //     }
     // }
 
-    .add-btn {
-        i {
-            color: transparentize(whitesmoke, .5);
-        }
+    // .add-btn {
+    //     i {
+    //         color: transparentize(whitesmoke, .5);
+    //     }
 
-        &:hover {
-            i {
-                color: whitesmoke;
-            }
-        }
-    }
+    //     &:hover {
+    //         i {
+    //             color: whitesmoke;
+    //         }
+    //     }
+    // }
 }
 
 @media (min-width: $playlist-table-break-point) {
