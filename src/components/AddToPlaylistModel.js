@@ -1,26 +1,44 @@
-import React, { useEffect } from 'react'
+import React, { useState } from 'react'
 
 import '../styles/AddToPlaylistModel.scss'
 
 const PlaylistCheckItem = ({ playlist, trackId }) => {
+    const [isInPlaylist, setInPlaylist] = useState(playlist.tracks.some(track => track.id === trackId) || false)
+
+    const handleChange = (e) => {
+        setInPlaylist(e.target.checked)
+    }
+
     return (
         <div className='PlaylistCheckItem'>
-            <h6>{playlist.title}</h6>
+            {/* {playlist.tracks.some(track => track.id === trackId)} */}
+            {playlist.is_public ? (
+                <i className="fas fa-globe-africa"></i>
+            ): (
+                <i className='fas fa-lock'></i>        
+            )}
+            
+            <h6 className='title'>{playlist.title}</h6>
+
+            <div className='checkbox'>
+                <input type='checkbox' onChange={handleChange} checked={isInPlaylist} />
+                <div className='checkmark' />
+            </div>
         </div>
     )
 } 
 
 export const AddToPlaylistModel = ({ playlists, id, data }) => {
 
-    useEffect(() => {
-        console.log(playlists)
-        console.log(id)
-        console.log(data)
-    }, [])
-
     return (
         <div className='model AddToPlaylistModel'>
-            {playlists.map(playlist => <PlaylistCheckItem key={playlist.id} playlist={playlist} trackId={id} />)}
+            <div className='playlists-container'>
+                {playlists.map(playlist => <PlaylistCheckItem 
+                    key={playlist.id} 
+                    playlist={playlist} 
+                    trackId={id} 
+                />)}
+            </div>
         </div>
     )
 }
