@@ -6,6 +6,7 @@ import '../styles/TrackRow.scss'
 
 import { MusicPlayer } from '../context/MusicPlayer'
 import { FavoriteTracksBtn } from './FavoriteButtons/FavoriteTrackBtn'
+import { AddToPlaylistBtn } from './AddToPlaylistBtn'
 
 export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
     const { isPlaying, currentId, setPlayingStatus } = useContext(MusicPlayer)
@@ -53,9 +54,7 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
             </td>
 
             <td className='btn-col'>
-                <button className='add-btn' onClick={addToFav}>
-                    <i className='fas fa-plus'></i>
-                </button>
+                <AddToPlaylistBtn />
             </td>
         </tr>
     )
