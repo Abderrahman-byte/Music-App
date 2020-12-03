@@ -11,11 +11,18 @@ import LoginFormManager from './LoginFormManager'
 export const FollowBtn = ({id, callback}) => {
     const { user } = useContext(AuthContext)
     const { openModel } = useContext(ModelsContext)
+
     const [isUserFollowing, setFollowingState] = useState(false)
     const [isLoading, setLoadingState] = useState(false)
 
     const checkFollow = async () => {
         setLoadingState(true)
+        if(!user) {
+            setFollowingState(false)
+            setLoadingState(false)
+            return
+        }
+
         const req = await fetch(`${process.env.API_URL}/api/playlists/subscription/${id}`, {
             credentials: 'include', redirect: 'manual'
         })
@@ -62,9 +69,7 @@ export const FollowBtn = ({id, callback}) => {
     }
             
     useEffect(() => {
-        if(user && user.id) {
-            checkFollow()
-        }
+        checkFollow()
     }, [user])
 
     return (
