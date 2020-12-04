@@ -17,6 +17,10 @@ export const AddToPlaylistBtn = ({ id, data }) => {
 
     const trackToggleCallback = (playlistId, action = true) => {
         console.log(`{id} will be ${action ? 'added to': 'removed from'} playlist ${playlistId}`)
+
+        if(action) {
+            addTracksToPlaylist(playlistId, data)
+        }
     }
 
     const getPlaylistsWithTracks = async () => {
