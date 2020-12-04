@@ -12,14 +12,14 @@ import { LoadingModel } from './LoadingModel'
 
 export const AddToPlaylistBtn = ({ id, data }) => {
     const { openModel } = useContext(ModelsContext)
-    const { getPlaylists, addTracksToPlaylist } = useContext(PlaylistsContext)
+    const { getPlaylists, addTracksToPlaylist, removeTracksToPlaylist } = useContext(PlaylistsContext)
     const { user } = useContext(AuthContext)
 
     const trackToggleCallback = (playlistId, action = true) => {
-        console.log(`{id} will be ${action ? 'added to': 'removed from'} playlist ${playlistId}`)
-
         if(action) {
             addTracksToPlaylist(playlistId, data)
+        } else {
+            removeTracksToPlaylist(playlistId, id)
         }
     }
 
