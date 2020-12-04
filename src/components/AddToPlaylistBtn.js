@@ -15,6 +15,10 @@ export const AddToPlaylistBtn = ({ id, data }) => {
     const { getPlaylists, addTracksToPlaylist } = useContext(PlaylistsContext)
     const { user } = useContext(AuthContext)
 
+    const trackToggleCallback = (playlistId, action = true) => {
+        console.log(`{id} will be ${action ? 'added to': 'removed from'} playlist ${playlistId}`)
+    }
+
     const getPlaylistsWithTracks = async () => {
         let playlists = await getPlaylists()
         
@@ -48,7 +52,11 @@ export const AddToPlaylistBtn = ({ id, data }) => {
         } else {
             openModel(<LoadingModel msg='Loading playlists data' />, false)
             const playlists = await getPlaylistsWithTracks()
-            openModel(<AddToPlaylistModel playlists={playlists} id={id} data={data} />, true)
+            openModel(<AddToPlaylistModel 
+                playlists={playlists} 
+                toggleCallback={trackToggleCallback} 
+                id={id}
+            />, true)
         }
     }
 
