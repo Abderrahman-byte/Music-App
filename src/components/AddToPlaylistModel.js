@@ -29,7 +29,7 @@ const PlaylistCheckItem = ({ playlist, trackId, toggleCallback }) => {
     )
 } 
 
-export const AddToPlaylistModel = ({ playlists, id, toggleCallback }) => {
+export const AddToPlaylistModel = ({ playlists, id, toggleCallback, CreatePlaylistCallback }) => {
 
     return (
         <div className='model AddToPlaylistModel'>
@@ -42,7 +42,7 @@ export const AddToPlaylistModel = ({ playlists, id, toggleCallback }) => {
                 />)}
             </div>
 
-            <button className='create-playlist-btn'>
+            <button onClick={CreatePlaylistCallback} className='create-playlist-btn'>
                 <i className='fas fa-plus'></i>
                 <p>Create Playlist</p>
             </button>
