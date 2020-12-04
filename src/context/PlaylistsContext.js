@@ -89,6 +89,18 @@ export class PlaylistsProvider extends React.Component {
         this.setState({ playlists: playlists })
     }
 
+    removeTracksToPlaylist = async (playlistId, trackId) => {
+        let playlists = await this.getPlaylists()
+
+        playlists = playlists.map(playlist => {
+            if(playlist.id !== playlistId) return playlist
+            playlist.tracks = playlist.tracks.filter(track => track.id !== trackId)
+            return playlist
+        })
+
+        this.setState({ playlists: playlists })
+    }
+
     getRemoveFrom = (from, path, type) => {
         return async (id) => {
             let newState = {}
@@ -125,6 +137,7 @@ export class PlaylistsProvider extends React.Component {
             removeFromFavoriteTracks: this.getRemoveFrom('favoriteTracks', 'favorite/tracks', 'tracks'),
             addToFavoriteTracks: this.generateAddTo('favoriteTracks', 'favorite/tracks', 'tracks'),
             addTracksToPlaylist: this.addTracksToPlaylist,
+            removeTracksToPlaylist: this.removeTracksToPlaylist
         }
 
         return (
