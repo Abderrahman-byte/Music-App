@@ -92,7 +92,7 @@ class PlaylistDetails(APIView) :
         
         self.check_object_permissions(request, pl)
         data = request.data
-        action = data.get('action')
+        action = data.get('action', True)
         tracks_ids = data.get('tracks_ids')
 
         if tracks_ids is None :
@@ -110,12 +110,12 @@ class PlaylistDetails(APIView) :
         if action is None :
             return Response({'detail': 'action field is required.'}, status=400, content_type='application/json')
         
-        elif action.lower() == 'add' :
+        elif action == True:
             pl.tracks.add(*tracks_list)
             pl.save()
             return Response(status=204, content_type='application/json')
         
-        elif action.lower() == 'remove':
+        elif action == False:
             pl.tracks.remove(*tracks_list)
             pl.save()
             return Response(status=204, content_type='application/json')
