@@ -21,6 +21,16 @@ export const AddToPlaylistBtn = ({ id, data }) => {
         } else {
             removeTracksToPlaylist(playlistId, id)
         }
+
+        fetch(`${process.env.API_URL}/api/playlists/list/${playlistId}`, {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify({ action, tracks_ids: [id] }),
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
     }
 
     const getPlaylistsWithTracks = async () => {
