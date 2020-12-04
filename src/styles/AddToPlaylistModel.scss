@@ -3,6 +3,31 @@
 .AddToPlaylistModel {
     padding: .75em 1em;
 
+    .create-playlist-btn {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        background-color: transparentize($secondary-grey, .7);
+        padding: .75em 0;
+        border: 1px solid transparentize(black, .9);
+        border-radius: 3px;
+        font-size: 1.2rem;
+        letter-spacing: .1em;
+        font-weight: 700;
+        color: $secondary-grey;
+        cursor: pointer;
+        transition: .3s;
+
+        &:hover {
+            background-color: transparentize($secondary-grey, .5);
+            color: darken($secondary-grey, 10);
+        }
+
+        i {
+            margin-right: .5em;
+        }
+    }
 
     .PlaylistCheckItem {
         display: flex;

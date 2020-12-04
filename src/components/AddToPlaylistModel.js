@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import '../styles/AddToPlaylistModel.scss'
 
@@ -40,6 +41,18 @@ export const AddToPlaylistModel = ({ playlists, id, toggleCallback }) => {
                     toggleCallback={toggleCallback}
                 />)}
             </div>
+
+            <button className='create-playlist-btn'>
+                <i className='fas fa-plus'></i>
+                <p>Create Playlist</p>
+            </button>
         </div>
     )
+}
+
+AddToPlaylistModel.propTypes = {
+    playlists: PropTypes.array.isRequired,
+    id: PropTypes.string.isRequired,
+    CreatePlaylistCallback: PropTypes.func.isRequired,
+    toggleCallback: PropTypes.func.isRequired
 }
