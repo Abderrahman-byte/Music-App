@@ -9,6 +9,7 @@ import { PlaylistsContext } from '../context/PlaylistsContext'
 import { getCookie } from '../utils/http'
 import LoginFormManager from './LoginFormManager'
 import { LoadingModel } from './LoadingModel'
+import { PlaylistFormModel } from './PlaylistFormModel'
 
 export const AddToPlaylistBtn = ({ id, data }) => {
     const { openModel } = useContext(ModelsContext)
@@ -60,6 +61,10 @@ export const AddToPlaylistBtn = ({ id, data }) => {
         return playlistsWithTracks
     }
 
+    const CreatePlaylistBtnHandle = () => {
+        openModel(<PlaylistFormModel />, true)
+    }
+
     const handleClicked = async () => {
         if(!user) {
             openModel(<LoginFormManager isModel className='model' />, true)
@@ -70,6 +75,7 @@ export const AddToPlaylistBtn = ({ id, data }) => {
                 playlists={playlists} 
                 toggleCallback={trackToggleCallback} 
                 id={id}
+                CreatePlaylistCallback={CreatePlaylistBtnHandle}
             />, true)
         }
     }
