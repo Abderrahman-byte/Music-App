@@ -1,0 +1,87 @@
+@import './variables.scss';
+
+.PlaylistFormModel {
+    .form-div > label {
+        letter-spacing: .1em;
+        font-size: 1.1rem;
+        color: transparentize(black, .3);
+    }
+
+    .form-inline {
+        margin-bottom: .75em;
+        flex-direction: row;
+        align-items: center;
+
+        label {
+            margin-bottom: 0;
+        }
+    }
+
+    textarea.form-control {
+        height: 100px;
+        resize: none;
+    }
+}
+
+.PlaylistFormModel {
+    .checkbox {
+        display: block;
+        position: relative;
+        margin-right: 1em;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        border-radius: 3px;
+        overflow: hidden;
+
+        // I dont know are those
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .checkmark {
+            position: absolute;
+            display: block;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: transparentize($secondary-grey, .75);
+        }
+
+        .checkmark::after {
+            content: "";
+            position: absolute;
+            display: none;
+            width: 5px;
+            height: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -65%) rotate(45deg);
+            border: solid white;
+            border-width: 0 3px 3px 0;
+        }
+
+        input:hover ~ .checkmark {
+            background-color: transparentize($primary-purple, .75);
+        }
+
+        input:checked ~ .checkmark {
+            background-color: $primary-purple;
+        }
+
+        input:checked ~ .checkmark::after {
+            display: block;
+        }
+    }
+}
