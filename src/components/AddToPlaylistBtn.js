@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
 
 import '../styles/AddToPlaylistBtn.scss'
 
@@ -85,4 +86,9 @@ export const AddToPlaylistBtn = ({ id, data }) => {
             <i className='fas fa-plus'></i>
         </button>
     )
+}
+
+AddToPlaylistBtn.propTypes = {
+    id: PropTypes.string.isRequired,
+    data: PropTypes.object.isRequired
 }
