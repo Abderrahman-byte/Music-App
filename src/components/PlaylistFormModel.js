@@ -25,8 +25,30 @@ export class PlaylistFormModel extends React.Component {
         this.setState({ data })
     }
 
+    verifieData = () => {
+        const data = this.state.data
+
+        if(data.title === '') {
+            this.setState({ errors: ['Playlist Title is required.']})
+            return false
+        }
+
+        if(data.title.length < 6) {
+            this.setState({ errors: ['Playlist Title must contain at least 6 characters.']})
+            return false
+        }
+
+        this.setState({ errors: []})
+        return true
+    }
+
     handleSubmit = (e) => {
         e.preventDefault()
+        const dataVerified = this.verifieData()
+
+        if(dataVerified) {
+            console.log('data verified')
+        }
     } 
 
     render = () => {
