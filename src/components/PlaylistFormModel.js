@@ -18,11 +18,11 @@ export class PlaylistFormModel extends React.Component {
     handleChanges = (e) => {
         const data = {...this.state.data}
         
-        if(e.target.type === 'text' || e.target.type === 'password') {
-            data[e.target.name] = e.target.value
-        } else if(e.target.type === 'checkbox') {
+        if(e.target.type === 'checkbox') {
             data[e.target.name] = e.target.checked
-        }
+        } else {
+            data[e.target.name] = e.target.value
+        } 
 
         this.setState({ data })
     }
@@ -54,9 +54,12 @@ export class PlaylistFormModel extends React.Component {
         })
 
         if(req.status >= 200 && req.status < 300) {
-            console.log(await req.json())
+            const data = await req.json()
+            this.props.playlistCreatedCallback(data)
         } else {
-            console.error(await req.json())
+            const response = await req.json()
+            const detail = response.detail || 'Something went wrong'
+            this.setState({ errors: [detail]})
         }
     }
 
@@ -122,6 +125,6 @@ export class PlaylistFormModel extends React.Component {
     }
 }
 
-// PlaylistFormModel.propTypes = {
-//     callback: PropTypes.func.isRequired
-// }
+PlaylistFormModel.propTypes = {
+    playlistCreatedCallback: PropTypes.func.isRequired,
+}
