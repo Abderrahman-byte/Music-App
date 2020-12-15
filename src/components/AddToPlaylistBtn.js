@@ -14,7 +14,7 @@ import { PlaylistFormModel } from './PlaylistFormModel'
 
 export const AddToPlaylistBtn = ({ id, data }) => {
     const { openModel } = useContext(ModelsContext)
-    const { getPlaylists, addTracksToPlaylist, removeTracksToPlaylist } = useContext(PlaylistsContext)
+    const { getPlaylists, addTracksToPlaylist, removeTracksToPlaylist, addToPlaylists } = useContext(PlaylistsContext)
     const { user } = useContext(AuthContext)
 
     const trackToggleCallback = (playlistId, action = true) => {
@@ -63,7 +63,17 @@ export const AddToPlaylistBtn = ({ id, data }) => {
     }
 
     const CreatePlaylistBtnHandle = () => {
-        openModel(<PlaylistFormModel />, true)
+        const playlistCreated = async (data) => {
+            addToPlaylists(data)
+            const playlists = await getPlaylistsWithTracks()
+            openModel(<AddToPlaylistModel 
+                playlists={playlists} 
+                toggleCallback={trackToggleCallback} 
+                id={id}
+                CreatePlaylistCallback={CreatePlaylistBtnHandle}
+            />, true)
+        }
+        openModel(<PlaylistFormModel playlistCreatedCallback={playlistCreated} />, true)
     }
 
     const handleClicked = async () => {
