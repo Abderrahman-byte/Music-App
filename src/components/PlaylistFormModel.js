@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import '../styles/PlaylistFormModel.scss'
 
+import { getCookie } from '../utils/http'
+
 export class PlaylistFormModel extends React.Component {
     state = {
         data: {
@@ -42,12 +44,28 @@ export class PlaylistFormModel extends React.Component {
         return true
     }
 
+    savePlaylist = async () => {
+        const data = JSON.stringify(this.state.data)
+        const req = await fetch(`${process.env.API_URL}/api/playlists/`, {
+            method: 'POST',
+            credentials: 'include',
+            body: data,
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')}
+        })
+
+        if(req.status >= 200 && req.status < 300) {
+            console.log(await req.json())
+        } else {
+            console.error(await req.json())
+        }
+    }
+
     handleSubmit = (e) => {
         e.preventDefault()
         const dataVerified = this.verifieData()
 
         if(dataVerified) {
-            console.log('data verified')
+            this.savePlaylist()
         }
     } 
 
