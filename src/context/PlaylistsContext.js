@@ -136,6 +136,8 @@ export class PlaylistsProvider extends React.Component {
             getPlaylists: this.getPlaylists,
             removeFromFavoriteTracks: this.getRemoveFrom('favoriteTracks', 'favorite/tracks', 'tracks'),
             addToFavoriteTracks: this.generateAddTo('favoriteTracks', 'favorite/tracks', 'tracks'),
+            removeFromFavoriteArtists: this.getRemoveFrom('favoriteArtists', 'favorite/artists', 'artists'),
+            addToFavoriteArtists: this.generateAddTo('favoriteArtists', 'favorite/artists', 'artists'),
             addToPlaylists: this.generateAddTo('playlists', '', 'playlists'),
             addTracksToPlaylist: this.addTracksToPlaylist,
             removeTracksToPlaylist: this.removeTracksToPlaylist
