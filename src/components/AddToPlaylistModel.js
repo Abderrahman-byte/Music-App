@@ -14,9 +14,9 @@ const PlaylistCheckItem = ({ playlist, trackId, toggleCallback }) => {
     return (
         <div className='PlaylistCheckItem'>
             {playlist.is_public ? (
-                <i className="fas fa-globe-africa"></i>
+                <i className='fas fa-globe-africa public-icon'></i>
             ): (
-                <i className='fas fa-lock'></i>
+                <i className='fas fa-lock public-icon'></i>
             )}
             
             <h6 className='title'>{playlist.title}</h6>
@@ -33,6 +33,10 @@ export const AddToPlaylistModel = ({ playlists, id, toggleCallback, CreatePlayli
 
     return (
         <div className='model AddToPlaylistModel'>
+            <div className='playlists-header'>
+                <h6 className='title'>Your Playlists</h6>
+            </div>
+
             <div className='playlists-container'>
                 {playlists.map(playlist => <PlaylistCheckItem 
                     key={playlist.id} 
@@ -40,6 +44,9 @@ export const AddToPlaylistModel = ({ playlists, id, toggleCallback, CreatePlayli
                     trackId={id} 
                     toggleCallback={toggleCallback}
                 />)}
+                {playlists.length <= 0 ? (
+                    <p className='warn'>There no playlists.</p>
+                ) : null}
             </div>
 
             <button onClick={CreatePlaylistCallback} className='create-playlist-btn'>
