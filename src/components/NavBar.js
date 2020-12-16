@@ -30,7 +30,7 @@ export class NavBar extends React.Component {
                 type: 1,
                 iconClassName: 'fas fa-record-vinyl',
                 title: 'playlists',
-                to: '/playlists'
+                to: '/feed/playlists'
             },
             {
                 type: 1,
