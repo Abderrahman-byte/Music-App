@@ -1,9 +1,9 @@
 import React from 'react'
 
-export class PlaylistsPage extends React.Component {
+export class UserPlaylistsPage extends React.Component {
     render = () => {
         return (
-            <div className='PlaylistsPage'>
+            <div className='UserPlaylistsPage'>
                 This Playlists Page
             </div>
         )
