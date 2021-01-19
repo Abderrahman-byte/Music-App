@@ -1,0 +1,56 @@
+@import './variables.scss';
+
+.TableOfPlaylists {
+    width: 100%;
+    border-top: 1px solid transparentize($primary-grey, .75);
+    
+    &, th, td {
+        border-collapse: collapse;
+    }
+
+    tr {
+        border-bottom: 1px solid transparentize($primary-grey, .75);
+    }
+
+    th {
+        color: $secondary-grey;
+        text-transform: capitalize;
+        letter-spacing: .1em;
+    }
+
+    td, th {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        padding-left: .5em;
+        padding-right: .5em;
+        font-weight: 300;
+        text-align: center;
+
+        &.btn-col {
+            max-width: 40px;
+            font-size: .8rem;
+        }
+
+        &.text-start {
+            text-align: start;
+            padding-left: 1%;
+        }
+    }
+
+    // &.mini {
+    //     max-width: 600px;
+    //     td, th {
+    //         padding-top: .5em;
+    //         padding-bottom: .5em;
+    //     }
+    // }
+}
+
+@media (min-width: $playlist-table-break-point) {
+    .TableOfPlaylists {
+        td, th {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
