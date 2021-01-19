@@ -83,18 +83,20 @@ export class PlaylistsProvider extends React.Component {
         playlists = playlists.map(playlist => {
             if(playlist.id !== id) return playlist
             playlist.tracks = [...(playlist.tracks || []), ...tracks]
+            console.log('playlist added :', playlist.id)
             return playlist
         })
 
         this.setState({ playlists: playlists })
     }
 
-    removeTracksToPlaylist = async (playlistId, trackId) => {
+    removeTracksFromPlaylist = async (playlistId, trackId) => {
         let playlists = await this.getPlaylists()
 
         playlists = playlists.map(playlist => {
             if(playlist.id !== playlistId) return playlist
             playlist.tracks = playlist.tracks.filter(track => track.id !== trackId)
+            console.log('playlist removed :', playlist.id)
             return playlist
         })
 
@@ -140,7 +142,7 @@ export class PlaylistsProvider extends React.Component {
             addToFavoriteArtists: this.generateAddTo('favoriteArtists', 'favorite/artists', 'artists'),
             addToPlaylists: this.generateAddTo('playlists', '', 'playlists'),
             addTracksToPlaylist: this.addTracksToPlaylist,
-            removeTracksToPlaylist: this.removeTracksToPlaylist
+            removeTracksFromPlaylist: this.removeTracksFromPlaylist
         }
 
         return (
