@@ -13,14 +13,14 @@ export class TableOfPlaylists extends Component {
                     <tr>
                         <th>#</th>
                         <th>Playlist</th>
-                        <th>Created date</th>
                         <th>Author</th>
+                        <th>Tracks</th>
                         <th></th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {this.props.data?.map(playlist => <PlaylistRow key={playlist.id} data={playlist} />)}
+                    {this.props.data?.map((playlist, i) => <PlaylistRow key={playlist.id} data={playlist} index={i} />)}
                 </tbody>
             </table>
         )
@@ -28,5 +28,10 @@ export class TableOfPlaylists extends Component {
 }
 
 TableOfPlaylists.propTypes = {
-    data: PropTypes.array.isRequired
+    data: PropTypes.array.isRequired,
+    withAuthor: PropTypes.bool
+}
+
+TableOfPlaylists.defaultProps = {
+    withAuthor: true
 }
