@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom'
 import { AlbumPage } from './Album.page'
 import { ArtistPage } from './Artist.page'
 import { MusicPage } from './Music.page'
+import PlaylistPage from './Playlist.page'
 import SearchPage from './Search.page'
 
 export const MainPages = () => {
@@ -12,6 +13,7 @@ export const MainPages = () => {
             <Route exact path='/' component={MusicPage} />
             <Route exact path='/album/:id' component={AlbumPage} />
             <Route exact path='/artist/:id' component={ArtistPage} />
+            <Route exact path='/playlist/:id' component={PlaylistPage} />
             <Route exact path='/search' component={SearchPage} />
         </Switch>
     )
