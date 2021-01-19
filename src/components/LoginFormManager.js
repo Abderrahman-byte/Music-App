@@ -95,7 +95,7 @@ export class LoginFormManager extends React.Component {
                     className='model'
                     isModel 
                     initErrors={[detail]}
-                />)
+                />, true)
             } else {
                 // Close model and display error
                 this.setState({ errors: [detail] })

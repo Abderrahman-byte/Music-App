@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 // import '../styles/LoginForm.scss'
 
+import { ModelsContext } from '../context/ModelsContext'
+
 export const LoginForm = ({username, password, updater, submitHandler, className, errors}) => {
+    const { closeModel } = useContext(ModelsContext)
+
     return (
         <form className={`form LoginForm ${className || ''}`} onSubmit={submitHandler}>
             <div className='form-div form-header'>
@@ -39,7 +43,8 @@ export const LoginForm = ({username, password, updater, submitHandler, className
             </div>
 
             <div className='form-div form-footer'>
-                <Link to='/register'>Not Member Yet? Create account</Link>
+                {/* Temporary fix */}
+                <Link onClick={closeModel} to='/register'>Not Member Yet? Create account</Link>
             </div>
         </form>
     )
