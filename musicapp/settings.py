@@ -82,22 +82,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'musicapp.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'music_app',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'USER': 'music_app_admin',
-        'PASSWORD': 'Abdou@25002001',
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -189,8 +173,32 @@ LOGGING = {
             'propagate': True
         }
     }
-} 
+}
 
+# Config file
+config_file='./config.json'
+config = dict()
+
+try :
+    config = json.loads(open(config_file).read())
+except :
+    logging.getLogger('errors').error(f'Cannot find configuration file "{config}"')
+    config = dict()
+
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+if 'db' not in config :
+    logging.getLogger('errors').error("Cannot find database configuration")
+    config['db'] = dict()
+    exit(1)
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        **config.get('db')
+    }
+}
 
 # Authentication costumization
 
@@ -202,11 +210,12 @@ ROOT_HOSTCONF = 'localhost:8000'
 SITE_PROTO = 'http'
 
 # Email SMTP Configuration
-try :
-    mail_cred = json.loads(open('./mail.json', 'r').read())
-except Exception as ex :
-    logging.getLogger('errors').error(f'Error comming from SMTP settings : {ex.__str__()}.')
+
+if 'mail' not in config :
+    logging.getLogger('errors').error(f'Cannot find SMTP settings')
     mail_cred = dict()
+else :
+    mail_cred = config.get('mail', {})
     
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
