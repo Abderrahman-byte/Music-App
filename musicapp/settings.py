@@ -177,7 +177,6 @@ LOGGING = {
 
 # Config file
 config_file='./config.json'
-config = dict()
 
 try :
     config = json.loads(open(config_file).read())
