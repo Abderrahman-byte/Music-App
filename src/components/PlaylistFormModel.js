@@ -12,7 +12,7 @@ export class PlaylistFormModel extends React.Component {
     }
 
     componentDidMount = () => {
-        if(this.props.edit && (!this.props.id || this.props.id == '')) {
+        if(this.props.edit && (!this.props.id || this.props.id === '')) {
             throw Error('Cannot edit playlist without providing its id')
         } 
     }
@@ -82,7 +82,7 @@ export class PlaylistFormModel extends React.Component {
         return (
             <form onSubmit={this.handleSubmit} className='form model PlaylistFormModel'>
                 <div className='form-div form-header'>
-                    <h6 className='title'>Create Playlist</h6>
+                    <h6 className='title'>{this.props.edit ? 'Modifie Playlist' : 'Create Playlist'}</h6>
                 </div>
 
                 <div className='form-div'>
