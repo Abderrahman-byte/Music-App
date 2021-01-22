@@ -1,11 +1,13 @@
 import React from 'react'
-import { ClassWithMultipleContexts } from '../components/ClassWithMultipleContexts'
 
 import { ModelsContext } from '../context/ModelsContext'
 import { AuthContext } from '../context/AuthContext'
 import { PlaylistsContext } from '../context/PlaylistsContext'
 import { PageHeader } from '../components/PageHeader'
 import { TableOfPlaylists } from '../components/TableOfPlaylists'
+import { ClassWithMultipleContexts } from '../components/ClassWithMultipleContexts'
+import { CreatePlaylistBtn } from '../components/CreatePlaylistBtn'
+import { PlaylistFormModel } from '../components/PlaylistFormModel'
 
 export class UserPlaylistsPage extends React.Component {
     state = {
@@ -42,8 +44,17 @@ export class UserPlaylistsPage extends React.Component {
         this.context.PlaylistsContext.updatePlaylist(id, newData)
     }
 
+    playlistCreated = (playlist) => {
+        this.context.ModelsContext.closeModel()
+        this.setState({ data: [...this.state.data, playlist]})
+        this.context.PlaylistsContext.addToPlaylists(playlist)
+    }
+
+    createPlaylistBtnHandler = () => {
+        this.context.ModelsContext.openModel(<PlaylistFormModel callback={this.playlistCreated} />)
+    }  
+
     render = () => {
-        console.log(this.state.data)
         return (
             <div className='UserPlaylistsPage page'>
                 <PageHeader title='User Playlists' />
@@ -55,6 +66,8 @@ export class UserPlaylistsPage extends React.Component {
                         data={this.state.data} 
                     />
                 ) : null}
+
+                <CreatePlaylistBtn callback={this.createPlaylistBtnHandler} />
             </div>
         )
     }

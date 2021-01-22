@@ -1,0 +1,27 @@
+@import './variables.scss';
+
+.CreatePlaylistBtn {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-top: .5em;
+    padding: .3em .75em;
+
+    background: transparent;
+    border: 1px solid $primary-grey;
+    color: $primary-grey;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: .4s;
+    border-radius: 3px;
+    
+    p {
+        margin-left: .3em;
+        letter-spacing: .1em;
+    }
+
+    &:hover {
+        background: $primary-grey;
+        color: $secondary-black;
+    }
+}
