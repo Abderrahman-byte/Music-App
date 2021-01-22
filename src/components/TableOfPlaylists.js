@@ -29,6 +29,7 @@ export class TableOfPlaylists extends Component {
                         key={playlist.id} 
                         withAuthor={this.props.withAuthor} 
                         data={playlist}
+                        updatePlaylist={this.props.updatePlaylist}
                     />)}
                 </tbody>
             </table>
@@ -39,7 +40,8 @@ export class TableOfPlaylists extends Component {
 TableOfPlaylists.propTypes = {
     data: PropTypes.array.isRequired,
     withAuthor: PropTypes.bool,
-    deletePlaylist: PropTypes.func.isRequired
+    deletePlaylist: PropTypes.func.isRequired,
+    updatePlaylist: PropTypes.func.isRequired
 }
 
 TableOfPlaylists.defaultProps = {

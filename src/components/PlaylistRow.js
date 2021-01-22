@@ -7,12 +7,20 @@ import '../styles/PlaylistRow.scss'
 import { getCookie } from '../utils/http'
 import { ModelsContext } from '../context/ModelsContext'
 import { ConfirmModel } from './ConfirmModel'
+import { PlaylistFormModel } from './PlaylistFormModel'
 
-export const PlaylistRow = ({withAuthor, data, deletePlaylist}) => {
+export const PlaylistRow = ({withAuthor, data, deletePlaylist, updatePlaylist}) => {
     const { openModel, closeModel } = useContext(ModelsContext)
 
-    const editPlaylist = () => {
-        console.log(`%c Edit playlist ${data.id}`, "color: royalblue;")
+    const playlistEdited = (savedData) => {
+        const newData = {...savedData, tracks: [...data.tracks]}
+        updatePlaylist(data.id, newData)
+        closeModel()
+    }
+
+    const editPlaylistBtn = () => {
+        const initData = {title: data.title, description: data.description, is_public: data.is_public}
+        openModel(<PlaylistFormModel callback={playlistEdited} initData={initData} edit id={data.id} />, true)
     }
 
     const deletePlaylistConfimed = () => {
@@ -27,7 +35,6 @@ export const PlaylistRow = ({withAuthor, data, deletePlaylist}) => {
         })
 
         closeModel()
-        console.log(`%c Playlist ${data.id} deleted`, "color: red;")
     }
 
     const deletePlaylistBtn = () => {
@@ -58,7 +65,7 @@ export const PlaylistRow = ({withAuthor, data, deletePlaylist}) => {
             <td>{new Date(data.created_date || 0).toLocaleString()} </td>
 
             <td className='col-btn'>
-                <button className='btn btn-edit' onClick={editPlaylist}>
+                <button className='btn btn-edit' onClick={editPlaylistBtn}>
                     <i className='fas fa-pen'></i>
                 </button>
             </td>
@@ -78,5 +85,6 @@ PlaylistRow.propTypes = {
         title: PropTypes.string.isRequired
     }).isRequired,
     withAuthor: PropTypes.bool,
-    deletePlaylist: PropTypes.func.isRequired
+    deletePlaylist: PropTypes.func.isRequired,
+    updatePlaylist: PropTypes.func.isRequired
 }
