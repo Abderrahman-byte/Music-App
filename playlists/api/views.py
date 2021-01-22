@@ -28,8 +28,9 @@ class UserPlaylists(APIView):
         user_playlists = user.tracksplaylist_set.all()
         user_playlists_count = user.tracksplaylist_set.count()
 
+        PlaylistsData = PlaylistDetailedSerializer(user_playlists, many=True) if 'details' in request.query_params else PlaylistSimpleSerializer(user_playlists, many=True) 
         context = {
-            'data': PlaylistSimpleSerializer(user_playlists, many=True).data,
+            'data': PlaylistsData.data,
             'count': user_playlists_count 
         }
 
