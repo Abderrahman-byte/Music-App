@@ -1,6 +1,8 @@
 @import './variables.scss';
 
 .TableOfPlaylists {
+    margin-top: 2em;
+    margin-bottom: .75em;
     width: 100%;
     border-top: 1px solid transparentize($primary-grey, .75);
     
@@ -13,7 +15,7 @@
     }
 
     th {
-        color: $secondary-grey;
+        color: $primary-grey;
         text-transform: capitalize;
         letter-spacing: .1em;
     }
@@ -36,14 +38,6 @@
             padding-left: 1%;
         }
     }
-
-    // &.mini {
-    //     max-width: 600px;
-    //     td, th {
-    //         padding-top: .5em;
-    //         padding-bottom: .5em;
-    //     }
-    // }
 }
 
 @media (min-width: $playlist-table-break-point) {
