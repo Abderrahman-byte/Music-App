@@ -1,0 +1,31 @@
+@import './variables.scss';
+
+.PlaylistRow {
+    color: $secondary-grey;
+
+    .playlist-title {
+        color: whitesmoke;
+        letter-spacing: .1em;
+    }
+
+    td {
+        border: 1px solid red;
+    }
+
+    .btn {
+        border: 0;
+        background-color: transparent;
+        color: $secondary-grey;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: .4s;
+        
+        &:hover {
+            color: whitesmoke;
+        }
+    }
+
+    .btn-delete {
+        color: rgb(255, 35, 35);
+    }
+}
