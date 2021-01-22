@@ -105,6 +105,17 @@ export class PlaylistsProvider extends React.Component {
         this.setState({ playlists: playlists })
     }
 
+    updatePlaylist = async (playlistId, newData) => {
+        let playlists = await this.getPlaylists()
+
+        playlists = playlists.map(playlist => {
+            if(playlist.id === playlistId) return newData
+            return playlist
+        })
+
+        this.setState({ playlists: playlists })
+    }
+
     getRemoveFrom = (from, path, type) => {
         return async (id) => {
             let newState = {}
@@ -145,7 +156,8 @@ export class PlaylistsProvider extends React.Component {
             addToPlaylists: this.generateAddTo('playlists', '?details', 'playlists'),
             removeFromPlaylists: this.getRemoveFrom('playlists', '?details', 'playlists'),
             addTracksToPlaylist: this.addTracksToPlaylist,
-            removeTracksFromPlaylist: this.removeTracksFromPlaylist
+            removeTracksFromPlaylist: this.removeTracksFromPlaylist,
+            updatePlaylist: this.updatePlaylist
         }
 
         return (

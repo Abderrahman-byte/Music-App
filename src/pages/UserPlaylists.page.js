@@ -33,6 +33,15 @@ export class UserPlaylistsPage extends React.Component {
         this.context.PlaylistsContext.removeFromPlaylists(id)
     }
 
+    updatePlaylist = (id, newData) => {
+        this.setState({ data : this.state.data.map(playlist => {
+            if(playlist.id === id) return newData
+            return playlist
+        })})
+
+        this.context.PlaylistsContext.updatePlaylist(id, newData)
+    }
+
     render = () => {
         console.log(this.state.data)
         return (
@@ -40,7 +49,11 @@ export class UserPlaylistsPage extends React.Component {
                 <PageHeader title='User Playlists' />
 
                 {this.state.data && this.state.data.length > 0 ? (
-                    <TableOfPlaylists deletePlaylist={this.deletePlaylist} data={this.state.data} />
+                    <TableOfPlaylists
+                        updatePlaylist={this.updatePlaylist}
+                        deletePlaylist={this.deletePlaylist} 
+                        data={this.state.data} 
+                    />
                 ) : null}
             </div>
         )
