@@ -18,7 +18,6 @@ export const AddToPlaylistBtn = ({ id, data }) => {
     const { user } = useContext(AuthContext)
 
     const trackToggleCallback = (playlistId, action = true) => {
-        console.log('action :', action)
         if(action) {
             addTracksToPlaylist(playlistId, data)
         } else {

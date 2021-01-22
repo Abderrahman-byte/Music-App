@@ -79,10 +79,12 @@ export class PlaylistsProvider extends React.Component {
 
     addTracksToPlaylist = async (id, ...tracks) => {
         let playlists = await this.getPlaylists()
-        
+
         playlists = playlists.map(playlist => {
             if(playlist.id !== id) return playlist
             playlist.tracks = [...(playlist.tracks || []), ...tracks]
+            playlist.tracks_count++
+            
             return playlist
         })
 
@@ -95,7 +97,8 @@ export class PlaylistsProvider extends React.Component {
         playlists = playlists.map(playlist => {
             if(playlist.id !== playlistId) return playlist
             playlist.tracks = playlist.tracks.filter(track => track.id !== trackId)
-            
+            playlist.tracks_count--
+
             return playlist
         })
 
