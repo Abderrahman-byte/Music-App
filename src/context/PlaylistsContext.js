@@ -84,7 +84,7 @@ export class PlaylistsProvider extends React.Component {
             if(playlist.id !== id) return playlist
             playlist.tracks = [...(playlist.tracks || []), ...tracks]
             playlist.tracks_count++
-            
+
             return playlist
         })
 
@@ -143,6 +143,7 @@ export class PlaylistsProvider extends React.Component {
             removeFromFavoriteArtists: this.getRemoveFrom('favoriteArtists', 'favorite/artists', 'artists'),
             addToFavoriteArtists: this.generateAddTo('favoriteArtists', 'favorite/artists', 'artists'),
             addToPlaylists: this.generateAddTo('playlists', '?details', 'playlists'),
+            removeFromPlaylists: this.getRemoveFrom('playlists', '?details', 'playlists'),
             addTracksToPlaylist: this.addTracksToPlaylist,
             removeTracksFromPlaylist: this.removeTracksFromPlaylist
         }

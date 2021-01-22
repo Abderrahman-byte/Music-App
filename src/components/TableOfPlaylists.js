@@ -25,6 +25,7 @@ export class TableOfPlaylists extends Component {
                 </thead>
                 <tbody>
                     {this.props.data?.map(playlist => <PlaylistRow 
+                        deletePlaylist={this.props.deletePlaylist}
                         key={playlist.id} 
                         withAuthor={this.props.withAuthor} 
                         data={playlist}
@@ -37,7 +38,8 @@ export class TableOfPlaylists extends Component {
 
 TableOfPlaylists.propTypes = {
     data: PropTypes.array.isRequired,
-    withAuthor: PropTypes.bool
+    withAuthor: PropTypes.bool,
+    deletePlaylist: PropTypes.func.isRequired
 }
 
 TableOfPlaylists.defaultProps = {
