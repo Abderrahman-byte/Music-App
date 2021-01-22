@@ -71,7 +71,7 @@ export class PlaylistsProvider extends React.Component {
 
     getPlaylists = async () => {
         if(this.state.playlists === undefined) {
-            return await this.initList('', 'playlists', 'playlists')
+            return await this.initList('?details', 'playlists', 'playlists')
         } else {
             return this.state?.playlists || []
         }
@@ -79,11 +79,10 @@ export class PlaylistsProvider extends React.Component {
 
     addTracksToPlaylist = async (id, ...tracks) => {
         let playlists = await this.getPlaylists()
-
+        
         playlists = playlists.map(playlist => {
             if(playlist.id !== id) return playlist
             playlist.tracks = [...(playlist.tracks || []), ...tracks]
-            console.log('playlist added :', playlist.id)
             return playlist
         })
 
@@ -96,7 +95,7 @@ export class PlaylistsProvider extends React.Component {
         playlists = playlists.map(playlist => {
             if(playlist.id !== playlistId) return playlist
             playlist.tracks = playlist.tracks.filter(track => track.id !== trackId)
-            console.log('playlist removed :', playlist.id)
+            
             return playlist
         })
 
@@ -140,7 +139,7 @@ export class PlaylistsProvider extends React.Component {
             addToFavoriteTracks: this.generateAddTo('favoriteTracks', 'favorite/tracks', 'tracks'),
             removeFromFavoriteArtists: this.getRemoveFrom('favoriteArtists', 'favorite/artists', 'artists'),
             addToFavoriteArtists: this.generateAddTo('favoriteArtists', 'favorite/artists', 'artists'),
-            addToPlaylists: this.generateAddTo('playlists', '', 'playlists'),
+            addToPlaylists: this.generateAddTo('playlists', '?details', 'playlists'),
             addTracksToPlaylist: this.addTracksToPlaylist,
             removeTracksFromPlaylist: this.removeTracksFromPlaylist
         }
