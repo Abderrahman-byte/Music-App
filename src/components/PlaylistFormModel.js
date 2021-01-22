@@ -55,7 +55,8 @@ export class PlaylistFormModel extends React.Component {
 
         if(req.status >= 200 && req.status < 300) {
             const data = await req.json()
-            this.props.playlistCreatedCallback(data)
+            data.tracks = []
+            this.props.callback(data)
         } else {
             const response = await req.json()
             const detail = response.detail || 'Something went wrong'
@@ -126,5 +127,16 @@ export class PlaylistFormModel extends React.Component {
 }
 
 PlaylistFormModel.propTypes = {
-    playlistCreatedCallback: PropTypes.func.isRequired,
+    callback: PropTypes.func.isRequired,
+    initData: PropTypes.shape({
+        title: PropTypes.string,
+        description: PropTypes.string,
+        is_public: PropTypes.bool,
+    })
+}
+
+PlaylistFormModel.defaultProps = {
+    title: '',
+    description: '',
+    is_public: false,
 }

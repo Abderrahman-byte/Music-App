@@ -46,7 +46,7 @@ export const AddToPlaylistBtn = ({ id, data }) => {
                 CreatePlaylistCallback={CreatePlaylistBtnHandle}
             />, true)
         }
-        openModel(<PlaylistFormModel playlistCreatedCallback={playlistCreated} />, true)
+        openModel(<PlaylistFormModel callback={playlistCreated} />, true)
     }
 
     const handleClicked = async () => {
