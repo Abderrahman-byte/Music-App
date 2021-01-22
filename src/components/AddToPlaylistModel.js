@@ -30,7 +30,6 @@ const PlaylistCheckItem = ({ playlist, trackId, toggleCallback }) => {
 } 
 
 export const AddToPlaylistModel = ({ playlists, id, toggleCallback, CreatePlaylistCallback }) => {
-
     return (
         <div className='model AddToPlaylistModel'>
             <div className='playlists-header'>
