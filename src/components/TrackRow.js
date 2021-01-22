@@ -21,10 +21,6 @@ export const TrackRow = ({data, index, withAlbum, withArtist, playFunc}) => {
         }
     }
 
-    const addToFav = () => {
-        console.error('You forgot to ampleilent add to fav functionality')
-    }
-
     return (
         <tr className={`TrackRow${currentId === data.id ? ' current': ''}`}>
             <td>{index}</td>
