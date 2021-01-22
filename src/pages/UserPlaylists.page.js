@@ -28,6 +28,11 @@ export class UserPlaylistsPage extends React.Component {
         this.closeModelOnAuthLoaded()
     }
 
+    deletePlaylist = (id) => {
+        this.setState({ data: this.state.data.filter(pl => pl.id != id)})
+        this.context.PlaylistsContext.removeFromPlaylists(id)
+    }
+
     render = () => {
         console.log(this.state.data)
         return (
@@ -35,7 +40,7 @@ export class UserPlaylistsPage extends React.Component {
                 <PageHeader title='User Playlists' />
 
                 {this.state.data && this.state.data.length > 0 ? (
-                    <TableOfPlaylists data={this.state.data} />
+                    <TableOfPlaylists deletePlaylist={this.deletePlaylist} data={this.state.data} />
                 ) : null}
             </div>
         )
