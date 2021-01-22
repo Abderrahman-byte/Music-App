@@ -7,12 +7,14 @@ import { getCookie } from '../utils/http'
 
 export class PlaylistFormModel extends React.Component {
     state = {
-        data: {
-            title: '',
-            description: '',
-            is_public: false,
-        },
+        data: {...this.props.initData},
         errors : []
+    }
+
+    componentDidMount = () => {
+        if(this.props.edit && (!this.props.id || this.props.id == '')) {
+            throw Error('Cannot edit playlist without providing its id')
+        } 
     }
 
     handleChanges = (e) => {
@@ -46,8 +48,11 @@ export class PlaylistFormModel extends React.Component {
 
     savePlaylist = async () => {
         const data = JSON.stringify(this.state.data)
-        const req = await fetch(`${process.env.API_URL}/api/playlists/`, {
-            method: 'POST',
+        const method = this.props.edit ? 'PUT' : 'POST'
+        const path = this.props.edit ? `api/playlists/list/${this.props.id}` : `api/playlists/`
+
+        const req = await fetch(`${process.env.API_URL}/${path}`, {
+            method: method,
             credentials: 'include',
             body: data,
             headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')}
@@ -132,11 +137,16 @@ PlaylistFormModel.propTypes = {
         title: PropTypes.string,
         description: PropTypes.string,
         is_public: PropTypes.bool,
-    })
+    }),
+    edit: PropTypes.bool,
+    id: PropTypes.string
 }
 
 PlaylistFormModel.defaultProps = {
-    title: '',
-    description: '',
-    is_public: false,
+    initData : {
+        title: '',
+        description: '',
+        is_public: false,
+    },
+    edit: false
 }
