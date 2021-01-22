@@ -11,16 +11,24 @@ export class TableOfPlaylists extends Component {
             <table className='TableOfPlaylists'>
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th className='text-start'>#</th>
                         <th>Playlist</th>
-                        <th>Author</th>
+                        {this.props.withAuthor ? (
+                            <th>Author</th>
+                        ) : (null)}
+
                         <th>Tracks</th>
+                        <th>Created Date</th>
                         <th></th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {this.props.data?.map((playlist, i) => <PlaylistRow key={playlist.id} data={playlist} index={i} />)}
+                    {this.props.data?.map(playlist => <PlaylistRow 
+                        key={playlist.id} 
+                        withAuthor={this.props.withAuthor} 
+                        data={playlist}
+                    />)}
                 </tbody>
             </table>
         )
@@ -33,5 +41,4 @@ TableOfPlaylists.propTypes = {
 }
 
 TableOfPlaylists.defaultProps = {
-    withAuthor: true
 }
