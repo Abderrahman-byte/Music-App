@@ -18,6 +18,7 @@ class Account(AbstractUser):
     })
 
     # Profil_img
+    avatar = models.TextField(blank=False, null=False, default='/media/users/avatars/default.png')
     # added playlists
 
     def save(self, *args, **kwargs) :
