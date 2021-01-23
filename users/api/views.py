@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication
@@ -6,10 +6,16 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
+from rest_framework.parsers import FileUploadParser
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 
 from .serializers import AccountSerializer
 from ..models import Account
 from ..tokens import activate_accounts_token
+
+import os, random, string
+from urllib.parse import urljoin
 
 @api_view(['POST'])
 def LoginView(request) :
@@ -48,7 +54,6 @@ def RegisterView(request) :
             data_resp = {'detail': f'{field_rep} field is required'}
             status = 400
             break
-    
     if is_there_error : return Response(data_resp, status=status, content_type='application/json')
     validated_data = dict([(field, data.get(field)) for field in required_fields])
 
@@ -87,6 +92,7 @@ def ActivateAccount(request, uidb64, token) :
 
 
 class AccountDetails(APIView) :
+    
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -117,3 +123,33 @@ class AccountDetails(APIView) :
 def LogoutView(request) :
     logout(request)
     return Response(status=204)
+    
+
+@parser_classes([FileUploadParser])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def UpdateAvatar(request):
+    avatar_file = request.FILES.get('avatar')
+
+    if avatar_file is None :
+        return Response({'details': 'Avatar field is required'}, status=400, content_type='application/json')
+
+    name_chars = list(string.ascii_letters + string.digits)
+    random.shuffle(name_chars)
+
+    fs = FileSystemStorage()
+    fn, ext = os.path.splitext(avatar_file.name)
+    file_id = ''.join([random.choice(name_chars) for _ in range(11)])
+
+    filename = fs.save(f'users/avatars/{file_id}{ext}', avatar_file)
+    url = fs.url(filename)
+    
+    request.user.avatar = url.lstrip('/').lstrip('media')
+    request.user.save()
+
+    context = {
+        'url': urljoin(f'{settings.SITE_PROTO}://{settings.ROOT_HOSTCONF}', url.lstrip('/'))
+    }
+
+    return Response(context, content_type='application/json', status=201)
