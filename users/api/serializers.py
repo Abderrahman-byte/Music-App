@@ -1,15 +1,26 @@
 from rest_framework import serializers
 from django.db import utils
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
-import re, logging
+from urllib.parse import urljoin
+
+import os, re, logging
 
 from ..models import Account
 
+class MediaUrl(serializers.Field) :
+    def to_representation(self, value) :
+        filePath = os.path.join(settings.MEDIA_URL, value.lstrip('/'))
+        url = urljoin(f'{settings.SITE_PROTO}://{settings.ROOT_HOSTCONF}/', filePath)
+        return url
+
 class AccountSerializer(serializers.ModelSerializer) :
+    avatar = MediaUrl()
+
     class Meta :
         model = Account
-        fields = ['id', 'username', 'first_name', 'last_name', 'email']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'avatar']
     
     def create(self, **validated_data) :
         username = validated_data.get('username')
