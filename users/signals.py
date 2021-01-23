@@ -1,12 +1,13 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.conf import settings
 
-import logging
+import logging, os
 
 from .tokens import activate_accounts_token
 from .models import Account
@@ -45,3 +46,14 @@ def NewAccountCreated(sender, instance, created, *args, **kwargs) :
     if created and not instance.is_active :
         sendActivationEmail(instance)
         createFavLists(instance)
+
+
+@receiver(pre_save, sender=Account)
+def CleanAccountPrevAvatar(sender, instance, *args, **kwargs) :
+    id = instance.id
+    oldAccount = Account.objects.get(pk=id)
+
+    if instance.avatar != oldAccount.avatar and instance.avatar != '/users/avatars/default.png' :
+        file_path = os.path.join(settings.MEDIA_ROOT, oldAccount.avatar.lstrip('/'))
+        if os.path.exists(file_path) :
+            os.remove(file_path)
