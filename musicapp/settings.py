@@ -120,6 +120,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 # Loggers
 
 LOGGING = {
@@ -207,6 +210,7 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBacke
 # Url Conf
 ROOT_HOSTCONF = 'localhost:8000'
 SITE_PROTO = 'http'
+FRONTEND_HOST = 'http://localhost:9000/'
 
 # Email SMTP Configuration
 
