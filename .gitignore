@@ -19,3 +19,9 @@ config.json
 node_modules
 build
 dist
+
+
+/media/users/avatars/*
+!/media/users/avatars/default.png
+/media/users/pl_pictures/*
+!/media/users/pl_pictures/default.jpg
