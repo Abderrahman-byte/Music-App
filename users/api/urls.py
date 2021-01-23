@@ -8,4 +8,6 @@ urlpatterns = [
     path('logout', views.LogoutView, name='logout'),
     path('activate/<uidb64>/<token>', views.ActivateAccount, name='activate-account'),
     path('account', views.AccountDetails.as_view(), name='account-details'),
+
+    path('update/avatar', views.UpdateAvatar, name='update-avatar')
 ]
