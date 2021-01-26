@@ -25,3 +25,5 @@ dist
 !/media/users/avatars/default.png
 /media/users/pl_pictures/*
 !/media/users/pl_pictures/default.jpg
+
+*.swp
