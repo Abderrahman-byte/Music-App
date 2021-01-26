@@ -22,9 +22,7 @@ def get_music_pages() :
         channel.basic_publish(exchange='', routing_key='music_pages', body=link)
         time.sleep(0.1)
 
-    channel.basic_publish(exchange='', routing_key='music_pages', body='')
     connection.close()
 
 def run() :
     get_music_pages()
-    pass
