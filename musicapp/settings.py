@@ -234,3 +234,8 @@ CORS_ALLOW_CREDENTIALS = True
 
 if DEBUG :
     CORS_ORIGIN_ALLOW_ALL = True
+
+# Messaging Queue Broker
+RABBITMQ = {
+    **config.get('mq', dict())
+}
