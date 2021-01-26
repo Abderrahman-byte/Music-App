@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
-import requests, time
+import requests, time, logging
 
 from .main import connect_broker
 
@@ -23,6 +23,10 @@ def get_music_pages() :
         time.sleep(0.1)
 
     connection.close()
+    logging.getLogger('debuging').debug(f'Added to queue {len(list_of_pages)} music page link')
 
 def run() :
-    get_music_pages()
+    try :
+        get_music_pages()
+    except Exception as ex :
+        logging.getLogger('errors').error(f'get_music_pages : {ex.__str__()}')
