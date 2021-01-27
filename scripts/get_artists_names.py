@@ -1,0 +1,121 @@
+from bs4 import BeautifulSoup
+import requests, logging, re, sys
+
+from .main import connect_broker
+
+names_fields = ['name', 'band', 'artist', 'violinist', 'music director', 'person']
+FORBIDDEN_NAMES = ['^.*category.*$', '^.*bands.*$', '^lists?\sof\s.+$', '^\w$']
+
+def get_name_field(fields) :
+    pattern = re.compile('^.+\s(name|band)$')
+
+    for i, field in enumerate(fields) :
+        if field.lower() in names_fields :
+            return i
+        elif re.compile('^.+\s(name|band)$').match(field.lower()) :
+            return i
+        elif re.compile('^name\sof\s.*$').match(field.lower()) :
+            return i
+
+    return None
+
+def parse_names_lists(soup) :
+    names = []
+    anchors = soup.select('#mw-content-text ul > li > a[title]')
+    active = True
+
+    for an in anchors :
+        name = an.get_text()
+
+        if active :
+            # test if valid and append it list
+            for pattern in FORBIDDEN_NAMES :
+                if re.compile(pattern).match(name.lower()):
+                    print(f'{name} is matching {pattern}')
+                    active = False
+                    break
+            if active : names.append(name)
+
+        if re.compile('^lists?\sof\s.+$').match(name.lower()):
+            # requeue
+            print(f'{name} is matching lisf of')
+            pass
+
+    return names
+            
+
+def parse_names_tables(soup) :
+    names = []
+    tables = soup.select('#mw-content-text .wikitable')
+    table_fields = [th.get_text().strip() for th in tables[0].find('tr').select('th')]
+    name_field_index = get_name_field(table_fields)
+
+    if name_field_index is None and len(tables[0].find_all('tr')) > 1 :
+        table_fields = [th.get_text().strip() for th in tables[0].find_all('tr')[1].select('th')]
+        name_field_index = get_name_field(table_fields)
+    elif name_field_index is None and len(tables) == 1 :
+        # MUST BE HANDLED AS PAGE OF LISTS
+        names = parse_names_lists(soup)
+        return names
+    
+    if name_field_index is not None :
+        rows_start = 1
+    else :
+        name_field_index = 0
+        rows_start = 0
+
+    for table in tables :
+        rows = table.find_all('tr') 
+        
+        for row in rows[rows_start:] :
+            children = row.find_all(recursive=False)
+            if len(children) > name_field_index :
+                anchor = children[name_field_index].find('a')
+                if anchor is not None : names.append(anchor.get_text())
+
+    return names
+
+def handle_message(ch, method, properties, body):
+    link = body.decode()
+    req = requests.get(link)
+    
+    if req.status_code != requests.codes.ok : 
+        logging.getLogger('errors').error(f'request : {req.status_code} {link}')
+        return
+
+    soup = BeautifulSoup(req.content.decode(), 'html.parser')
+    
+    tables = soup.select('#mw-content-text .wikitable')
+    has_table = len(tables) > 0
+    
+    if has_table :
+        names = parse_names_tables(soup)
+    else :
+        names = parse_names_lists(soup)
+
+    with open('artists', 'a') as fd :
+        fd.write('\n'.join(names))
+
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+    log_message = f'proccessing {link} done'
+    print(log_message)
+    logging.getLogger('debug').debug(log_message)
+    # sys.exit(0)
+    
+def get_artists_names() :
+    connection = connect_broker()
+    channel = connection.channel()
+    
+    try :
+        channel.basic_qos(prefetch_count=1)
+        channel.basic_consume(queue='music_pages', on_message_callback=handle_message)
+        channel.start_consuming()
+    except KeyboardInterrupt :
+        connection.close()
+        sys.exit(0)
+
+def run() :
+    try :
+        get_artists_names()
+    except Exception as ex :
+        logging.getLogger('errors').error(f'get_artists_names : {ex.__str__()}')
