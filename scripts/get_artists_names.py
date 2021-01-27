@@ -1,8 +1,10 @@
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import requests, logging, re, sys
 
 from .main import connect_broker
 
+LINKS_PREFIX = 'https://en.wikipedia.org'
 names_fields = ['name', 'band', 'artist', 'violinist', 'music director', 'person']
 FORBIDDEN_NAMES = ['^.*category.*$', '^.*bands.*$', '^lists?\sof\s.+$', '^\w$']
 
@@ -19,7 +21,7 @@ def get_name_field(fields) :
 
     return None
 
-def parse_names_lists(soup) :
+def parse_names_lists(soup, channel) :
     names = []
     anchors = soup.select('#mw-content-text ul > li > a[title]')
     active = True
@@ -28,18 +30,17 @@ def parse_names_lists(soup) :
         name = an.get_text()
 
         if active :
-            # test if valid and append it list
             for pattern in FORBIDDEN_NAMES :
                 if re.compile(pattern).match(name.lower()):
-                    print(f'{name} is matching {pattern}')
                     active = False
                     break
             if active : names.append(name)
 
         if re.compile('^lists?\sof\s.+$').match(name.lower()):
-            # requeue
-            print(f'{name} is matching lisf of')
-            pass
+            url = an.get('href')
+            if url is not None and url != '' :
+                url = urljoin(LINKS_PREFIX, url)
+                channel.basic_publish(exchange='', routing_key='music_pages', body=url)
 
     return names
             
@@ -54,7 +55,6 @@ def parse_names_tables(soup) :
         table_fields = [th.get_text().strip() for th in tables[0].find_all('tr')[1].select('th')]
         name_field_index = get_name_field(table_fields)
     elif name_field_index is None and len(tables) == 1 :
-        # MUST BE HANDLED AS PAGE OF LISTS
         names = parse_names_lists(soup)
         return names
     
@@ -91,16 +91,15 @@ def handle_message(ch, method, properties, body):
     if has_table :
         names = parse_names_tables(soup)
     else :
-        names = parse_names_lists(soup)
+        names = parse_names_lists(soup, ch)
 
-    with open('artists', 'a') as fd :
-        fd.write('\n'.join(names))
+    for name in names :
+        ch.basic_publish(exchange='', routing_key='artists_names', body=name.strip())
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
     log_message = f'proccessing {link} done'
     print(log_message)
     logging.getLogger('debug').debug(log_message)
-    # sys.exit(0)
     
 def get_artists_names() :
     connection = connect_broker()
