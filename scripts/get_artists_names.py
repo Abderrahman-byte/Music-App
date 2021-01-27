@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
-import requests, logging, re, sys
+import threading, requests, logging, re, sys, time
 
 from .main import connect_broker
 
@@ -100,21 +100,31 @@ def handle_message(ch, method, properties, body):
     log_message = f'proccessing {link} done'
     print(log_message)
     logging.getLogger('debug').debug(log_message)
-    
-def get_artists_names() :
-    connection = connect_broker()
-    channel = connection.channel()
-    
+
+def get_artists_names(n) : 
     try :
+        connection = connect_broker()
+        channel = connection.channel()
         channel.basic_qos(prefetch_count=1)
         channel.basic_consume(queue='music_pages', on_message_callback=handle_message)
+        print(f'Thread-{n} start consuming')
         channel.start_consuming()
-    except KeyboardInterrupt :
-        connection.close()
+    except Exception as ex :
+        logging.getLogger('errors').error(f'get_artists_names thread-{n} : {ex.__str__()}')
+
+def start_workers(workers=4) :
+    threads = []
+    stop_event = threading.Event()
+
+    for n in range(0, workers) :
+        thread = threading.Thread(target=get_artists_names, args=(n,))
+        threads.append(thread)
+
+    try :
+        for t in threads : t.start()
+        for t in threads : t.join()
+    except (KeyboardInterrupt, SystemExit) :
         sys.exit(0)
 
 def run() :
-    try :
-        get_artists_names()
-    except Exception as ex :
-        logging.getLogger('errors').error(f'get_artists_names : {ex.__str__()}')
+    start_workers(4)
