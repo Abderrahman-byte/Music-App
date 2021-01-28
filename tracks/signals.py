@@ -30,6 +30,7 @@ def AlbumCreated(sender, instance, created, *args, **kwargs) :
         try :
             logging.getLogger('debuging').debug(f'Album created {instance.title} with id {instance.deezer_id}')
             publish_to_queue('album_tracks', str(instance.deezer_id))
+            publish_to_queue('album_genres', str(instance.deezer_id))
             logging.getLogger('debuging').debug(f'Album {instance.deezer_id} added to queue "album_tracks"')
         except Exception as ex :
             logging.getLogger('errors').error(f'Album created signal : {ex.__str__()}')
