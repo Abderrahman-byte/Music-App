@@ -45,7 +45,7 @@ def parse_names_lists(soup, channel) :
     return names
             
 
-def parse_names_tables(soup) :
+def parse_names_tables(soup, channel) :
     names = []
     tables = soup.select('#mw-content-text .wikitable')
     table_fields = [th.get_text().strip() for th in tables[0].find('tr').select('th')]
@@ -55,7 +55,7 @@ def parse_names_tables(soup) :
         table_fields = [th.get_text().strip() for th in tables[0].find_all('tr')[1].select('th')]
         name_field_index = get_name_field(table_fields)
     elif name_field_index is None and len(tables) == 1 :
-        names = parse_names_lists(soup)
+        names = parse_names_lists(soup, channel)
         return names
     
     if name_field_index is not None :
@@ -89,7 +89,7 @@ def handle_message(ch, method, properties, body):
     has_table = len(tables) > 0
     
     if has_table :
-        names = parse_names_tables(soup)
+        names = parse_names_tables(soup, ch)
     else :
         names = parse_names_lists(soup, ch)
 
