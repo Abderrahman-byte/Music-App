@@ -1,9 +1,21 @@
-import threading, logging, sys, requests, json
+import threading, logging, sys, requests, json, re
+import unicodedata
 
 from tracks.models import Artist
 from .main import connect_broker
 
 MIN_FAN = 1000
+
+def normalize(name) :
+    name_normalized = unicodedata.normalize('NFKD', name.strip()).encode('ascii', 'ignore').decode()
+
+    pattern = re.compile('^(\w{4,})\s\(.+\)$')
+    match = pattern.match(name_normalized)
+
+    if match :
+        name_normalized = match.group(1)
+
+    return name_normalized
 
 def add_artist(name) :
     url = f'https://api.deezer.com/search/artist?q={name}'
@@ -17,18 +29,31 @@ def add_artist(name) :
             artist_data = data[0]
         
             if artist_data.get('nb_fan') >= MIN_FAN :
-                artist = Artist(deezer_id=artist_data.get('id'), name=artist_data.get('name'))
-                artist.save()
-                logging.getLogger('debuging').debug(f'artist {artist_data.get("name")} with id {artist_data.get("id")} has been added')
+                try :
+                    artist = Artist(deezer_id=artist_data.get('id'), name=artist_data.get('name'))
+                    artist.picture = artist_data.get('picture')
+                    artist.picture_small = artist_data.get('picture_small')
+                    artist.picture_medium = artist_data.get('picture_medium')
+                    artist.picture_big = artist_data.get('picture_big')
+                    artist.picture_xl = artist_data.get('picture_xl')
+                    artist.save()
+                except Exception as ex :
+                    print(f'add_artist({name}) : {ex.__str__()}')
+                    logging.getLogger('errors').error(f'get_artists_data from add_artist: {ex.__str__()}')
+        else :                     
+            print(f'{name} no data')
 
     except Exception as ex :
         logging.getLogger('errors').error(f'get_artists_data from add_artist: {ex.__str__()}')
 
 def get_data(ch, method, properties, body) :
+    name = normalize(body.decode())
+
     try :
-        Artist.objects.get(name=body)
+        Artist.objects.get(name__iexact=name)
+        print(f'{name} already exists')
     except Artist.DoesNotExist :
-        add_artist(body)
+        add_artist(name.lower())
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
