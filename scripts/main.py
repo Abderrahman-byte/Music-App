@@ -37,7 +37,8 @@ def run () :
     channel = connection.channel()
 
     for queue in queues :
-        channel.queue_declare(queue=queue, durable=True)
+        args = {'x-queue-mode': 'lazy'}
+        channel.queue_declare(queue=queue, durable=True, arguments=args)
         print(f'Queue "{queue}" has been created')
 
     connection.close()
