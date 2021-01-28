@@ -24,11 +24,9 @@ def publish_to_queue(queue, body) :
     )
     connection.close()
 
+@receiver(post_save, sender=Album)
 def AlbumCreated(sender, instance, created, *args, **kwargs) :
-    print('AlbumCreated()')
-
     if created :
-        print('new albums has been created')
         try :
             logging.getLogger('debuging').debug(f'Album created {instance.title} with id {instance.deezer_id}')
             publish_to_queue('album_tracks', str(instance.deezer_id))
@@ -38,10 +36,7 @@ def AlbumCreated(sender, instance, created, *args, **kwargs) :
 
 @receiver(post_save, sender=Artist)
 def ArtistCreated(sender, instance, created, *args, **kwargs) :
-    print('ArtistCreated()')
-
     if created :
-        print('new artist has been created')
         try :
             logging.getLogger('debuging').debug(f'Artist created "{instance.name}" with id {instance.deezer_id}')
             publish_to_queue('artist_albums', str(instance.deezer_id))
