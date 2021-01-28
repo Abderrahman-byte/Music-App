@@ -3,7 +3,7 @@ from django.conf import settings
 import sys
 import pika
 
-queues = ['music_pages', 'artists_names', 'artist_albums', 'album_tracks']
+queues = ['music_pages', 'artists_names', 'artist_albums', 'album_tracks', 'album_genres']
 
 def checkConf(conf) :
     if conf.get('user') is None or conf.get('password') is None :
