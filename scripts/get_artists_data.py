@@ -9,7 +9,7 @@ MIN_FAN = 1000
 def normalize(name) :
     name_normalized = unicodedata.normalize('NFKD', name.strip()).encode('ascii', 'ignore').decode()
 
-    pattern = re.compile('^(\w{4,})\s\(.+\)$')
+    pattern = re.compile('^(.{4,})\s\(.+\)$')
     match = pattern.match(name_normalized)
 
     if match :
@@ -23,7 +23,7 @@ def add_artist(name) :
         req = requests.get(url)
         content = req.content.decode()
         response = json.loads(content)
-        data = response.get('data')
+        data = response.get('data', [])
 
         if len(data) >= 1 :
             artist_data = data[0]
