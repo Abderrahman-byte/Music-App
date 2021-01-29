@@ -23,7 +23,8 @@ def get_album_data(album_id, tries=0) :
     try :
         url = f'https://api.deezer.com/album/{album_id}/tracks?limit={LIMIT}'
         req = requests.get(url, timeout=3)
-        
+        req.raise_for_status() 
+
         if req.status_code == requests.codes.get('ok') :
             content = req.content.decode()
             data = json.loads(content).get('data', [])
@@ -32,7 +33,7 @@ def get_album_data(album_id, tries=0) :
         else :
             debugLogger.debug(f'add_track : {url} responded with {req.status_code} error')
             return []
-    except (requests.exception.ConnectionError, requests.exception.Timeout) :
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) :
         time.sleep(3)
 
         if tries < 3 :
