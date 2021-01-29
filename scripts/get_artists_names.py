@@ -75,16 +75,42 @@ def parse_names_tables(soup, channel) :
 
     return names
 
+def get_page(link, tries=0) :
+    try :
+        
+        req = requests.get(link, timeout=3)
+        req.raise_for_status()
+
+        if req.status_code != requests.codes.ok : 
+            logging.getLogger('errors').error(f'request : {req.status_code} {link}')
+            return None
+        else :
+            return req.content.decode()
+
+    
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+        time.sleep(3)
+
+        if tries < 3 :
+            return get_page(link, tries + 1)
+        else :
+            print(f'get_page({link}) : enough tries')
+            logging.getLogger('errors').error(f'get_page({link}) : enough tries')
+            return None
+
+    except Exception as ex :
+        logging.getLogger('errors').error(f'get_page({link}) : {ex.__str__()}')
+        return None
+
 def handle_message(ch, method, properties, body):
     link = body.decode()
-    req = requests.get(link)
+    html = get_page(link)
     
-    if req.status_code != requests.codes.ok : 
-        logging.getLogger('errors').error(f'request : {req.status_code} {link}')
+    if html is None :
+        ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
-    soup = BeautifulSoup(req.content.decode(), 'html.parser')
-    
+    soup = BeautifulSoup(html, 'html.parser')
     tables = soup.select('#mw-content-text .wikitable')
     has_table = len(tables) > 0
     
