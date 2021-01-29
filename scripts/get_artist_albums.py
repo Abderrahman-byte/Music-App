@@ -1,4 +1,4 @@
-import threading, sys, logging, requests, json
+import threading, sys, logging, requests, json, time
 
 from tracks.models import Album, Artist
 from.main import connect_broker
@@ -15,31 +15,52 @@ def submit_album(data, artist) :
         album.cover_small = data.get('cover_small')
         album.cover_xl = data.get('cover_xl')
         album.save()
-    
-def add_albums(ch, method, properties, body) :
+        print(f'\talbum "{album.title}" has been created')
+
+def get_albums_data(artist_id, tries=0) :
     try :
-        deezer_id = int(body)
-        print(f'getting albums of {body}')
-        url = f'https://api.deezer.com/artist/{deezer_id}/albums?limit={LIMIT}'
-        req = requests.get(url)
+        url = f'https://api.deezer.com/artist/{artist_id}/albums?limit={LIMIT}'
+        req = requests.get(url, timeout=3)
+        req.raise_for_status()
 
         if req.status_code == requests.codes.get('ok') :
             content = req.content.decode()
             response_data = json.loads(content)
             data = response_data.get('data', [])
+            return data
+        else :
+            return []
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) :
+        time.sleep(3)
+
+        if tries < 3 :
+            return get_albums_data(artist_id, tries + 1)
+        else :
+            logging.getLogger('errors').error(f'get_albums_data({artist_id}) : enought trying') 
+            return []
+
+    except Exception as ex :
+        logging.getLogger('errors').error(f'get_albums_data({artist_id}) : {ex.__str__()}') 
+        return []
+
+
+def add_albums(ch, method, properties, body) :
+    try :
+        deezer_id = int(body)
+        data = get_albums_data(deezer_id)
+
+        if len(data) > 0 :
+            print(f'[*] adding {len(data)} albums for {deezer_id}')
             artist = Artist.objects.get(deezer_id=deezer_id)
 
-            if len(data) > 0 :
-                for album_data in data :
-                    submit_album(album_data, artist)
-            else :    
-                logging.getLogger('debuging').debug(f'add_album({body}) : empty data') 
-        else :
-            logging.getLogger('errors').error(f'add_album({body}) : response status {req.status_code}') 
-        
-        ch.basic_ack(delivery_tag=method.delivery_tag)
+            for album_data in data :
+                submit_album(album_data, artist)
+        else :    
+            logging.getLogger('debuging').debug(f'add_albums({body}) : empty data') 
     except Exception as ex :
-        logging.getLogger('errors').error(f'add_album({body}) : {ex.__str__()}') 
+        logging.getLogger('errors').error(f'add_albums({body}) : {ex.__str__()}') 
+    
+    ch.basic_ack(delivery_tag=method.delivery_tag)
 
 def get_artist_albums(n):
     try :
