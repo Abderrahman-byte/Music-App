@@ -27,9 +27,18 @@ def get_album_data(album_id, tries=0) :
 
         if req.status_code == requests.codes.get('ok') :
             content = req.content.decode()
-            data = json.loads(content).get('data', [])
+            response = json.loads(content)
+            
+            if 'error' in response and response.get('error').get('code') == 4 :
+                time.sleep(3)
 
-            return data
+                if tries < 3 :
+                    return get_album_data(album_id, tries + 1)
+                else :
+                    return []
+            else :
+                return response.get('data', [])
+
         else :
             debugLogger.debug(f'add_track : {url} responded with {req.status_code} error')
             return []

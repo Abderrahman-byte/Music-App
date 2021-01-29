@@ -18,7 +18,15 @@ def get_album_genres(album_id, tries=0) :
         if req.status_code == requests.codes.get('ok') :
             content = req.content.decode()
             data = json.loads(content)
-            return data.get('genres', {}).get('data', []) 
+
+            if 'error' in data and data.get('error').get('code') == 4 :
+                time.sleep(3)
+                if tries < 3 :
+                    return get_album_genres(album_id, tries + 1)
+                else :
+                    return []
+            else :
+                return data.get('genres', {}).get('data', []) 
         else :
             debugLogger.debug(f'get_album_genre : {url} responded with {req.status_code} error')
             return []

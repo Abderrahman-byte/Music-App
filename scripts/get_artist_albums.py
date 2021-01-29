@@ -26,8 +26,16 @@ def get_albums_data(artist_id, tries=0) :
         if req.status_code == requests.codes.get('ok') :
             content = req.content.decode()
             response_data = json.loads(content)
-            data = response_data.get('data', [])
-            return data
+            
+            if 'error' in response_data and response_data.get('error').get('code') == 4 :
+                time.sleep(3)
+                if tries < 3:
+                    return get_albums_data(artist_id, tries + 1)
+                else :
+                    return []
+            else :
+                data = response_data.get('data', [])
+                return data
         else :
             return []
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) :
