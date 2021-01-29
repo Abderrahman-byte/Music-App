@@ -44,6 +44,13 @@ def add_artist(name, tries=0) :
                 except Exception as ex :
                     print(f'[ERROR] add_artist({name}) : {ex.__str__()}')
                     logging.getLogger('errors').error(f'get_artists_data from add_artist: {ex.__str__()}')
+        elif 'error' in response and response.get('error').get('code') == 4 :
+            time.sleep(3)
+            if tries < 3 :
+                add_artist(name, tries + 1)
+            else :
+                print(f'[ERROR] add_artist({name}) : enough tries')
+                logging.getLogger('errors').error(f'add_artist({name}) : enough tries')
         else :
             print(f'[*] No data found "{name}"')
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
