@@ -26,7 +26,7 @@ def add_albums(ch, method, properties, body) :
         if req.status_code == requests.codes.get('ok') :
             content = req.content.decode()
             response_data = json.loads(content)
-            data = response_data.get('data')
+            data = response_data.get('data', [])
             artist = Artist.objects.get(deezer_id=deezer_id)
 
             if len(data) > 0 :
