@@ -11,36 +11,56 @@ debugLogger = logging.getLogger('debuging')
 def add_track(data, album) :
     try :
         Track.objects.get(deezer_id=data.get('id'))
-        print(f'Track "{data.get("title")}" already exists')
+        print(f'\tTrack "{data.get("title")}" already exists')
     except Track.DoesNotExist :
         track = Track(title=data.get('title'), deezer_id=data.get('id'), album=album)
         track.preview = data.get('preview')
         track.rank = data.get('rank')
         track.save()
-        print(f'Track "{data.get("title")}" has been created')
-    
-def get_tracks(ch, method, properties, body) :
+        print(f'\tTrack "{data.get("title")}" has been created')
+
+def get_album_data(album_id, tries=0) :
     try :
-        album_id = int(body)
         url = f'https://api.deezer.com/album/{album_id}/tracks?limit={LIMIT}'
-        req = requests.get(url)
+        req = requests.get(url, timeout=3)
         
         if req.status_code == requests.codes.get('ok') :
             content = req.content.decode()
             data = json.loads(content).get('data', [])
-            album = Album.objects.get(deezer_id=album_id)
 
-            if len(data) :
-                for track_data in data :
-                    add_track(track_data, album)
-            else :
-                debugLogger.debug(f'add_track : {album_id} is an empty album')
+            return data
         else :
             debugLogger.debug(f'add_track : {url} responded with {req.status_code} error')
+            return []
+    except (requests.exception.ConnectionError, requests.exception.Timeout) :
+        time.sleep(3)
 
-        ch.basic_ack(delivery_tag=method.delivery_tag)
+        if tries < 3 :
+            return get_album_data(album_id, tries + 1)
+        else :
+            errorsLogger.error(f'get_album_data({album_id}) : enough trying')
+            return []
+    except Exception as ex :
+        errorsLogger.error(f'get_album_data({album_id}) : {ex.__str__()}')
+        return []
+    
+def get_tracks(ch, method, properties, body) :
+    try :
+        album_id = int(body)
+        data = get_album_data(album_id)
+
+        if len(data) > 0:
+            print(f'[*] album {album_id} found {len(data)} track')
+            album = Album.objects.get(deezer_id=album_id)
+            for track_data in data :
+                add_track(track_data, album)
+        else :
+            debugLogger.debug(f'add_track : {album_id} is an empty album')
+
     except Exception as ex :
         errorsLogger.error(f'add_tracks({body.decode()}) : {ex.__str__()}')
+    
+    ch.basic_ack(delivery_tag=method.delivery_tag)
         
 def get_albums_tracks(n) :
     try :
