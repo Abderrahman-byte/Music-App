@@ -86,11 +86,15 @@ def start_workers(workers_num=4) :
 
     for n in range(0, workers_num) :
         thread = threading.Thread(target=get_artists_data, args=(n,))
+        thread.daemon = True
         threads.append(thread)
-
-    for thread in threads : thread.start()
-    print('Thread has been started')
-    for thread in threads : thread.join()
+    
+    try :
+        for thread in threads : thread.start()
+        print('Thread has been started')
+        for thread in threads : thread.join()
+    except KeyboardInterrupt :
+        sys.exit(0)
 
 def run() :
     start_workers()
