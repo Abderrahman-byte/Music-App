@@ -1,4 +1,4 @@
-import threading, logging, sys, requests, json, re
+import threading, logging, sys, requests, json, re, time
 import unicodedata
 
 from tracks.models import Artist
@@ -17,10 +17,13 @@ def normalize(name) :
 
     return name_normalized
 
-def add_artist(name) :
+def add_artist(name, tries=0) :
     url = f'https://api.deezer.com/search/artist?q={name}'
+    print('.')
+
     try :
-        req = requests.get(url)
+        req = requests.get(url, timeout=3)
+        req.raise_for_status()
         content = req.content.decode()
         response = json.loads(content)
         data = response.get('data', [])
@@ -37,14 +40,23 @@ def add_artist(name) :
                     artist.picture_big = artist_data.get('picture_big')
                     artist.picture_xl = artist_data.get('picture_xl')
                     artist.save()
+                    print(f'[*] artist "{artist.name}" has been created')
                 except Exception as ex :
-                    print(f'add_artist({name}) : {ex.__str__()}')
+                    print(f'[ERROR] add_artist({name}) : {ex.__str__()}')
                     logging.getLogger('errors').error(f'get_artists_data from add_artist: {ex.__str__()}')
-        else :                     
-            print(f'{name} no data')
+        else :
+            print(f'[*] No data found "{name}"')
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+        time.sleep(3)
+        if tries < 3 :
+            add_artist(name, tries + 1)
+        else :
+            print(f'[ERROR] add_artist({name}) : enough tries')
+            logging.getLogger('errors').error(f'add_artist({name}) : enough tries')
 
     except Exception as ex :
         logging.getLogger('errors').error(f'get_artists_data from add_artist: {ex.__str__()}')
+
 
 def get_data(ch, method, properties, body) :
     name = normalize(body.decode())
