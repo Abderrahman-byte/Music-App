@@ -1,12 +1,26 @@
-import threading, requests, logging, json, sys, time
+import json, sys, time
+import threading
+import requests
+import logging
+import functools
+import datetime
 
 from tracks.models import Track, Album
-from .main import connect_broker
+from .main import connect_to_broker
 
 LIMIT = 1000
+THREADS = 6
 
-errorsLogger = logging.getLogger('errors')
-debugLogger = logging.getLogger('debuging')
+logError = logging.getLogger('errors').error
+logDebug = logging.getLogger('debuging').debug
+
+def sleepWithHeartbeat(connection, time_to_sleep=3) :
+    start_time = time.time()
+
+    while time.time() - start_time < time_to_sleep :
+        print('?' * 50)
+        connection.process_data_events()
+        time.sleep(50/1000)
 
 def add_track(data, album) :
     try :
@@ -16,88 +30,91 @@ def add_track(data, album) :
         track = Track(title=data.get('title'), deezer_id=data.get('id'), album=album)
         track.preview = data.get('preview')
         track.rank = data.get('rank')
+        track.release_date = album.release_date
         track.save()
         print(f'\tTrack "{data.get("title")}" has been created')
 
-def get_album_data(album_id, tries=0) :
+def get_album_data(album_id, connection, tries=0) :
     try :
         url = f'https://api.deezer.com/album/{album_id}/tracks?limit={LIMIT}'
         req = requests.get(url, timeout=3)
         req.raise_for_status() 
+        content = req.content.decode()
+        response = json.loads(content)
 
-        if req.status_code == requests.codes.get('ok') :
-            content = req.content.decode()
-            response = json.loads(content)
-            
-            if 'error' in response and response.get('error').get('code') == 4 :
-                time.sleep(3)
+        if 'data' in response and len(response.get('data')) > 0 :
+            return response.get('data')
+        elif 'error' in response and response.get('error').get('code') == 4 :
+            sleepWithHeartbeat(connection, 3)
 
-                if tries < 3 :
-                    return get_album_data(album_id, tries + 1)
-                else :
-                    return []
+            if tries < 3 :
+                return get_album_data(album_id, connection, tries + 1)
             else :
-                return response.get('data', [])
-
+                print(f'get_album_data({album_id}) : enough trying')
+                logError(f'get_album_data({album_id}) : enough trying')
+                connection.close()
+                return []
         else :
-            debugLogger.debug(f'add_track : {url} responded with {req.status_code} error')
             return []
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) :
-        time.sleep(3)
+        sleepWithHeartbeat(connection, 3)
 
         if tries < 3 :
-            return get_album_data(album_id, tries + 1)
+            return get_album_data(album_id, connection, tries + 1)
         else :
-            errorsLogger.error(f'get_album_data({album_id}) : enough trying')
+            print(f'get_album_data({album_id}) : enough trying')
+            logError(f'get_album_data({album_id}) : enough trying')
+            connection.close()
             return []
     except Exception as ex :
-        errorsLogger.error(f'get_album_data({album_id}) : {ex.__str__()}')
+        logError(f'get_album_data({album_id}) : {ex.__str__()}')
         return []
-    
-def get_tracks(ch, method, properties, body) :
-    try :
-        album_id = int(body)
-        data = get_album_data(album_id)
 
-        if len(data) > 0:
-            print(f'[*] album {album_id} found {len(data)} track')
-            album = Album.objects.get(deezer_id=album_id)
-            for track_data in data :
-                add_track(track_data, album)
-        else :
-            debugLogger.debug(f'add_track : {album_id} is an empty album')
-
-    except Exception as ex :
-        errorsLogger.error(f'add_tracks({body.decode()}) : {ex.__str__()}')
+def on_message(ch, method, properties, body, connection) :
+    album_id = body.decode()
+    data = get_album_data(album_id, connection) 
+    album = Album.objects.get(deezer_id=album_id)
     
-    ch.basic_ack(delivery_tag=method.delivery_tag)
-        
+    print(f'[+] Album "{album_id}" has "{len(data)}" track')
+    for track_data in data :
+        connection.process_data_events()
+        try :
+            add_track(track_data, album)
+        except Exception as ex :
+            print(f'add_track({track_data.id}) : {ex.__str__()}')
+            logError(f'add_track({track_data.id}) : {ex.__str__()}')
+            connection.close()
+
+    if connection.is_open and ch.is_open :
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+
 def get_albums_tracks(n) :
+    connection = connect_to_broker()
+    channel = connection.channel()
+    channel.basic_qos(prefetch_count=1)
+
+    on_message_callback = functools.partial(on_message, connection=connection) 
+    channel.basic_consume(queue='album_tracks', on_message_callback=on_message_callback)
+
     try :
-        connection = connect_broker()
-        channel = connection.channel()
-        channel.basic_qos(prefetch_count=1)
-        channel.basic_consume(queue='album_tracks', on_message_callback=get_tracks)
-        print(f'[*] Thread-{n} start consuming')
+        print(f'Thread-{n} start consuming')
         channel.start_consuming()
     except Exception as ex :
-        errorsLogger.error(f'Thread-{n} : {ex.__str__()}')
+        print(f'Thread-{n} stops consuming : {ex.__str__()}')
+        logError(f'Thread-{n} stops consuming : {ex.__str__()}')
+        channel.stop_consuming()
 
-def start_workers(workers_num = 4) :
+def run() :
     threads = []
 
-    for n in range(0, workers_num) :
-        thread = threading.Thread(target=get_albums_tracks, args=(n,))
-        thread.daemon = True
+    for i in range(0, THREADS) :
+        thread = threading.Thread(target=get_albums_tracks, args=(i,), daemon=True)
         threads.append(thread)
 
     try :
         for t in threads : t.start()
+        print('=' * 5, f'{THREADS} Threads Has Been Started', '=' * 5)
         for t in threads : t.join()
+        print('=' * 5, 'All Threads Has Been Finished', '=' * 5)
     except KeyboardInterrupt :
-        sys.exit(1)
-    except Exception as ex :
-        errorsLogger.error('get_albums_tracks : {ex.__str__()}')
-
-def run() :
-    start_workers(6)
+        sys.exit(0)
