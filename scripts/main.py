@@ -22,18 +22,18 @@ def checkConf(conf) :
         print('Vhost not provided')
         sys.exit(1)
 
-def connect_broker() :
+def connect_to_broker(**kwargs) :
     conf = settings.RABBITMQ
     checkConf(conf)
     
     credentials = pika.PlainCredentials(conf.get('user'), conf.get('password'))
-    parameters = pika.ConnectionParameters(conf.get('host'), conf.get('port'), conf.get('vhost'), credentials)
+    parameters = pika.ConnectionParameters(conf.get('host'), conf.get('port'), conf.get('vhost'), credentials, **kwargs)
     connection = pika.BlockingConnection(parameters)
 
     return connection
 
 def run () :
-    connection = connect_broker()
+    connection = connect_to_broker()
     channel = connection.channel()
 
     for queue in queues :
