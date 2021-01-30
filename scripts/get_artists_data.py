@@ -29,7 +29,7 @@ def normalize(name) :
 def sleepWithHeartbeat(connection, time_to_sleep=3) :
     time_start = time.time()
 
-    while time.time() - time_start < 3 :
+    while time.time() - time_start < time_to_sleep :
         print('??')
         connection.process_data_events()
         time.sleep(50 / 1000)

@@ -21,10 +21,10 @@ def validate_date(date_str) :
     except :
         return False
 
-def sleepWithHeartbeats(connection, time_to_sleep) :
+def sleepWithHeartbeats(connection, time_to_sleep:int) :
     start_time = time.time()
 
-    while time.time() - start_time < 3 :
+    while time.time() - start_time < time_to_sleep :
         print('???????????????????????')
         connection.process_data_events()
         time.sleep(50 / 1000)
