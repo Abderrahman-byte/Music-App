@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import threading, requests, logging, re, sys, time
 
-from .main import connect_broker
+from .main import connect_to_broker
 
 LINKS_PREFIX = 'https://en.wikipedia.org'
 names_fields = ['name', 'band', 'artist', 'violinist', 'music director', 'person']
@@ -129,7 +129,7 @@ def handle_message(ch, method, properties, body):
 
 def get_artists_names(n) : 
     try :
-        connection = connect_broker()
+        connection = connect_to_broker()
         channel = connection.channel()
         channel.basic_qos(prefetch_count=1)
         channel.basic_consume(queue='music_pages', on_message_callback=handle_message)
