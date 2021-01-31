@@ -112,7 +112,7 @@ def on_message(ch, method, properties, body, connection) :
             artist.picture_xl = data.get('picture_xl')
             try :
                 artist.save()
-                print('\033[0;34m[+] Artists "{data.get("name")} has been created\033[0m"')
+                print(f'\033[0;34m[+] Artists "{data.get("name")} has been created\033[0m"')
             except Exception as ex:
                 print(f'[EXCEPTION] Could not save artist "{artist.name}".')
                 logError(f'Could not save artist "{artist.name}" because : {ex.__str__()}')
