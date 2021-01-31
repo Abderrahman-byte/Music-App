@@ -2,13 +2,13 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import requests, time, logging
 
-from .main import connect_broker
+from .main import connect_to_broker
 
 MAIN_PAGE = 'https://en.wikipedia.org/wiki/Lists_of_musicians'
 LINKS_PREFIX = 'https://en.wikipedia.org'
 
 def get_music_pages() :
-    connection = connect_broker()
+    connection = connect_to_broker()
     channel = connection.channel()
 
     req = requests.get(MAIN_PAGE)
