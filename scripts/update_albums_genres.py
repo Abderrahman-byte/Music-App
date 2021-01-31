@@ -1,55 +1,64 @@
-import threading, requests, logging, json, sys, time
+import json, sys, time
+import threading
+import requests
+import logging
+import functools
 
 from tracks.models import Album, Genre
-from .main import connect_broker
+from .main import connect_to_broker
 
 
 errorsLogger = logging.getLogger('errors')
 debugLogger = logging.getLogger('debuging')
 
+def sleepWithHeartbeat(connection, time_to_sleep=3) :
+    start_time = time.time()
+    
+    while time.time() - start_time < time_to_sleep :
+        connection.process_data_events()
+        time.sleep(50/1000)
 
-def get_album_genres(album_id, tries=0) :
+def get_album_genres(album_id, connection, tries=0) :
     print('.')
     try :
         url = f'https://api.deezer.com/album/{album_id}'
         req = requests.get(url, timeout=3)
         req.raise_for_status()
-        
-        if req.status_code == requests.codes.get('ok') :
-            content = req.content.decode()
-            data = json.loads(content)
+        content = req.content.decode()
+        response = json.loads(content)
 
-            if 'error' in data and data.get('error').get('code') == 4 :
-                time.sleep(3)
-                if tries < 3 :
-                    return get_album_genres(album_id, tries + 1)
-                else :
-                    return []
+        if 'genres' in response and len(response.get('genres', {}).get('data', [])) > 0 :
+            return response.get('genres').get('data')
+        elif 'error' in response and response.get('error').get('code') == 4 :
+            sleepWithHeartbeat(connection, 5)
+            if tries < 3 :
+                return get_album_genres(album_id, connection, tries + 1)
             else :
-                return data.get('genres', {}).get('data', []) 
+                connection.close()
+                print(f'Connection had to be closed : enough trying')
+                errorsLogger.error(f'Connection had to be closed : enough trying')
+                return []
         else :
-            debugLogger.debug(f'get_album_genre : {url} responded with {req.status_code} error')
             return []
 
     except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) :
-        time.sleep(3)
-        
+        sleepWithHeartbeat(connection, 5)
         if tries < 3 :
-            print(f'retry get_album_genres({album_id})')
-            return get_album_genres(album_id, tries + 1)
+            return get_album_genres(album_id, connection, tries + 1)
         else :
-            print(f'get_album_genres({album_id}) : enough trying')
-            errorsLogger.error(f'get_album_genres({album_id}) : enough trying')
+            connection.close()
+            print(f'Connection had to be closed : enough trying')
+            errorsLogger.error(f'Connection had to be closed : enough trying')
             return []
-
     except Exception as ex :
-        errorsLogger.error(f'update_album({album_id}) : {ex.__str__()}')
+        connection.close()
+        errorsLogger.error(f'update_album({album_id}) connection has to be closed : {ex.__str__()}')
         return []
 
-def update_album(ch, method, properties, body) :
+def update_album(ch, method, properties, body, connection) :
     try :
         album_id = int(body)
-        data = get_album_genres(album_id)
+        data = get_album_genres(album_id, connection)
         album = Album.objects.get(deezer_id=album_id)
 
         for genre_data in data :
@@ -74,10 +83,11 @@ def update_album(ch, method, properties, body) :
         
 def get_albums_genres(n) :
     try :
-        connection = connect_broker()
+        connection = connect_to_broker()
         channel = connection.channel()
         channel.basic_qos(prefetch_count=1)
-        channel.basic_consume(queue='album_genres', on_message_callback=update_album)
+        on_message_callback = functools.partial(update_album, connection=connection)
+        channel.basic_consume(queue='album_genres', on_message_callback=on_message_callback)
         print(f'[*] Thread-{n} start consuming')
         channel.start_consuming()
     except Exception as ex :
