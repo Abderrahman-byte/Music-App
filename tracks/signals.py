@@ -5,6 +5,7 @@ from django.conf import settings
 import requests, json, time
 from datetime import datetime
 import logging, pika
+import threading
 
 from .models import Artist, Album, Genre, Track
 
@@ -16,14 +17,21 @@ def rabbitmq_connection() :
     
     return connection
 
-def publish_to_queue(queue, body) :
-    connection = rabbitmq_connection()
-    channel = connection.channel()
-    channel.basic_publish(exchange='', routing_key=queue, body=body, 
-        properties=pika.BasicProperties(delivery_mode=2)
-    )
-    # channel.basic_publish(exchange='', routing_key=queue, body=body)
-    connection.close()
+def publish_to_queue(queue, body, connection=None, channel=None) :
+    if connection is None or channel is None :
+        connection = rabbitmq_connection()
+        channel = connection.channel()
+        channel.confirm_delivery()
+
+    try :
+        channel.basic_publish(exchange='', routing_key=queue, body=body, properties=pika.BasicProperties(delivery_mode=1))
+    except :
+        start_time = time.time()
+        while time.time() - start_time < 3 :
+            connection.process_data_events()
+            time.sleep(50/1000)
+        publish_to_queue(queue, body, connection, channel)
+
 
 @receiver(post_save, sender=Album)
 def AlbumCreated(sender, instance, created, *args, **kwargs) :
@@ -32,14 +40,12 @@ def AlbumCreated(sender, instance, created, *args, **kwargs) :
         try :
             publish_to_queue('album_tracks', str(instance.deezer_id))
             logging.getLogger('debuging').debug(f'Album {instance.deezer_id} added to queue "album_tracks"')
-            time.sleep(1)
         except Exception as ex :
             logging.getLogger('errors').error(f'Could not pulish to "album_tracks" : {ex.__str__()}')
 
         try :
             publish_to_queue('album_genres', str(instance.deezer_id))
             logging.getLogger('debuging').debug(f'Album {instance.deezer_id} added to queue "album_genres"')
-            time.sleep(1)
         except Exception as ex :
             logging.getLogger('errors').error(f'Could not pulish to "album_genres" : {ex.__str__()}')
 
