@@ -22,7 +22,7 @@ def checkConf(conf) :
         print('Vhost not provided')
         sys.exit(1)
 
-def connect_to_broker(**kwargs) :
+def connect_to_broker(*args, **kwargs) :
     conf = settings.RABBITMQ
     checkConf(conf)
     
