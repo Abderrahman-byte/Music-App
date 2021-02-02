@@ -73,8 +73,8 @@ def searchArtistData(name, connection, tries=0) :
         if tries < 5 : # check enough trying
             return searchArtistData(name, connection, tries + 1)
         else : # close connection if tried too much to fix problem
-            logError(f'searchArtistData({name}) : connection.close() because i tried too much\n\tresponse : \n\t{response}')
-            print(f'searchArtistData({name}) : connection.close() because i tried too much\n\tresponse : \n\t{response}')
+            logError(f'searchArtistData({name}) : connection.close() because i tried too much')
+            print(f'searchArtistData({name}) : connection.close() because i tried too much')
             connection.close()
             return None
     except Exception as ex : # Close Connection Exception is anknown
