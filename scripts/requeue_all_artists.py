@@ -30,6 +30,7 @@ def run() :
                 sleepWithHeartbeats(connection, 3)
 
             publish(connection, channel, 'artist_albums', artist)
+        print('[*] Requeueing done {len(artists_ids)} in {round(time.time() - time_start, 2)} s')
 
     except KeyboardInterrupt :
         connection.close()
